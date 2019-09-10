@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, AlertController, IonDatetime } from '@ionic/angular';
-
+import { NavController, AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -16,10 +15,9 @@ export class HomePage {
   public txtTimeArrived: string = "07:48 AM";
   public txtTimeBack: string = "-";
   public txtWorkStatus: string = "Working";
-  constructor(public navCtrl: NavController, public alertController: AlertController) {
-    for (let index = 0; index < 10; index++) {
-      this.datas.push(index);
-    }
+  constructor(public navCtrl: NavController, public alertController: AlertController) { }
+
+  ngOnInit() {
   }
 
   clickedButton() {
@@ -74,6 +72,4 @@ export class HomePage {
     this.txtDayNow = date.toDateString();
     this.txtTimeNow = date;
   }
-
-  
 }

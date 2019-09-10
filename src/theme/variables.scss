@@ -99,3 +99,30 @@
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
 }
+
+.ion-color-hk-red {
+  --ion-color-base: var(--ion-color-hk-red);
+  --ion-color-base-rgb: var(--ion-color-hk-red-rgb);
+  --ion-color-contrast: var(--ion-color-hk-red-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-hk-red-contrast-rgb);
+  --ion-color-shade: var(--ion-color-hk-red-shade);
+  --ion-color-tint: var(--ion-color-hk-red-tint);
+}
+
+.ion-color-hk-green {
+  --ion-color-base: var(--ion-color-hk-green);
+  --ion-color-base-rgb: var(--ion-color-hk-green-rgb);
+  --ion-color-contrast: var(--ion-color-hk-green-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-hk-green-contrast-rgb);
+  --ion-color-shade: var(--ion-color-hk-green-shade);
+  --ion-color-tint: var(--ion-color-hk-green-tint);
+}
+
+.ion-color-hk-yellow {
+  --ion-color-base: var(--ion-color-hk-yellow);
+  --ion-color-base-rgb: var(--ion-color-hk-yellow-rgb);
+  --ion-color-contrast: var(--ion-color-hk-yellow-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-hk-yellow-contrast-rgb);
+  --ion-color-shade: var(--ion-color-hk-yellow-shade);
+  --ion-color-tint: var(--ion-color-hk-yellow-tint);
+}

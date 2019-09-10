@@ -1,121 +1,96 @@
 ion-footer {
-  color: #000000;
-  background-color: #f0f0f0;
-  padding-bottom: 5px;
-  padding-top: 20px;
-  padding-left: 18px;
-  padding-right: 18px;
-
-  .ion-float-right {
-    text-align: right;
-    font-size: 14px;
+    color: #000000;
+    background-color: #f0f0f0;
+    padding-bottom: 5px;
+    padding-top: 20px;
+    padding-left: 18px;
+    padding-right: 18px;
+  
+    .ion-float-right {
+      text-align: right;
+      font-size: 14px;
+    }
+  
+    .ion-float-left {
+      font-size: 14px;
+    }
+  
+    ion-button{
+      min-height: 50px;
+    }
+  
+    .ontime{
+      font-size: 10px;
+      height: 18px;
+      background: var(--ion-color-hk-green);
+    }
+  
+    .terlambat{
+      font-size: 10px;
+      height: 18px;
+      background: var(--ion-color-hk-red);
+    }
+  
+    .diluarkantor{
+      font-size: 10px;
+      height: 18px;
+      background: var(--ion-color-hk-yellow);
+    }
   }
-
-  .ion-float-left {
-    font-size: 14px;
+  
+  ion-content{
+    .workStatus{
+      font-size: 14px;
+      color: var(--ion-color-hk-green);
+    }
   }
-
-  ion-button{
-    min-height: 50px;
+  
+  .datang {
+    text-align: center;
   }
-
-  .ontime{
-    font-size: 10px;
-    height: 18px;
-    background: var(--ion-color-hk-green);
+  
+  .inner {
+    width: 2000px;
+    height: 100%;
+  
+    ion-card {
+      display: table-cell;
+      border: solid 1px #ccc;
+    }
   }
-
-  .terlambat{
-    font-size: 10px;
-    height: 18px;
-    background: var(--ion-color-hk-red);
+  
+  .forecast_container {
+    overflow-x: scroll !important;
+    overflow-y: hidden;
+    word-wrap: break-word;
+    height: 20vw;
+    font-size: 0.8em;
+    font-weight: 300;
+    width: 200%;
   }
-
-  .diluarkantor{
-    font-size: 10px;
-    height: 18px;
-    background: var(--ion-color-hk-yellow);
+  
+  ion-scroll[scrollx="true"],
+  ion-scroll[scrollx="true"] {
+    overflow: hidden;
   }
-}
-
-ion-content{
-  .workStatus{
-    font-size: 14px;
-    color: var(--ion-color-hk-green);
+  
+  ion-scroll[scrollx="true"] {
+    position: relative;
+    overflow-x: auto;
+    height: 100px;
   }
-}
-.ion-color-hk-red {
-  --ion-color-base: var(--ion-color-hk-red);
-  --ion-color-base-rgb: var(--ion-color-hk-red-rgb);
-  --ion-color-contrast: var(--ion-color-hk-red-contrast);
-  --ion-color-contrast-rgb: var(--ion-color-hk-red-contrast-rgb);
-  --ion-color-shade: var(--ion-color-hk-red-shade);
-  --ion-color-tint: var(--ion-color-hk-red-tint);
-}
-
-.ion-color-hk-green {
-  --ion-color-base: var(--ion-color-hk-green);
-  --ion-color-base-rgb: var(--ion-color-hk-green-rgb);
-  --ion-color-contrast: var(--ion-color-hk-green-contrast);
-  --ion-color-contrast-rgb: var(--ion-color-hk-green-contrast-rgb);
-  --ion-color-shade: var(--ion-color-hk-green-shade);
-  --ion-color-tint: var(--ion-color-hk-green-tint);
-}
-
-.ion-color-hk-yellow {
-  --ion-color-base: var(--ion-color-hk-yellow);
-  --ion-color-base-rgb: var(--ion-color-hk-yellow-rgb);
-  --ion-color-contrast: var(--ion-color-hk-yellow-contrast);
-  --ion-color-contrast-rgb: var(--ion-color-hk-yellow-contrast-rgb);
-  --ion-color-shade: var(--ion-color-hk-yellow-shade);
-  --ion-color-tint: var(--ion-color-hk-yellow-tint);
-}
-
-.datang {
-  text-align: center;
-}
-
-.inner {
-  width: 2000px;
-  height: 100%;
-
-  ion-card {
-    display: table-cell;
-    border: solid 1px #ccc;
+  
+  div.container {
+    display: inline-flex;
   }
-}
-
-.forecast_container {
-  overflow-x: scroll !important;
-  overflow-y: hidden;
-  word-wrap: break-word;
-  height: 20vw;
-  font-size: 0.8em;
-  font-weight: 300;
-  width: 200%;
-}
-
-ion-scroll[scrollx="true"],
-ion-scroll[scrollx="true"] {
-  overflow: hidden;
-}
-
-ion-scroll[scrollx="true"] {
-  position: relative;
-  overflow-x: auto;
-  height: 100px;
-}
-
-div.container {
-  display: inline-flex;
-}
-
-.fixed[scrollx=true]{
-  overflow-x: scroll !important;
-  overflow-y: hidden;
-  word-wrap: break-word;
-  height: 20vw;
-  font-size: 0.8em;
-  font-weight: 300;
-  width: 200%;
-}
+  
+  .fixed[scrollx=true]{
+    overflow-x: scroll !important;
+    overflow-y: hidden;
+    word-wrap: break-word;
+    height: 20vw;
+    font-size: 0.8em;
+    font-weight: 300;
+    width: 200%;
+  }
+  

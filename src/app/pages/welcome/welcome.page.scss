@@ -1,0 +1,32 @@
+ion-slides {
+  --bullet-background-active: var(--ion-color-hk-red);
+  --bullet-backcground: var(--ion-color-hk-yellow-tint);
+
+//   background: #3b2e85;
+  height: 100%;
+}
+
+ion-slide {
+  padding: 140px 20px;
+  display: block;
+  h2 {
+    font-size: 32px;
+    font-weight: bold;
+  }
+
+  .bottom {
+    position: fixed;
+    bottom: 80px;
+    left: 0px;
+    right: 0px;
+  }
+
+  background-image: url("../../../assets/images/bg-2.png");
+  background-position: top;
+  background-size: cover;
+}
+
+ion-button {
+  position: fixed;
+  bottom: 30px;
+}
