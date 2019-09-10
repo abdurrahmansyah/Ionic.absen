@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, AlertController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -9,23 +10,49 @@ import { NavController, AlertController } from '@ionic/angular';
 export class HomePage {
 
   datas: any = [];
-  public txtTimeNow: Date;
+  public txtTimeNow: string;
   public txtDayNow: string;
   public inputVal: string = "variabel";
   public txtTimeArrived: string = "07:48 AM";
   public txtTimeBack: string = "-";
   public txtWorkStatus: string = "Working";
-  constructor(public navCtrl: NavController, public alertController: AlertController) { }
+  constructor(public navCtrl: NavController, 
+    public alertController: AlertController,
+    public router: Router) { }
 
   ngOnInit() {
-  }
+    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    var days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
 
-  clickedButton() {
-    console.log("Time");
+    var date = new Date();
+    var hr = date.getHours();
+    var ampm = "AM";
+    if (hr > 12) {
+      hr -= 12;
+      ampm = "PM";
+    }
+    var day = days[date.getDay()];
+    var tanggal = date.getDate();
+    var month = months[date.getMonth()];
+    var year = date.getFullYear();
+
+    var minute = date.getMinutes();
+    var minuteString = minute.toString();
+    if (minute < 10){
+      minuteString = "0" + minute;
+    }
+    this.txtDayNow = day + ", " + tanggal + " " + month + " " + year;
+    this.txtTimeNow = date.getHours() + ":" + minuteString + " " + ampm;
   }
 
   buttonAbsen() {
     alert("ABSEN SELESAI");
+    
+
+  }
+
+  clickedButton(){
+    this.router.navigate(['notifications'])
   }
 
   async presentAlert() {
@@ -50,7 +77,7 @@ export class HomePage {
           role: 'cancel',
           cssClass: 'background',
           handler: (blah) => {
-            console.log('Confirm Cancel: blah'); 
+            console.log('Confirm Cancel: blah');
           }
         }, {
           text: 'Okay',
@@ -62,14 +89,5 @@ export class HomePage {
     });
 
     await alert.present();
-  }
-
-  doAbsen(){
-    var date = new Date();
-    console.log(date.toLocaleDateString("DDDD"));
-    console.log(date.toString());
-    console.log(date.toDateString());
-    this.txtDayNow = date.toDateString();
-    this.txtTimeNow = date;
   }
 }

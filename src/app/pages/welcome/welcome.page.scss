@@ -23,7 +23,8 @@ ion-slide {
 
   background-image: url("../../../assets/images/bg-2.png");
   background-position: top;
-  background-size: cover;
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
 ion-button {

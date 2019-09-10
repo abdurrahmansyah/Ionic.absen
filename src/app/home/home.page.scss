@@ -1,96 +1,64 @@
 ion-footer {
-    color: #000000;
-    background-color: #f0f0f0;
-    padding-bottom: 5px;
-    padding-top: 20px;
-    padding-left: 18px;
-    padding-right: 18px;
-  
-    .ion-float-right {
-      text-align: right;
-      font-size: 14px;
-    }
-  
-    .ion-float-left {
-      font-size: 14px;
-    }
-  
-    ion-button{
-      min-height: 50px;
-    }
-  
-    .ontime{
-      font-size: 10px;
-      height: 18px;
-      background: var(--ion-color-hk-green);
-    }
-  
-    .terlambat{
-      font-size: 10px;
-      height: 18px;
-      background: var(--ion-color-hk-red);
-    }
-  
-    .diluarkantor{
-      font-size: 10px;
-      height: 18px;
-      background: var(--ion-color-hk-yellow);
-    }
+  color: #000000;
+  background-color: #f0f0f0;
+  padding-bottom: 5px;
+  padding-top: 20px;
+  padding-left: 18px;
+  padding-right: 18px;
+
+  .ion-float-right {
+    text-align: right;
+    font-size: 14px;
   }
-  
-  ion-content{
-    .workStatus{
-      font-size: 14px;
-      color: var(--ion-color-hk-green);
-    }
+
+  .ion-float-left {
+    font-size: 14px;
   }
-  
-  .datang {
-    text-align: center;
+
+  ion-button {
+    min-height: 50px;
   }
-  
-  .inner {
-    width: 2000px;
-    height: 100%;
-  
-    ion-card {
-      display: table-cell;
-      border: solid 1px #ccc;
-    }
+
+  .ontime {
+    font-size: 10px;
+    height: 18px;
+    background: var(--ion-color-hk-green);
   }
-  
-  .forecast_container {
-    overflow-x: scroll !important;
-    overflow-y: hidden;
-    word-wrap: break-word;
-    height: 20vw;
-    font-size: 0.8em;
-    font-weight: 300;
-    width: 200%;
+
+  .terlambat {
+    font-size: 10px;
+    height: 18px;
+    background: var(--ion-color-hk-red);
   }
-  
-  ion-scroll[scrollx="true"],
-  ion-scroll[scrollx="true"] {
-    overflow: hidden;
+
+  .diluarkantor {
+    font-size: 10px;
+    height: 18px;
+    background: var(--ion-color-hk-yellow);
   }
-  
-  ion-scroll[scrollx="true"] {
-    position: relative;
-    overflow-x: auto;
-    height: 100px;
+}
+
+ion-content {
+  .workStatus {
+    font-size: 14px;
+    color: var(--ion-color-hk-green);
   }
-  
-  div.container {
-    display: inline-flex;
+
+  // .bottom {
+  //   position: absolute;
+  //   bottom: 80px;
+  //   left: 0px;
+  //   right: 0px;
+  // }
+
+  .ion-justify-content-center {
+    // background: #a85858;
+    background-image: url("../../assets/images/tes-1.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+
+    // grid-auto-rows: 330%;
+    height: 80%;
   }
-  
-  .fixed[scrollx=true]{
-    overflow-x: scroll !important;
-    overflow-y: hidden;
-    word-wrap: break-word;
-    height: 20vw;
-    font-size: 0.8em;
-    font-weight: 300;
-    width: 200%;
-  }
-  
+}
