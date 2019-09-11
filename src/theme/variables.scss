@@ -3,27 +3,35 @@
 
 /** Ionic CSS Variables **/
 :root {
+  /** hk-grey **/
+  --ion-color-hk-grey: #dedede;
+  --ion-color-hk-grey-rgb: 222, 222, 222;
+  --ion-color-hk-grey-contrast: #000000;
+  --ion-color-hk-grey-contrast-rgb: 0, 0, 0;
+  --ion-color-hk-grey-shade: #c3c3c3;
+  --ion-color-hk-grey-tint: #e1e1e1;
+
   /** hk-green **/
-  --ion-color-hk-green: #03D91F;
-  --ion-color-hk-green-rgb: 3,217,31;
+  --ion-color-hk-green: #03d91f;
+  --ion-color-hk-green-rgb: 3, 217, 31;
   --ion-color-hk-green-contrast: #000000;
-  --ion-color-hk-green-contrast-rgb: 0,0,0;
+  --ion-color-hk-green-contrast-rgb: 0, 0, 0;
   --ion-color-hk-green-shade: #03bf1b;
   --ion-color-hk-green-tint: #1cdd35;
-  
+
   /** hk-yellow **/
-  --ion-color-hk-yellow: #FACB42;
-  --ion-color-hk-yellow-rgb: 250,203,66;
+  --ion-color-hk-yellow: #facb42;
+  --ion-color-hk-yellow-rgb: 250, 203, 66;
   --ion-color-hk-yellow-contrast: #000000;
-  --ion-color-hk-yellow-contrast-rgb: 0,0,0;
+  --ion-color-hk-yellow-contrast-rgb: 0, 0, 0;
   --ion-color-hk-yellow-shade: #dcb33a;
   --ion-color-hk-yellow-tint: #fbd055;
 
   /** hk-red **/
-  --ion-color-hk-red: #EA2227;
-  --ion-color-hk-red-rgb: 234,34,39;
+  --ion-color-hk-red: #ea2227;
+  --ion-color-hk-red-rgb: 234, 34, 39;
   --ion-color-hk-red-contrast: #ffffff;
-  --ion-color-hk-red-contrast-rgb: 255,255,255;
+  --ion-color-hk-red-contrast-rgb: 255, 255, 255;
   --ion-color-hk-red-shade: #ce1e22;
   --ion-color-hk-red-tint: #ec383d;
 
@@ -125,4 +133,13 @@
   --ion-color-contrast-rgb: var(--ion-color-hk-yellow-contrast-rgb);
   --ion-color-shade: var(--ion-color-hk-yellow-shade);
   --ion-color-tint: var(--ion-color-hk-yellow-tint);
+}
+
+.ion-color-hk-grey {
+  --ion-color-base: var(--ion-color-hk-grey);
+  --ion-color-base-rgb: var(--ion-color-hk-grey-rgb);
+  --ion-color-contrast: var(--ion-color-hk-grey-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-hk-grey-contrast-rgb);
+  --ion-color-shade: var(--ion-color-hk-grey-shade);
+  --ion-color-tint: var(--ion-color-hk-grey-tint);
 }
