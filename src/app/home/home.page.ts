@@ -47,8 +47,8 @@ export class HomePage {
 
   buttonAbsen() {
     alert("ABSEN SELESAI");
-    
 
+    
   }
 
   clickedButton(){
