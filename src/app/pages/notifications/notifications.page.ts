@@ -26,7 +26,7 @@ export class NotificationsPage implements OnInit {
       cssClass: 'pop-over-style'
     });
 
-    popover.style.cssText = '--min-width: 300px; box-shadow: #15ff00';
+    popover.style.cssText = '--min-width: 300px; --box-shadow: #15ff00';
     return await popover.present();
   }
 }

@@ -1,7 +1,11 @@
-import { Component } from '@angular/core';
-import { NavController, AlertController } from '@ionic/angular';
+//import { Component } from '@angular/core';
+//import { NavController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { Component, OnInit } from '@angular/core';
+import { PopoverController, AlertController } from '@ionic/angular';
+import { PopoverComponent } from 'src/app/components/popover/popover.component';
+
 
 @Component({
   selector: 'app-home',
@@ -24,10 +28,11 @@ export class HomePage {
   public txtWorkStatus: string = "Working";
   geoAccuracy:number;
 
-  constructor(public navCtrl: NavController, 
+  constructor(//public navCtrl: NavController, 
     public alertController: AlertController,
     public router: Router,
-    private geolocation: Geolocation
+    public geolocation: Geolocation,
+    public popoverController: PopoverController
     ) { }
 
   ngOnInit() {
@@ -67,16 +72,9 @@ export class HomePage {
     var today = new Date();
     var time = today.getHours() + ":" + today.getMinutes();
     var hours= today.getHours();
-    var options = {
-      enableHighAccuracy: true,
-      timeout: 5000,
-      maximumAge: 0
-    };
     this.waktu = time;
-
-    
   
-    this.geolocation.getCurrentPosition(options).then((position) => {
+    this.geolocation.getCurrentPosition({enableHighAccuracy: true}).then((position) => {
       this.geoLatitude = position.coords.latitude;
       this.geoLongitude = position.coords.longitude; 
       this.geoAccuracy = position.coords.accuracy; 
@@ -92,27 +90,30 @@ export class HomePage {
     
      if( this.geoLatitude <= -6.24508 && this.geoLatitude >= -6.24587 && this.geoLongitude >= 106.87269 && this.geoLongitude <= 106.87379 ){
       if (hours >=6 && hours <=17 ) {
-        alert("ABSEN DATANG DITERIMA");
       } else if (hours > 17){ 
-        alert("ABSEN PULANG");
+        this.popoverController;
       }
      }else{
       alert("DILUAR LOKASI ABSEN");
+      this.presentPopover(1);
      }
 
   }
 
-  // doRefresh(event) {
-  //   console.log('Begin async operation');
-
-  //   setTimeout(() => {
-  //     console.log('Async operation has ended');
-  //     event.target.complete();
-  //   }, 2000);
-  // }
-
   clickedButton(){
     this.router.navigate(['notifications'])
+  }
+
+  async presentPopover(ev: any) {
+    const popover = await this.popoverController.create({
+      component: PopoverComponent,
+      event: ev,
+      translucent: true,
+      cssClass: 'pop-over-style'
+    });
+
+    popover.style.cssText = '--min-width: 300px; --box-shadow: #15ff00';
+    return await popover.present();
   }
 
   async presentAlert() {
