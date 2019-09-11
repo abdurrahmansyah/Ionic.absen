@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
 
 @Component({
   selector: 'app-home',
@@ -10,15 +11,24 @@ import { Router } from '@angular/router';
 export class HomePage {
 
   datas: any = [];
+  geoLatitude: number;
+  geoLongitude: number;
+  lat: number;
+  long: number;
+  waktu: string;
   public txtTimeNow: string;
   public txtDayNow: string;
   public inputVal: string = "variabel";
   public txtTimeArrived: string = "07:48 AM";
   public txtTimeBack: string = "-";
   public txtWorkStatus: string = "Working";
+  geoAccuracy:number;
+
   constructor(public navCtrl: NavController, 
     public alertController: AlertController,
-    public router: Router) { }
+    public router: Router,
+    private geolocation: Geolocation
+    ) { }
 
   ngOnInit() {
     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -43,13 +53,63 @@ export class HomePage {
     }
     this.txtDayNow = day + ", " + tanggal + " " + month + " " + year;
     this.txtTimeNow = date.getHours() + ":" + minuteString + " " + ampm;
+
+    this.geolocation.getCurrentPosition().then((resp) => {
+      this.geoLatitude = 11;
+      this.geoLongitude = 0; 
+      this.geoAccuracy = resp.coords.accuracy; 
+      // this.getGeoencoder(this.geoLatitude,this.geoLongitude);
+     }).catch((error) => {
+     });
   }
 
   buttonAbsen() {
-    alert("ABSEN SELESAI");
+    var today = new Date();
+    var time = today.getHours() + ":" + today.getMinutes();
+    var hours= today.getHours();
+    var options = {
+      enableHighAccuracy: true,
+      timeout: 5000,
+      maximumAge: 0
+    };
+    this.waktu = time;
 
     
+  
+    this.geolocation.getCurrentPosition(options).then((position) => {
+      this.geoLatitude = position.coords.latitude;
+      this.geoLongitude = position.coords.longitude; 
+      this.geoAccuracy = position.coords.accuracy; 
+      // this.getGeoencoder(this.geoLatitude,this.geoLongitude);
+     }).catch((error) => {
+       alert('GPS ANDA BELUM AKTIF');
+     });
+
+     if(this.geoLatitude=0){
+       this.geoLatitude = 0;
+       this.geoLongitude = 11;
+     }
+    
+     if( this.geoLatitude <= -6.24508 && this.geoLatitude >= -6.24587 && this.geoLongitude >= 106.87269 && this.geoLongitude <= 106.87379 ){
+      if (hours >=6 && hours <=17 ) {
+        alert("ABSEN DATANG DITERIMA");
+      } else if (hours > 17){ 
+        alert("ABSEN PULANG");
+      }
+     }else{
+      alert("DILUAR LOKASI ABSEN");
+     }
+
   }
+
+  // doRefresh(event) {
+  //   console.log('Begin async operation');
+
+  //   setTimeout(() => {
+  //     console.log('Async operation has ended');
+  //     event.target.complete();
+  //   }, 2000);
+  // }
 
   clickedButton(){
     this.router.navigate(['notifications'])
