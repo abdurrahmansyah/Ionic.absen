@@ -1,8 +1,14 @@
 <ion-header>
   <ion-toolbar color="hk-red">
-    <ion-title>
-      {{ txtDayNow }}
-    </ion-title>
+    <ion-title>{{ txtDayNow }}</ion-title>
+    <ion-buttons slot="primary">
+      <ion-button color="hk-white-red" (click)="navigateToNotificationsPage()">
+        <ion-icon slot="icon-only" name="notifications"></ion-icon>
+      </ion-button>
+      <ion-button color="hk-white-red" (click)="navigateToReportPage()">
+        <ion-icon slot="icon-only" name="clipboard"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -16,7 +22,7 @@
   <ion-row class="nowrap ion-justify-content-center ion-align-items-center">
     <ion-text style="font-size: 34px; text-align: center">{{ txtTimeNow }}</ion-text>
   </ion-row>
-  
+
 </ion-content>
 
 <ion-footer>
@@ -28,8 +34,8 @@
         <ion-text>Pulang : {{txtTimeBack}}</ion-text>
       </ion-col>
       <ion-col class="ion-float-right" size="4" style="background: transparent">
-        <ion-text (click)="clickedButton()">Detail </ion-text>
-        <ion-icon name="arrow-forward" style="font-size: 14px; vertical-align: middle"></ion-icon>
+        <ion-text (click)="navigateToReportPage()">Detail </ion-text>
+        <ion-icon name="arrow-forward" mode="ios" style="font-size: 14px; vertical-align: middle"></ion-icon>
       </ion-col>
     </ion-row>
   </ion-grid>

@@ -18,6 +18,12 @@ const routes: Routes = [
                 loadChildren: () => import('../pages/notifications/notifications.module').then(
                     m => m.NotificationsPageModule
                 )
+            },
+            {
+                path: 'reports',
+                loadChildren: () => import('../pages/reports/reports.module').then(
+                    m => m.ReportsPageModule
+                )
             }
         ]
     }

@@ -31,6 +31,7 @@
     "cordova-plugin-geolocation": "^4.0.2",
     "cordova-plugin-networkinterface": "^2.0.0",
     "core-js": "^2.5.4",
+    "ionic2-calendar": "^0.5.4",
     "rxjs": "^6.4.0",
     "tslib": "^1.9.0",
     "zone.js": "~0.9.1"

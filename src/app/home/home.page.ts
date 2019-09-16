@@ -86,41 +86,47 @@ export class HomePage {
         subHeader: 'Subtitle',
         message: 'This is an alert message.',
         cssClass: 'alertcss',
-        buttons: ['OK']
+        buttons: ['OK', 'Cancel'],
+        mode: "ios"
       });
 
+      // alert.style.cssText = "color: ";
       await alert.present();
     }
 
-  
-    this.geolocation.getCurrentPosition({enableHighAccuracy: true}).then((position) => {
-      this.geoLatitude = position.coords.latitude;
-      this.geoLongitude = position.coords.longitude;
-      this.geoAccuracy = position.coords.accuracy;
-      // this.getGeoencoder(this.geoLatitude,this.geoLongitude);
-    }).catch((error) => {
-      alert('GPS ANDA BELUM AKTIF');
-    });
+  // UNCOMMEND
+    // this.geolocation.getCurrentPosition({enableHighAccuracy: true}).then((position) => {
+    //   this.geoLatitude = position.coords.latitude;
+    //   this.geoLongitude = position.coords.longitude;
+    //   this.geoAccuracy = position.coords.accuracy;
+    //   // this.getGeoencoder(this.geoLatitude,this.geoLongitude);
+    // }).catch((error) => {
+    //   alert('GPS ANDA BELUM AKTIF');
+    // });
 
-    if (this.geoLatitude = 0) {
-      this.geoLatitude = 0;
-      this.geoLongitude = 11;
-    }
+    // if (this.geoLatitude = 0) {
+    //   this.geoLatitude = 0;
+    //   this.geoLongitude = 11;
+    // }
 
-    var hours = dateData.hr;
-    if (this.geoLatitude <= -6.24508 && this.geoLatitude >= -6.24587 && this.geoLongitude >= 106.87269 && this.geoLongitude <= 106.87379) {
-      if (hours >= 6 && hours <= 17) {
-      } else if (hours > 17) {
-        this.popoverController;
-      }
-    } else {
-      alert("DILUAR LOKASI ABSEN");
-      this.presentPopover(1);
-     }
+    // var hours = dateData.hr;
+    // if (this.geoLatitude <= -6.24508 && this.geoLatitude >= -6.24587 && this.geoLongitude >= 106.87269 && this.geoLongitude <= 106.87379) {
+    //   if (hours >= 6 && hours <= 17) {
+    //   } else if (hours > 17) {
+    //     this.popoverController;
+    //   }
+    // } else {
+    //   alert("DILUAR LOKASI ABSEN");
+    //   this.presentPopover(1);
+    //  }
 
   }
 
-  clickedButton() {
+  navigateToReportPage() {
+    this.router.navigate(['reports'])
+  }
+
+  navigateToNotificationsPage() {
     this.router.navigate(['notifications'])
   }
 

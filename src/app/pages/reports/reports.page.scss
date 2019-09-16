@@ -1,0 +1,40 @@
+// .pop-over-style {
+//     min-width: 300px;
+//     --background: #15ff00;
+//     --background-color: #15ff00;
+//     // .popover-content {
+//     //     // width: 80% !important;// - this wont work or the bottom one.
+//     //     --min-width: 730px;
+//     // }
+// }
+
+ion-segment {
+    --background-color: #000000;
+    width: 80%;
+    height: 25px;
+    text-align: center;
+  }
+  
+  ion-segment-button {
+    min-height: 25px;
+  }
+  
+  .ion-justify-content-center {
+    padding: 5px;
+  }
+  
+  ion-slide {
+      // padding: 140px 20px;
+      display: block;
+      // h2 {
+      //   font-size: 32px;
+      //   font-weight: bold;
+      // }
+    
+      // .bottom {
+      //   position: absolute;
+      //   bottom: 80px;
+      //   left: 0px;
+      //   right: 0px;
+      // }
+  }

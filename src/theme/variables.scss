@@ -3,6 +3,22 @@
 
 /** Ionic CSS Variables **/
 :root {
+  /** hk-white-red **/
+  --ion-color-hk-white-red: #ffffff;
+  --ion-color-hk-white-red-rgb: 255, 255, 255;
+  --ion-color-hk-white-red-contrast: #ea2227;
+  --ion-color-hk-white-red-contrast-rgb: 234, 34, 39;
+  --ion-color-hk-white-red-shade: #fce7e7;
+  --ion-color-hk-white-red-tint: #ffffff;
+
+  /** hk-purple **/
+  --ion-color-hk-purple: #652e7d;
+  --ion-color-hk-purple-rgb: 101, 46, 125;
+  --ion-color-hk-purple-contrast: #ffffff;
+  --ion-color-hk-purple-contrast-rgb: 255, 255, 255;
+  --ion-color-hk-purple-shade: #59286e;
+  --ion-color-hk-purple-tint: #74438a;
+
   /** hk-grey **/
   --ion-color-hk-grey: #dedede;
   --ion-color-hk-grey-rgb: 222, 222, 222;
@@ -142,4 +158,22 @@
   --ion-color-contrast-rgb: var(--ion-color-hk-grey-contrast-rgb);
   --ion-color-shade: var(--ion-color-hk-grey-shade);
   --ion-color-tint: var(--ion-color-hk-grey-tint);
+}
+
+.ion-color-hk-purple {
+  --ion-color-base: var(--ion-color-hk-purple);
+  --ion-color-base-rgb: var(--ion-color-hk-purple-rgb);
+  --ion-color-contrast: var(--ion-color-hk-purple-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-hk-purple-contrast-rgb);
+  --ion-color-shade: var(--ion-color-hk-purple-shade);
+  --ion-color-tint: var(--ion-color-hk-purple-tint);
+}
+
+.ion-color-hk-white-red {
+  --ion-color-base: var(--ion-color-hk-white-red);
+  --ion-color-base-rgb: var(--ion-color-hk-white-red-rgb);
+  --ion-color-contrast: var(--ion-color-hk-white-red-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-hk-white-red-contrast-rgb);
+  --ion-color-shade: var(--ion-color-hk-white-red-shade);
+  --ion-color-tint: var(--ion-color-hk-white-red-tint);
 }
