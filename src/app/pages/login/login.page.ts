@@ -4,7 +4,7 @@ import { Storage } from '@ionic/storage';
 import { AlertController, NavController } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
+import { AuthenticationService } from './../../services/authentication.service';
 
 @Component({
   selector: 'app-login',
@@ -22,7 +22,8 @@ export class LoginPage implements OnInit {
     public navCtrl: NavController,
      public http: HttpClient,   
      public alertCtrl: AlertController, 
-     private storage: Storage) { }
+     private storage: Storage,
+     private authService: AuthenticationService) { }
 
   ngOnInit() {
   }
@@ -30,7 +31,7 @@ export class LoginPage implements OnInit {
   navigateToHomePage(){
 
     var titleText,subTitleText;
-    var url = 'http://eproc.hutamakarya.com/vendor/json/loginHK.php';
+    var url = 'http://sihk.hutamakarya.com/apiabsen/loginabsen.php';
     let postdata = new FormData();
     postdata.append('username',this.Username);
     postdata.append('password',this.Password);
@@ -44,16 +45,20 @@ export class LoginPage implements OnInit {
       this.result = data;
       if(this.result.error == false){
         this.storage.set('username', this.Username);
-        this.storage.set('nama', this.result.user.nama);
+        this.storage.set('name', this.result.user.name);
 
-        titleText = "Login Berhasil";
-        subTitleText = "Login Berhasil : "+this.result.user.nama;
-        this.router.navigate(['home'])
+        // titleText = "Login Berhasil";
+        this.authService.login();
+
+        subTitleText = "Login Berhasil : "+this.result.user.name;
+        alert(subTitleText);
+        this.router.navigate(['home']);
       }else{
         titleText = "Login Gagal";
-        subTitleText = "Username dan Password tidak cocok";        
+        subTitleText = "Username dan Password tidak cocok";
+        alert(subTitleText);
       }
-       alert(titleText);
+      //  alert(titleText);
 
     });
     

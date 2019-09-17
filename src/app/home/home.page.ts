@@ -5,7 +5,7 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { Component, OnInit } from '@angular/core';
 import { PopoverController, AlertController, NavController } from '@ionic/angular';
 import { PopoverComponent } from 'src/app/components/popover/popover.component';
-
+import { AuthenticationService } from './../services/authentication.service';
 
 @Component({
   selector: 'app-home',
@@ -33,8 +33,13 @@ export class HomePage {
   constructor(public navCtrl: NavController,     public alertController: AlertController,
     public router: Router,
     public geolocation: Geolocation,
-    public popoverController: PopoverController
+    public popoverController: PopoverController,
+    private authService: AuthenticationService
   ) { }
+
+  logout(){
+    this.authService.logout();
+  }
 
   ngOnInit() {
     var dateData = this.GetDate();
