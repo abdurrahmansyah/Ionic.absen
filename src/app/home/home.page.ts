@@ -30,14 +30,16 @@ export class HomePage {
   public txtWorkStatus: string = "Working";
   geoAccuracy: number;
 
-  constructor(public navCtrl: NavController,     public alertController: AlertController,
+  constructor(public navCtrl: NavController, public alertController: AlertController,
     public router: Router,
     public geolocation: Geolocation,
     public popoverController: PopoverController,
     private authService: AuthenticationService
-  ) { }
+  ) {
+    this.starTimer()
+  }
 
-  logout(){
+  logout() {
     this.authService.logout();
   }
 
@@ -45,7 +47,26 @@ export class HomePage {
     var dateData = this.GetDate();
 
     this.txtDayNow = dateData.day + ", " + dateData.date + " " + dateData.month + " " + dateData.year;
-    this.txtTimeNow = dateData.hrString + ":" + dateData.minuteString + " " + dateData.ampm;
+    this.txtTimeNow = this.checkTime(dateData.hr) + ":" + this.checkTime(dateData.minute) + " " + dateData.ampm;
+
+    // this.txtTimeNow = dateData.hrString + ":" + dateData.minuteString + " " + dateData.ampm;
+  }
+
+  checkTime(i) {
+    if (i < 10) {
+      i = "0" + i;
+    }
+    return i;
+  }
+
+  starTimer() {
+    this.newMethod();
+  }
+
+  private newMethod() {
+    setInterval(function () {
+      this.ngOnInit();
+    }.bind(this), 500);
   }
 
   private GetDate(): DateData {
@@ -99,7 +120,7 @@ export class HomePage {
       await alert.present();
     }
 
-  // UNCOMMEND
+    // UNCOMMEND
     // this.geolocation.getCurrentPosition({enableHighAccuracy: true}).then((position) => {
     //   this.geoLatitude = position.coords.latitude;
     //   this.geoLongitude = position.coords.longitude;
