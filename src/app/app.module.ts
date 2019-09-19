@@ -21,7 +21,12 @@ import { HttpClientModule } from '@angular/common/http';
     IonicModule.forRoot(), 
     AppRoutingModule,
     HttpClientModule,
-    IonicStorageModule.forRoot()],
+    IonicStorageModule.forRoot(
+      {
+        name: 'mobileabsensi_sql_lite',
+        driverOrder: ['indexeddb', 'sqlite', 'websql']
+      }
+    )],
   providers: [
     StatusBar,
     SplashScreen,

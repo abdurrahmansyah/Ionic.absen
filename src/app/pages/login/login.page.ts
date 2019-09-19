@@ -4,7 +4,7 @@ import { Storage } from '@ionic/storage';
 import { AlertController, NavController, ToastController } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
+import { AuthenticationService } from './../../services/authentication.service';
 
 @Component({
   selector: 'app-login',
@@ -21,15 +21,16 @@ export class LoginPage implements OnInit {
   constructor(private router: Router,
     public navCtrl: NavController,
     public http: HttpClient,
+private storage: Storage,
     public alertController: AlertController,
     public toastController: ToastController,
-    private storage: Storage) { }
+     private authService: AuthenticationService) { }
 
   ngOnInit() {
   }
 
   navigateToHomePage() {
-    var url = 'http://eproc.hutamakarya.com/vendor/json/loginHK.php';
+    var url = 'http://sihk.hutamakarya.com/apiabsen/loginabsen.php';
     let postdata = new FormData();
     postdata.append('username', this.Username);
     postdata.append('password', this.Password);
@@ -42,10 +43,14 @@ export class LoginPage implements OnInit {
       this.result = data;
       if (this.result.error == false) {
         this.storage.set('username', this.Username);
-        this.storage.set('nama', this.result.user.nama);
+        this.storage.set('name', this.result.user.name);
 
         this.presentToast("Login Berhasil");
-        this.router.navigate(['home'])
+        this.authService.login();
+
+        
+        
+        this.router.navigate(['home']);
       } 
       else { this.presentToast("Login Gagal"); }
     });

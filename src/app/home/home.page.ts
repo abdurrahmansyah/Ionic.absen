@@ -5,6 +5,7 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { Component, OnInit } from '@angular/core';
 import { PopoverController, AlertController, NavController } from '@ionic/angular';
 import { PopoverComponent } from 'src/app/components/popover/popover.component';
+import { AuthenticationService } from './../services/authentication.service';
 
 @Component({
   selector: 'app-home',
@@ -31,17 +32,43 @@ export class HomePage {
   constructor(public navCtrl: NavController, public alertController: AlertController,
     public router: Router,
     public geolocation: Geolocation,
-    public popoverController: PopoverController
-  ) { }
+    public popoverController: PopoverController,
+    private authService: AuthenticationService
+  ) {
+    this.starTimer()
+  }
+
+  logout() {
+    this.authService.logout();
+  }
 
   ngOnInit() {
     var dateData = this.GetDate();
 
     this.txtDayNow = dateData.day + ", " + dateData.date + " " + dateData.month + " " + dateData.year;
-    this.txtTimeNow = dateData.hrString + ":" + dateData.minuteString + " " + dateData.ampm;
+    this.txtTimeNow = this.checkTime(dateData.hr) + ":" + this.checkTime(dateData.minute) + " " + dateData.ampm;
+
+    // this.txtTimeNow = dateData.hrString + ":" + dateData.minuteString + " " + dateData.ampm;
   }
 
-  public GetDate(): DateData {
+  checkTime(i) {
+    if (i < 10) {
+      i = "0" + i;
+    }
+    return i;
+  }
+
+  starTimer() {
+    this.newMethod();
+  }
+
+  private newMethod() {
+    setInterval(function () {
+      this.ngOnInit();
+    }.bind(this), 500);
+  }
+
+  private GetDate(): DateData {
     var dateData = new DateData();
     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     var days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
