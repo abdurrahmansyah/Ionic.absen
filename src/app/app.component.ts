@@ -51,13 +51,14 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
-      this.authenticationService.authenticationState.subscribe(state => {
-        if (state) {
-          this.router.navigate(['home']);
-        } else {
-          this.router.navigate(['']);
-        }
-      });
+    });
+
+    this.authenticationService.authenticationState.subscribe(state => {
+      if (state) {
+        this.router.navigate(['home']);
+      } else {
+        this.router.navigate(['']);
+      }
     });
   }
   openPage(page) {

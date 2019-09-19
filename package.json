@@ -23,7 +23,7 @@
     "@ionic-native/background-geolocation": "^5.13.0",
     "@ionic-native/calendar": "^5.14.0",
     "@ionic-native/core": "^5.1.0",
-    "@ionic-native/geolocation": "^5.13.0",
+    "@ionic-native/geolocation": "^5.14.0",
     "@ionic-native/http": "^5.13.0",
     "@ionic-native/network-interface": "^5.13.0",
     "@ionic-native/splash-screen": "^5.0.0",
@@ -86,9 +86,7 @@
         "ANDROID_SUPPORT_ANNOTATIONS_VERSION": "27.+"
       },
       "cordova-plugin-ionic-keyboard": {},
-      "cordova-plugin-geolocation": {
-        "GEOLOCATION_USAGE_DESCRIPTION": "To locate you"
-      },
+      "cordova-plugin-geolocation": {},
       "cordova-plugin-networkinterface": {},
       "cordova-sqlite-storage": {},
       "cordova-plugin-advanced-http": {},
