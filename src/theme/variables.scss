@@ -3,6 +3,22 @@
 
 /** Ionic CSS Variables **/
 :root {
+  /** hk-darkgrey **/
+  --ion-color-hk-darkgrey: #4d4d4d;
+  --ion-color-hk-darkgrey-rgb: 77,77,77;
+  --ion-color-hk-darkgrey-contrast: #ffffff;
+  --ion-color-hk-darkgrey-contrast-rgb: 255,255,255;
+  --ion-color-hk-darkgrey-shade: #444444;
+  --ion-color-hk-darkgrey-tint: #5f5f5f;
+
+  /** hk-black-red **/
+  --ion-color-hk-black-red: #000000;
+  --ion-color-hk-black-red-rgb: 0, 0, 0;
+  --ion-color-hk-black-red-contrast: #ffffff;
+  --ion-color-hk-black-red-contrast-rgb: 255, 255, 255;
+  --ion-color-hk-black-red-shade: #ce1e22;
+  --ion-color-hk-black-red-tint: #ec383d;
+
   /** hk-white-red **/
   --ion-color-hk-white-red: #ffffff;
   --ion-color-hk-white-red-rgb: 255, 255, 255;
@@ -176,4 +192,22 @@
   --ion-color-contrast-rgb: var(--ion-color-hk-white-red-contrast-rgb);
   --ion-color-shade: var(--ion-color-hk-white-red-shade);
   --ion-color-tint: var(--ion-color-hk-white-red-tint);
+}
+
+.ion-color-hk-black-red {
+  --ion-color-base: var(--ion-color-hk-black-red);
+  --ion-color-base-rgb: var(--ion-color-hk-black-red-rgb);
+  --ion-color-contrast: var(--ion-color-hk-black-red-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-hk-black-red-contrast-rgb);
+  --ion-color-shade: var(--ion-color-hk-black-red-shade);
+  --ion-color-tint: var(--ion-color-hk-black-red-tint);
+}
+
+.ion-color-hk-darkgrey {
+  --ion-color-base: var(--ion-color-hk-darkgrey);
+  --ion-color-base-rgb: var(--ion-color-hk-darkgrey-rgb);
+  --ion-color-contrast: var(--ion-color-hk-darkgrey-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-hk-darkgrey-contrast-rgb);
+  --ion-color-shade: var(--ion-color-hk-darkgrey-shade);
+  --ion-color-tint: var(--ion-color-hk-darkgrey-tint);
 }

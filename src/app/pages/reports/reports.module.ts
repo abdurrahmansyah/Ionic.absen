@@ -6,7 +6,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { ReportsPage } from './reports.page';
-import { NgCalendarModule } from 'ionic2-calendar'
 
 const routes: Routes = [
   {
@@ -20,9 +19,8 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
-    NgCalendarModule,
     RouterModule.forChild(routes)
   ],
   declarations: [ReportsPage]
 })
-export class ReportsPageModule {}
+export class ReportsPageModule { }

@@ -1,0 +1,20 @@
+.container {
+  // display: inline;
+  // width: 80%;
+  padding-left: 5%;
+  padding-right: 5%;
+  // background-color: green;
+  overflow: hidden;
+  white-space: nowrap;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  .scroll {
+    overflow: auto;
+  }
+}
+
+hr {
+  height: 0.75px;
+  background-color: #cecece;
+}

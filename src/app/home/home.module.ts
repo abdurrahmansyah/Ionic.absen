@@ -24,6 +24,7 @@ const routes: Routes = [
     RouterModule.forChild(routes)
   ],
   entryComponents: [ PopoverComponent ],
-  declarations: [HomePage]
+  declarations: [HomePage],
+  exports: [HomePage]
 })
 export class HomePageModule { }

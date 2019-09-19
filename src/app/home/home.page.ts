@@ -6,13 +6,11 @@ import { Component, OnInit } from '@angular/core';
 import { PopoverController, AlertController, NavController } from '@ionic/angular';
 import { PopoverComponent } from 'src/app/components/popover/popover.component';
 
-
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-
 
 export class HomePage {
 
@@ -30,7 +28,7 @@ export class HomePage {
   public txtWorkStatus: string = "Working";
   geoAccuracy: number;
 
-  constructor(public navCtrl: NavController,     public alertController: AlertController,
+  constructor(public navCtrl: NavController, public alertController: AlertController,
     public router: Router,
     public geolocation: Geolocation,
     public popoverController: PopoverController
@@ -43,7 +41,7 @@ export class HomePage {
     this.txtTimeNow = dateData.hrString + ":" + dateData.minuteString + " " + dateData.ampm;
   }
 
-  private GetDate(): DateData {
+  public GetDate(): DateData {
     var dateData = new DateData();
     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     var days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
@@ -94,7 +92,7 @@ export class HomePage {
       await alert.present();
     }
 
-  // UNCOMMEND
+    // UNCOMMEND
     // this.geolocation.getCurrentPosition({enableHighAccuracy: true}).then((position) => {
     //   this.geoLatitude = position.coords.latitude;
     //   this.geoLongitude = position.coords.longitude;
