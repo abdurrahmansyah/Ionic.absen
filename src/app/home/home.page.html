@@ -17,7 +17,7 @@
 
 <ion-content padding scroll-y=false>
   <ion-text style="font-size: 14px">Status: </ion-text>
-  <ion-text class="workStatus">{{ txtWorkStatus }}</ion-text>
+  <ion-text style="font-size: 14px ;" color = "{{warnaStatus}}" >{{ txtWorkStatus }}</ion-text>
   <!--<p>Example just hit <a target="_blank" rel="noopener" href="https://www.hutamakarya.com/id/">hutama karya</a>
     text.
   </p>-->
@@ -32,7 +32,7 @@
   <ion-grid>
     <ion-row>
       <ion-col class="ion-float-left" size="8" style="background: transparent">
-        <ion-text>Datang : {{txtTimeArrived}} {{geoLatitude}} {{geoLongitude}}</ion-text>
+        <ion-text>Datang : {{txtTimeArrived}} </ion-text>
         <br>
         <ion-text>Pulang : {{txtTimeBack}}</ion-text>
       </ion-col>
