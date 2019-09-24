@@ -75,7 +75,7 @@ export class HomePage {
     var dateData = this.GetDate();
 
     this.txtDayNow = dateData.day + ", " + dateData.date + " " + dateData.month + " " + dateData.year;
-    this.txtTimeNow = this.checkTime(dateData.hr) + ":" + this.checkTime(dateData.minute) + " " + dateData.ampm;
+    this.txtTimeNow = this.checkTime(dateData.hr) + ":" + this.checkTime(dateData.minute) + ":"  + this.checkTime(dateData.sec) + " " + dateData.ampm;
 
     // this.txtTimeNow = dateData.hrString + ":" + dateData.minuteString + " " + dateData.ampm;
   }
@@ -120,6 +120,7 @@ export class HomePage {
     dateData.year = date.getFullYear();
     dateData.month2 = date.getMonth();
     dateData.minute = date.getMinutes();
+    dateData.sec = date.getSeconds();
     dateData.minuteString = dateData.minute.toString();
     if (dateData.minute < 10) {
       dateData.minuteString = "0" + dateData.minute;
@@ -264,6 +265,7 @@ class DateData {
   public minute: number;
   public minuteString: string;
   public ampm: string;
+  public sec: number;
   month2: number;
 
   constructor() { }

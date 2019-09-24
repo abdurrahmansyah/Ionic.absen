@@ -1,0 +1,21 @@
+ion-content {
+    height: 100%;
+    .bg-img {
+    background-image: url("../../../assets/images/bg-2.png");
+    background-position: top;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    height: 50%;
+    width: 100%;
+    
+    }
+
+    form {
+        ion-card {
+            h1 {
+                text-align: center;
+            }
+        }
+        // padding: 95% 0%;
+    }
+}
