@@ -27,7 +27,8 @@ export class HomePage {
   public txtTimeNow: string;
   public txtDayNow: string;
   public inputVal: string = "variabel";
-  public txtTimeArrived: string = "";
+  public txtTimeArrived: string ;
+  public txtDate: string ;
   public txtTimeBack: string = "";
   public txtWorkStatus: string ="";
   geoAccuracy: number;
@@ -35,6 +36,7 @@ export class HomePage {
   kehadiran: any;
   warnaStatus: string;
   public buttonPropertyDatas = [];
+  error: void;
 
   constructor(public navCtrl: NavController, public alertController: AlertController,
     public router: Router,
@@ -44,23 +46,25 @@ export class HomePage {
     public popoverController: PopoverController,
     private authService: AuthenticationService
   ) {
+
     this.storage.get('username').then((nik) => {
       this.nik = nik;
+      let Data:Observable<any>;
+      var url = 'http://sihk.hutamakarya.com/apiabsen/transaksi.php';
+      var url2 = url+"?user_nik="+this.nik;
+      Data = this.http.get(url2); //+"?usernik="+this.nik
+      Data.subscribe( hasil => {
+        this.kehadiran = hasil;
+        if (this.kehadiran.error == false) {
+          this.txtTimeArrived = this.kehadiran.user.jam_datang_valid; //get api read ;
+        }else{
+          this.txtTimeArrived = "";
+        } 
+        this.statusWork();
+      });
     });
 
-    let Data:Observable<any>;
-    var url = 'http://sihk.hutamakarya.com/apiabsen/transaksi.php';
-
-    Data = this.http.get(url); //+"?usernik="+this.nik
-    Data.subscribe( hasil => {
-      this.kehadiran = hasil;
-      this.txtTimeArrived = this.kehadiran.user.jam_datang_valid; //get api read ;
-    });
-
-    this.txtTimeArrived;
-    
-    this.statusWork();
-    this.starTimer()
+    this.starTimer();
   }
 
   logout() {
@@ -89,11 +93,12 @@ export class HomePage {
 
   statusWork(){
     if (!this.txtTimeArrived) {
+      this.txtWorkStatus = "Not Working" ;
+      this.warnaStatus = "danger"; 
+    }
+    else{
       this.txtWorkStatus = "Working" ;
       this.warnaStatus = "primary";
-    }else{
-      this.txtWorkStatus = "Not Working" ;
-      this.warnaStatus = "danger";
     }
   }
 
@@ -139,6 +144,8 @@ export class HomePage {
     
     if (!this.txtTimeArrived) {
       this.txtTimeArrived = dateData.hrString + ":" + dateData.minuteString + " " + dateData.ampm;
+      this.txtDate = dateData.year+"/"+dateData.month2+"/"+dateData.day;
+
     } else if (!this.txtTimeBack) {
       this.txtTimeBack = dateData.hrString + ":" + dateData.minuteString + " " + dateData.ampm;
     } else {
@@ -180,6 +187,13 @@ export class HomePage {
     //   alert("DILUAR LOKASI ABSEN");
     //   this.presentPopover(1);
     //  }
+
+  }
+  absenhadir() {
+    // throw new Error("Method not implemented.");
+    var tanggal = this.txtDate;
+    var jamdatang= this.txtTimeArrived;
+
 
   }
 
