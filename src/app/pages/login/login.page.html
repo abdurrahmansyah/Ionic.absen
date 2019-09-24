@@ -1,38 +1,36 @@
-<ion-content padding>
-  <h1>Sign In</h1>
+<ion-content>
+<div class="bg-img" padding></div>
+    <form registerForm="ngForm" (ngSubmit)="navigateToHomePage()">
+      <ion-card mode="ios">
+        <ion-row class="ion-align-items-center">
+          <ion-col>
+            <h1>Login</h1>
+          </ion-col>
+        </ion-row>
 
-  <form registerForm="ngForm" (ngSubmit)="navigateToHomePage()">
-    <ion-row>
-      <ion-col>
-        <ion-list inset>
-          
-          <ion-item>
-            <ion-input type="text" placeholder="Username" [(ngModel)]="Username" name="Username"  required></ion-input>
-          </ion-item>
-          
-          <ion-item>
-            <ion-input type="password" placeholder="Password" [(ngModel)]="Password" name="Password" required></ion-input>
-          </ion-item>
-          
-        </ion-list>
-      </ion-col>
-    </ion-row>
-    
-    <ion-row>
-      <ion-col class="signup-col">
-        <ion-button shape="round" expand="block" color='hk-red' (click)="navigateToHomePage()" type="submit">Login</ion-button>
-      </ion-col>
-    </ion-row>
-  </form> 
-  <!-- <ion-item>
-    <ion-label position="floating">Username</ion-label>
-    <ion-input></ion-input>
-  </ion-item>
+        <ion-row class="ion-align-items-center">
+          <ion-col>
+            <ion-item>
+              <ion-input type="text" placeholder="Username" [(ngModel)]="Username" name="Username" required></ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
 
-  <ion-item>
-    <ion-label position="stacked">Password</ion-label>
-    <ion-input placeholder="Password"></ion-input>
-  </ion-item>
+        <ion-row class="ion-align-items-center">
+          <ion-col>
+            <ion-item>
+              <ion-input type="password" placeholder="Password" [(ngModel)]="Password" name="Password" required>
+              </ion-input>
+            </ion-item>
+          </ion-col>
+        </ion-row>
 
-  <ion-button shape="round" expand="block" color='hk-red' (click)="navigateToHomePage()">Login</ion-button> -->
+        <ion-row class="ion-align-items-center">
+          <ion-col class="signup-col">
+            <ion-button shape="round" expand="block" color='hk-red' (click)="navigateToHomePage()" type="submit">Login
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-card>
+    </form>
 </ion-content>
