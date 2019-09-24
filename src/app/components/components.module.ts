@@ -3,12 +3,13 @@ import { CommonModule } from '@angular/common';
 import { PopoverComponent } from './popover/popover.component';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
+import { ReportDailyComponent } from './report-daily/report-daily.component';
 
 
 
 @NgModule({
-  declarations: [PopoverComponent],
-  exports: [PopoverComponent],
+  declarations: [PopoverComponent, ReportDailyComponent],
+  exports: [PopoverComponent, ReportDailyComponent],
   imports: [
     CommonModule,
     FormsModule,

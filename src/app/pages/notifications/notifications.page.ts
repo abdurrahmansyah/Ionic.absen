@@ -9,6 +9,7 @@ import { IonSlides } from '@ionic/angular';
 export class NotificationsPage implements OnInit {
   
   @ViewChild('slides', { static: true }) slider: IonSlides;
+  segment = 0;
 
   constructor() { }
 

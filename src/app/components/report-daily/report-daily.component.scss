@@ -1,0 +1,30 @@
+ion-segment {
+  --background-color: #000000;
+  width: 80%;
+  height: 25px;
+  text-align: center;
+}
+
+ion-segment-button {
+  min-height: 25px;
+}
+
+.ion-justify-content-center {
+  padding: 5px;
+}
+
+.container {
+  // display: inline;
+  // width: 80%;
+  padding-left: 5%;
+  padding-right: 5%;
+  // background-color: green;
+  overflow: hidden;
+  white-space: nowrap;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  .scroll {
+    overflow: auto;
+  }
+}

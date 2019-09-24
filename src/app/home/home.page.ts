@@ -1,11 +1,14 @@
 //import { Component } from '@angular/core';
 //import { NavController, AlertController } from '@ionic/angular';
+import { HttpClient } from '@angular/common/http';
+import { Storage } from '@ionic/storage';
 import { Router } from '@angular/router';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { Component, OnInit } from '@angular/core';
 import { PopoverController, AlertController, NavController } from '@ionic/angular';
 import { PopoverComponent } from 'src/app/components/popover/popover.component';
 import { AuthenticationService } from './../services/authentication.service';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-home',
@@ -26,15 +29,37 @@ export class HomePage {
   public inputVal: string = "variabel";
   public txtTimeArrived: string = "";
   public txtTimeBack: string = "";
-  public txtWorkStatus: string = "Working";
+  public txtWorkStatus: string ="";
   geoAccuracy: number;
+  nik: any;
+  kehadiran: any;
+  warnaStatus: string;
+  public buttonPropertyDatas = [];
 
   constructor(public navCtrl: NavController, public alertController: AlertController,
     public router: Router,
     public geolocation: Geolocation,
+    public http: HttpClient,
+    private storage: Storage,
     public popoverController: PopoverController,
     private authService: AuthenticationService
   ) {
+    this.storage.get('username').then((nik) => {
+      this.nik = nik;
+    });
+
+    let Data:Observable<any>;
+    var url = 'http://sihk.hutamakarya.com/apiabsen/transaksi.php';
+
+    Data = this.http.get(url); //+"?usernik="+this.nik
+    Data.subscribe( hasil => {
+      this.kehadiran = hasil;
+      this.txtTimeArrived = this.kehadiran.user.jam_datang_valid; //get api read ;
+    });
+
+    this.txtTimeArrived;
+    
+    this.statusWork();
     this.starTimer()
   }
 
@@ -62,6 +87,16 @@ export class HomePage {
     this.newMethod();
   }
 
+  statusWork(){
+    if (!this.txtTimeArrived) {
+      this.txtWorkStatus = "Working" ;
+      this.warnaStatus = "primary";
+    }else{
+      this.txtWorkStatus = "Not Working" ;
+      this.warnaStatus = "danger";
+    }
+  }
+
   private newMethod() {
     setInterval(function () {
       this.ngOnInit();
@@ -78,6 +113,7 @@ export class HomePage {
     dateData.date = date.getDate();
     dateData.month = months[date.getMonth()];
     dateData.year = date.getFullYear();
+    dateData.month2 = date.getMonth();
     dateData.minute = date.getMinutes();
     dateData.sec = date.getSeconds();
     dateData.minuteString = dateData.minute.toString();
@@ -101,7 +137,7 @@ export class HomePage {
 
   async buttonAbsen() {
     var dateData = this.GetDate();
-
+    
     if (!this.txtTimeArrived) {
       this.txtTimeArrived = dateData.hrString + ":" + dateData.minuteString + " " + dateData.ampm;
     } else if (!this.txtTimeBack) {
@@ -216,6 +252,7 @@ class DateData {
   public minuteString: string;
   public ampm: string;
   public sec: number;
+  month2: number;
 
   constructor() { }
 }
