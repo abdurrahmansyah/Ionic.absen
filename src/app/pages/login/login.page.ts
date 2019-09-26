@@ -48,8 +48,6 @@ private storage: Storage,
         this.presentToast("Login Berhasil");
         this.authService.login();
 
-        
-        
         this.router.navigate(['home']);
       } 
       else { this.presentToast("Login Gagal"); }
