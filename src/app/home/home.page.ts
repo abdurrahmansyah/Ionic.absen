@@ -3,7 +3,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Storage } from '@ionic/storage';
 import { Router } from '@angular/router';
-import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { Geolocation,GeolocationOptions ,Geoposition ,PositionError } from '@ionic-native/geolocation/ngx';
 import { Component, OnInit } from '@angular/core';
 import { PopoverController, AlertController, NavController } from '@ionic/angular';
 import { PopoverComponent } from 'src/app/components/popover/popover.component';
@@ -40,6 +40,8 @@ export class HomePage {
   error: void;
   Data: Observable<any>;
   txtTimeBack2: string;
+  options : GeolocationOptions;
+  currentPos : Geoposition;
 
   constructor(public navCtrl: NavController, public alertController: AlertController,
     public router: Router,
@@ -145,13 +147,22 @@ export class HomePage {
   }
 
   async buttonAbsen() {
+      this.getUserPosition();
+      if (this.geoLatitude <= -6.24508 && this.geoLatitude >= -6.24587 && this.geoLongitude >= 106.87269 && this.geoLongitude <= 106.87379) {
+        this.verAbsen();
+      } else {
+        alert("Sorry you aren't in area");
+        // this.presentPopover(1);
+      }
+  }
+
+  async verAbsen(){
     var dateData = this.GetDate();
-    
     if (!this.txtTimeArrived) {
       this.txtTimeArrived = dateData.hrString + ":" + dateData.minuteString + " " + dateData.ampm;
       this.txtTimeArrived2 = dateData.hr+ ":" + dateData.minuteString + ":" + dateData.sec;
       this.txtDate = dateData.year+"/"+dateData.month2+"/"+dateData.date;
-      this.statusWork();
+      this.statusWork(); //method untuk  ubah status kerja
       this.absenhadir();  //method untuk push api jam datang  
     } else if (this.txtTimeBack=="") {
       this.txtTimeBack = dateData.hrString + ":" + dateData.minuteString + " " + dateData.ampm;
@@ -168,10 +179,23 @@ export class HomePage {
         buttons: ['OK', 'Cancel'],
         mode: "ios"
       });
-
       await alert.present();
     }
   }
+
+  getUserPosition(){
+    this.options = {
+        enableHighAccuracy : true
+    };
+    this.geolocation.getCurrentPosition(this.options).then((pos : Geoposition) => {
+        this.currentPos = pos;      
+        console.log(pos);
+        this.geoLatitude = pos.coords.latitude;
+        this.geoLongitude = pos.coords.longitude;
+    },(err : PositionError)=>{
+        console.log("error : " + err.message);
+    });
+}
 
   statusWork(){
     if (!this.txtTimeArrived) {

@@ -8,7 +8,8 @@ const routes: Routes = [
    { 
      path: 'home', 
      canActivate: [AuthGuard],
-     loadChildren: './home/home.module'},
+     loadChildren: './home/home.module'},  { path: 'form-request', loadChildren: './pages/form-request/form-request.module#FormRequestPageModule' },
+
 ];
 
 @NgModule({
