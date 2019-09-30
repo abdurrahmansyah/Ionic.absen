@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { NavParams } from '@ionic/angular';
+import { ActivityId } from 'src/app/services/global.service';
 
 @Component({
   selector: 'app-popover',
@@ -7,8 +9,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PopoverComponent implements OnInit {
 
-  constructor() { }
+  popoverParam: any;
+  constructor(private navParams: NavParams) { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.popoverParam = this.navParams.get('popoverParam');
+
+    if (this.popoverParam == ActivityId.AC005) {
+      console.log("lembur");
+
+    }
+  }
 
 }

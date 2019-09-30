@@ -1,0 +1,41 @@
+<hr width="90%">
+
+<ion-grid style="width: 90%" no-padding>
+  <ion-row no-padding align-items-center>
+    <ion-col size="2" no-padding style="text-align: left">
+      <ion-icon name="card" style="font-size: 50px; vertical-align: middle" color="hk-red"></ion-icon>
+    </ion-col>
+    <ion-col size="10" style="text-align: left; font-size: 16px">
+      <ion-text color="hk-darkgrey">Datang : </ion-text>
+      <ion-text color="dark">07:31 AM {{ txtTimeArrived }}</ion-text>
+      <br>
+      <ion-text color="hk-darkgrey">Pulang : </ion-text>
+      <ion-text color="dark">17:31 PM {{ txtTimeBack }}</ion-text>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+
+<hr width="90%">
+
+<ion-card *ngFor="let requestData of requestDatas">
+  <ion-item lines="none" color="transparent">
+    <ion-label>{{ requestData.szActivityName }}</ion-label>
+    <ion-button shape="round" slot="end" *ngIf="requestData.szStatusId == 'ST001'" color="hk-green">
+      {{ requestData.szStatusName }}</ion-button>
+    <ion-button shape="round" slot="end" *ngIf="requestData.szStatusId == 'ST002'" color="hk-red">
+      {{ requestData.szStatusName }}</ion-button>
+    <ion-button shape="round" slot="end" *ngIf="requestData.szStatusId == 'ST003'" color="hk-yellow">
+      {{ requestData.szStatusName }}</ion-button>
+  </ion-item>
+  <div class="ion-text-start" padding style="padding-top: 0px">
+    <ion-text>Keterangan : {{ requestData.szDesc }}</ion-text> <br>
+    <ion-text *ngIf="requestData.szActivityId != 'AC003'">Total : {{ requestData.decTotal }}</ion-text>
+    <ion-text *ngIf="requestData.szActivityId == 'AC003'">Lokasi : {{ requestData.szLocation }}</ion-text>
+  </div>
+</ion-card>
+
+<h1>Tab 1</h1>
+<br>
+
+<!-- contoh popover disini -->
+<ion-button expand="block" shape="round" color="hk-red" mode="ios" (click)="presentPopover()">ABSEN</ion-button>
