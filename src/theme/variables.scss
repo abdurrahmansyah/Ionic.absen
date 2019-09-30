@@ -5,9 +5,9 @@
 :root {
   /** hk-darkgrey **/
   --ion-color-hk-darkgrey: #4d4d4d;
-  --ion-color-hk-darkgrey-rgb: 77,77,77;
+  --ion-color-hk-darkgrey-rgb: 77, 77, 77;
   --ion-color-hk-darkgrey-contrast: #ffffff;
-  --ion-color-hk-darkgrey-contrast-rgb: 255,255,255;
+  --ion-color-hk-darkgrey-contrast-rgb: 255, 255, 255;
   --ion-color-hk-darkgrey-shade: #444444;
   --ion-color-hk-darkgrey-tint: #5f5f5f;
 
@@ -138,6 +138,14 @@
   --ion-color-light-contrast-rgb: 0, 0, 0;
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
+}
+
+.md ion-button {
+  text-transform: none;
+}
+
+.md ion-label {
+  text-transform: none;
 }
 
 .ion-color-hk-red {

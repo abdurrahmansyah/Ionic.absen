@@ -1,0 +1,14 @@
+ion-card {
+  --background: #f0f0f0;
+  box-shadow: none;
+  border-radius: 20px;
+}
+
+.ios ion-card {
+  margin-bottom: -8px;
+}
+
+hr {
+  height: 0.75px;
+  background-color: #cecece;
+}

@@ -9,53 +9,10 @@
 // }
 
 ion-segment {
-  --background-color: #000000;
   width: 80%;
   height: 25px;
-  text-align: center;
 }
 
 ion-segment-button {
   min-height: 25px;
-}
-
-.ion-justify-content-center {
-  padding: 5px;
-}
-
-.slides {
-  // padding: 140px 20px;
-  display: block;
-  // h2 {
-  //   font-size: 32px;
-  //   font-weight: bold;
-  // }
-
-  // .bottom {
-  //   position: absolute;
-  //   bottom: 80px;
-  //   left: 0px;
-  //   right: 0px;
-  // }
-}
-
-.container {
-  // display: inline;
-  // width: 80%;
-  padding-left: 5%;
-  padding-right: 5%;
-  // background-color: green;
-  overflow: hidden;
-  white-space: nowrap;
-  ::-webkit-scrollbar {
-    display: none;
-  }
-  .scroll {
-    overflow: auto;
-  }
-}
-
-hr {
-  height: 0.75px;
-  background-color: #cecece;
 }

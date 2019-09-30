@@ -21,10 +21,10 @@ export class LoginPage implements OnInit {
   constructor(private router: Router,
     public navCtrl: NavController,
     public http: HttpClient,
-private storage: Storage,
+    private storage: Storage,
     public alertController: AlertController,
     public toastController: ToastController,
-     private authService: AuthenticationService) { }
+    private authService: AuthenticationService) { }
 
   ngOnInit() {
   }
@@ -42,16 +42,19 @@ private storage: Storage,
     this.data.subscribe(data => {
       this.result = data;
       if (this.result.error == false) {
-        this.storage.set('username', this.Username);
-        this.storage.set('name', this.result.user.name);
+        this.storage.set('szUserId', this.Username);
+        this.storage.set('szFullName', this.result.user.name); // edit
+        this.storage.set('szShortName', this.result.user.name);
+        this.storage.set('szImage', this.result.user.name);
+        this.storage.set('szTitleId', this.result.user.name);
+        this.storage.set('szDivisionId', this.result.user.name);
+        this.storage.set('szSectionId', this.result.user.name);
+        this.storage.set('szToUserId', this.result.user.name);
 
         this.presentToast("Login Berhasil");
         this.authService.login();
-
-        
-        
         this.router.navigate(['home']);
-      } 
+      }
       else { this.presentToast("Login Gagal"); }
     });
   }

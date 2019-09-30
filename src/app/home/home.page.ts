@@ -1,6 +1,6 @@
 //import { Component } from '@angular/core';
 //import { NavController, AlertController } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { Component, OnInit } from '@angular/core';
 import { PopoverController, AlertController, NavController } from '@ionic/angular';
@@ -147,8 +147,13 @@ export class HomePage {
 
   }
 
-  navigateToReportPage() {
-    this.router.navigate(['reports'])
+  navigateToReportPage(indexReport: string) {
+    let navigationExtras: NavigationExtras = {
+      state: {
+        indexReport: indexReport
+      }
+    };
+    this.router.navigate(['reports'], navigationExtras);
   }
 
   navigateToNotificationsPage() {

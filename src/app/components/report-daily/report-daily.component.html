@@ -1,11 +1,12 @@
-<ion-button type="submit" float-left ion-button fill="clear" color="dark" class="btnPrev" (click)="prev()">
+<!-- BATAS ATAS -->
+<ion-button type="submit" float-left fill="clear" color="dark" class="btnPrev" (click)="prev()">
   <ion-icon name="arrow-back"></ion-icon>
 </ion-button>
-<ion-button type="submit" float-right ion-button fill="clear" color="dark" class="btnNext" (click)="next()">
+<ion-button type="submit" float-right fill="clear" color="dark" class="btnNext" (click)="next()">
   <ion-icon name="arrow-forward"></ion-icon>
 </ion-button>
 
-<ion-slides #slides (ionSlideDidChange)="slideChanged()" style="min-height: 30px">
+<ion-slides #slidesMonth (ionSlideDidChange)="slideMonthChanged()" [options]="slideOpts" style="min-height: 30px">
   <ion-slide>
     <ion-text style="padding-top: 12px">Januari {{ tahun }}</ion-text>
   </ion-slide>
@@ -46,34 +47,12 @@
 
 <div class="container">
   <div class="scroll" scrollX="true">
-    <ion-button shape="round" size="small" mode="md" fill="solid" color="success">20</ion-button>
-    <ion-button shape="round" size="small" mode="md" fill="clear" color="dark">20</ion-button>
-    <ion-button shape="round" size="small" mode="md" fill="clear" color="dark">20</ion-button>
-    <ion-button shape="round" size="small" mode="md" fill="clear" color="dark">20</ion-button>
-    <ion-button shape="round" size="small" mode="md" fill="clear" color="dark">20</ion-button>
-    <ion-button shape="round" size="small" mode="md" fill="clear" color="dark">20</ion-button>
-    <ion-button shape="round" size="small" mode="md" fill="clear" color="dark">2</ion-button>
-    <ion-button shape="round" size="small" mode="md" fill="clear" color="dark">2</ion-button>
-    <ion-button shape="round" size="small" mode="md" fill="clear" color="dark">2</ion-button>
-    <ion-button shape="round" size="small" mode="md" fill="clear" color="dark">2</ion-button>
-    <ion-button shape="round" size="small" mode="md" fill="clear" color="dark">2</ion-button>
-    <ion-button shape="round" size="small" mode="md" fill="clear" color="dark">2</ion-button>
-    <ion-button shape="round" size="small" mode="md" fill="clear" color="dark">2</ion-button>
-    <ion-button shape="round" size="small" mode="md" fill="clear" color="dark">2</ion-button>
-    <ion-button shape="round" size="small" mode="md" fill="clear" color="dark">2</ion-button>
-    <ion-button shape="round" size="small" mode="md" fill="clear" color="dark">2</ion-button>
-    <ion-button shape="round" size="small" mode="md" fill="clear" color="dark">2</ion-button>
-    <ion-button shape="round" size="small" mode="md" fill="clear" color="dark">2</ion-button>
-    <ion-button shape="round" size="small" mode="md" fill="clear" color="dark">2</ion-button>
-    <ion-button shape="round" size="small" mode="md" fill="clear" color="dark">2</ion-button>
-    <ion-button shape="round" size="small" mode="md" fill="clear" color="dark">2</ion-button>
-    <ion-button shape="round" size="small" mode="md" fill="clear" color="dark">2</ion-button>
-    <ion-button shape="round" size="small" mode="md" fill="clear" color="dark">2</ion-button>
-    <ion-button shape="round" size="small" mode="md" fill="clear" color="dark">2</ion-button>
-    <ion-button shape="round" size="small" mode="md" fill="clear" color="dark">2</ion-button>
-    <ion-button shape="round" size="small" mode="md" fill="clear" color="dark">2</ion-button>
-    <ion-button shape="round" size="small" mode="md" fill="clear" color="dark">2</ion-button>
-    <ion-button shape="round" size="small" mode="md" fill="clear" color="dark">2</ion-button>
-    <ion-button shape="round" size="small" mode="md" fill="clear" color="dark">2</ion-button>
+    <span *ngFor="let buttonPropertyData of buttonPropertyDatas">
+      <ion-button shape="round" size="small" fill="{{ buttonPropertyData.fill }}" color="{{ buttonPropertyData.color }}"
+        (click)="GetDayData(buttonPropertyData.date)">
+        {{ buttonPropertyData.date }}
+      </ion-button>
+    </span>
   </div>
 </div>
+<!-- BATAS BAWAH -->
