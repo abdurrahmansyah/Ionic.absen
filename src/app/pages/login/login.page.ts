@@ -53,6 +53,7 @@ export class LoginPage implements OnInit {
 
         this.presentToast("Login Berhasil");
         this.authService.login();
+
         this.router.navigate(['home']);
       }
       else { this.presentToast("Login Gagal"); }
