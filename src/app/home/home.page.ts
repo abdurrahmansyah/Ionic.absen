@@ -168,7 +168,7 @@ export class HomePage {
         //mengarahkan ke component form-terlambat
         let navigationExtras: NavigationExtras = {
           state: {
-            indexForm: ActivityId.AC002 == "true" ;
+            indexForm: ActivityId.AC002 == "true" 
           }
         }
         this.router.navigate(['form-request', navigationExtras])
