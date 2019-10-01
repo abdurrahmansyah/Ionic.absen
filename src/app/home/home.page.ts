@@ -4,7 +4,7 @@ import { Router, NavigationExtras } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Storage } from '@ionic/storage';
 
-import { Geolocation,GeolocationOptions ,Geoposition ,PositionError } from '@ionic-native/geolocation/ngx';
+import { Geolocation, GeolocationOptions, Geoposition, PositionError } from '@ionic-native/geolocation/ngx';
 import { Component, OnInit } from '@angular/core';
 import { PopoverController, AlertController, NavController } from '@ionic/angular';
 import { PopoverComponent } from 'src/app/components/popover/popover.component';
@@ -28,21 +28,20 @@ export class HomePage {
   public txtTimeNow: string;
   public txtDayNow: string;
   public inputVal: string = "variabel";
-  public txtTimeArrived: string ;
-  public txtTimeArrived2: string ;
-  public txtDate: string ;
+  public txtTimeArrived: string;
+  public txtTimeArrived2: string;
+  public txtDate: string;
   public txtTimeBack: string = "";
-  public txtWorkStatus: string ="";
+  public txtWorkStatus: string = "";
   geoAccuracy: number;
-  nik: any;
+  szUserId: any;
   kehadiran: any;
-  warnaStatus: string;
+  colorStatus: string;
   public buttonPropertyDatas = [];
   error: void;
-  Data: Observable<any>;
   txtTimeBack2: string;
-  options : GeolocationOptions;
-  currentPos : Geoposition;
+  options: GeolocationOptions;
+  currentPos: Geoposition;
 
   constructor(public navCtrl: NavController, public alertController: AlertController,
     public router: Router,
@@ -52,62 +51,48 @@ export class HomePage {
     public popoverController: PopoverController,
     private authService: AuthenticationService
   ) {
-    this.GetNik();
+    this.GetUserId();
+    this.GetTimeWorkingAndStatusUser();
     this.Timer();
   }
 
- async GetNik() {
-
-   //Fungsi untuk mengambil NIK pada local storage
-   await this.storage.get('username').then((nik) => {
-      this.nik = nik;
-   });
-
-      //Fungsi untuk menlakukan setup pengambilan api
-      var url = 'http://sihk.hutamakarya.com/apiabsen/transaksi.php';
-      var url2 = url + "?user_nik=" + this.nik;
-      this.Data = this.http.get(url2); 
-      this.Data.subscribe(hasil => {
-        this.kehadiran = hasil;
-        if (this.kehadiran.error == false) {
-          this.txtTimeArrived = this.kehadiran.user.jam_datang_valid; //get api read jam datang 
-          this.txtTimeBack = this.kehadiran.user.jam_pulang_valid; //get api read jam pulang
-        }
-        else {
-          this.txtTimeArrived = "";
-          this.txtTimeBack = "";
-        }
-
-        //If Statement untuk dilanjutan ke method statuswork()
-        if(this.txtTimeBack=="00:00:00"){
-          this.txtTimeBack= "";
-        }else{
-          this.txtTimeBack = this.txtTimeBack;
-        }
-
-        //method untuk mengubah status kerja
-        this.statusWork();
-      });
+  async GetUserId() {
+    //Fungsi untuk mengambil UserId pada local storage
+    await this.storage.get('szUserId').then((szUserId) => {
+      this.szUserId = szUserId;
+    });
   }
 
-  logout() {
-    this.authService.logout();
+  GetTimeWorkingAndStatusUser() {
+    //Fungsi untuk melakukan setup pengambilan api
+    var url = 'http://sihk.hutamakarya.com/apiabsen/transaksi.php';
+    var data:Observable<any> = this.http.get(url + "?user_nik=" + this.szUserId);
+    data.subscribe(hasil => {
+      this.kehadiran = hasil;
+      if (this.kehadiran.error == false) {
+        var timeValidArrived = this.kehadiran.user.jam_datang_valid.split(':'); //get api read jam datang
+        var { hour, minute, ampm } = this.ConvertTimeToViewFormat(timeValidArrived);
+        this.txtTimeArrived = hour + ":" + minute + " " + ampm;
+
+        var timeValidBack = this.kehadiran.user.jam_pulang_valid.split(':'); //get api read jam pulang 
+        var { hour, minute, ampm } = this.ConvertTimeToViewFormat(timeValidBack);
+        this.txtTimeBack = hour == 0 && minute == 0 ? "" : hour + ":" + minute + " " + ampm;
+      }
+      else {
+        this.txtTimeArrived = "";
+        this.txtTimeBack = "";
+      }
+
+      //Method untuk mengubah status kerja
+      this.SetStatusWork();
+    });
   }
 
-  ngOnInit() {
-    var dateData = this.GetDate();
-
-    this.txtDayNow = dateData.day + ", " + dateData.date + " " + dateData.month + " " + dateData.year;
-    this.txtTimeNow = this.checkTime(dateData.hr) + ":" + this.checkTime(dateData.minute) + ":"  + this.checkTime(dateData.sec) + " " + dateData.ampm;
-
-    // this.txtTimeNow = dateData.hrString + ":" + dateData.minuteString + " " + dateData.ampm;
-  }
-
-  checkTime(i) {
-    if (i < 10) {
-      i = "0" + i;
-    }
-    return i;
+  private ConvertTimeToViewFormat(timeFromDb: any) {
+    var hour = timeFromDb[0] < 10 && timeFromDb[0] != 0 ? "0" + timeFromDb[0] : timeFromDb[0];
+    var minute = timeFromDb[1] < 10 && timeFromDb[1] != 0 ? "0" + timeFromDb[1] : timeFromDb[1];
+    var ampm = timeFromDb[2] > 12 ? "PM" : "AM";
+    return { hour, minute, ampm };
   }
 
   private Timer() {
@@ -116,62 +101,66 @@ export class HomePage {
     }.bind(this), 500);
   }
 
+  ngOnInit() {
+    var dateData = this.GetDate();
+
+    this.txtDayNow = dateData.szDay + ", " + dateData.decDate + " " + dateData.decMonth + " " + dateData.decYear;
+    this.txtTimeNow = this.CheckTime(dateData.decHour) + ":" + this.CheckTime(dateData.decMinute) + ":" + this.CheckTime(dateData.decSec) + " " + dateData.szAMPM;
+  }
+
   private GetDate(): DateData {
     var dateData = new DateData();
     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     var days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
     var date = new Date();
 
-    dateData.day = days[date.getDay()];
-    dateData.date = date.getDate();
-    dateData.month = months[date.getMonth()];
-    dateData.year = date.getFullYear();
-    dateData.month2 = date.getMonth() + 1;
-    dateData.minute = date.getMinutes();
-    dateData.sec = date.getSeconds();
-    dateData.minuteString = dateData.minute.toString();
-    if (dateData.minute < 10) {
-      dateData.minuteString = "0" + dateData.minute;
-    }
-    dateData.hr = date.getHours();
-    var hr = dateData.hr;
-    dateData.ampm = "AM";
-    if (dateData.hr > 12) {
-      hr -= 12;
-      dateData.ampm = "PM";
-    }
-    dateData.hrString = hr.toString();
-    if (hr < 10) {
-      dateData.hrString = "0" + hr;
-    }
+    dateData.decYear = date.getFullYear();
+    dateData.decMonth = months[date.getMonth()];
+    dateData.decMonth2 = date.getMonth() + 1;
+    dateData.decDate = date.getDate();
+    dateData.szDay = days[date.getDay()];
+    dateData.decMinute = date.getMinutes();
+    dateData.szMinute = dateData.decMinute < 10 ? "0" + dateData.decMinute : dateData.decMinute.toString();
+    dateData.decHour = date.getHours();
+    dateData.szHour = dateData.decHour < 10 ? "0" + dateData.decHour : dateData.decHour.toString();
+    dateData.decSec = date.getSeconds();
+    dateData.szAMPM = dateData.decHour > 12 ? "PM" : "AM";
+
     return dateData;
   }
 
-  async buttonAbsen() {
-      this.getUserPosition();
-      if (this.geoLatitude <= -6.24508 && this.geoLatitude >= -6.24587 && this.geoLongitude >= 106.87269 && this.geoLongitude <= 106.87379) {
-        this.verAbsen();
-      } else {
-        alert("Sorry you aren't in area");
-        // this.presentPopover(1);
-      }
+  CheckTime(i: any) {
+    if (i < 10) {
+      i = "0" + i;
+    }
+    return i;
   }
 
-  async verAbsen(){
+  async ButtonAbsen() {
+    this.GetUserPosition();
+    if (this.geoLatitude <= -6.24508 && this.geoLatitude >= -6.24587 && this.geoLongitude >= 106.87269 && this.geoLongitude <= 106.87379) {
+      this.verAbsen();
+    } else {
+      alert("Sorry you aren't in area");
+      // this.presentPopover(1);
+    }
+  }
+
+  async verAbsen() {
     var dateData = this.GetDate();
     if (!this.txtTimeArrived) {
-      this.txtTimeArrived = dateData.hrString + ":" + dateData.minuteString + " " + dateData.ampm;
-      this.txtTimeArrived2 = dateData.hr+ ":" + dateData.minuteString + ":" + dateData.sec;
-      this.txtDate = dateData.year+"/"+dateData.month2+"/"+dateData.date;
-      this.statusWork(); //method untuk  ubah status kerja
-      this.absenhadir();  //method untuk push api jam datang  
-    } else if (this.txtTimeBack=="") {
-      this.txtTimeBack = dateData.hrString + ":" + dateData.minuteString + " " + dateData.ampm;
-      this.txtTimeBack2 = dateData.hr+ ":" + dateData.minuteString + ":" + dateData.sec;
-      this.statusWork();
+      this.txtTimeArrived = dateData.szHour + ":" + dateData.szMinute + " " + dateData.szAMPM;
+      this.txtTimeArrived2 = dateData.decHour + ":" + dateData.szMinute + ":" + dateData.decSec;
+      this.txtDate = dateData.decYear + "/" + dateData.decMonth2 + "/" + dateData.decDate;
+      this.SetStatusWork(); //method untuk ubah status kerja
+      this.absenhadir();  //method untuk push api jam datang 
+    } else if (this.txtTimeBack == "") {
+      this.txtTimeBack = dateData.szHour + ":" + dateData.szMinute + " " + dateData.szAMPM;
+      this.txtTimeBack2 = dateData.decHour + ":" + dateData.szMinute + ":" + dateData.decSec;
+      this.SetStatusWork();
       this.absenpulang(); //method untuk push api jam pulang
     } else {
-      this.statusWork();
+      this.SetStatusWork();
       const alert = await this.alertController.create({
         header: 'Alert',
         subHeader: '',
@@ -184,32 +173,32 @@ export class HomePage {
     }
   }
 
-  getUserPosition(){
+  GetUserPosition() {
     this.options = {
-        enableHighAccuracy : true
+      enableHighAccuracy: true
     };
-    this.geolocation.getCurrentPosition(this.options).then((pos : Geoposition) => {
-        this.currentPos = pos;      
-        console.log(pos);
-        this.geoLatitude = pos.coords.latitude;
-        this.geoLongitude = pos.coords.longitude;
-    },(err : PositionError)=>{
-        console.log("error : " + err.message);
+    this.geolocation.getCurrentPosition(this.options).then((pos: Geoposition) => {
+      this.currentPos = pos;
+      console.log(pos);
+      this.geoLatitude = pos.coords.latitude;
+      this.geoLongitude = pos.coords.longitude;
+    }, (err: PositionError) => {
+      console.log("error : " + err.message);
     });
-}
+  }
 
-  statusWork(){
+  SetStatusWork() {
     if (!this.txtTimeArrived) {
-      this.txtWorkStatus = "Not Working" ;
-      this.warnaStatus = "danger";
+      this.txtWorkStatus = "Not Working";
+      this.colorStatus = "danger";
     }
-    else{
-      if(this.txtTimeBack==""){
-        this.txtWorkStatus = "Working" ;
-        this.warnaStatus = "primary";  
-      }else{
-        this.txtWorkStatus = "Not Working" ;
-        this.warnaStatus = "danger";
+    else {
+      if (this.txtTimeBack == "") {
+        this.txtWorkStatus = "Working";
+        this.colorStatus = "primary";
+      } else {
+        this.txtWorkStatus = "Not Working";
+        this.colorStatus = "danger";
       }
     }
   }
@@ -217,13 +206,13 @@ export class HomePage {
   absenhadir() {
     // throw new Error("Method not implemented.");
     var tanggal = this.txtDate;
-    var jamdatang= this.txtTimeArrived2;
-    if(!this.txtTimeBack){
-      var jamplg= "00:00:00";  
-    }else{
-      var jamplg= this.txtTimeBack;
+    var jamdatang = this.txtTimeArrived2;
+    if (!this.txtTimeBack) {
+      var jamplg = "00:00:00";
+    } else {
+      var jamplg = this.txtTimeBack;
     }
-    var nik = this.nik;
+    var nik = this.szUserId;
 
     let postdata = new FormData();
     postdata.append('user_nik', nik);
@@ -234,8 +223,8 @@ export class HomePage {
     postdata.append('tanggal', tanggal);
 
     var url = 'http://sihk.hutamakarya.com/apiabsen/absendatang.php';
-    this.Data = this.http.post(url, postdata);
-    this.Data.subscribe(hasil => {
+    var data:Observable<any> = this.http.post(url, postdata);
+    data.subscribe(hasil => {
       this.kehadiran = hasil;
     });
   }
@@ -243,13 +232,13 @@ export class HomePage {
   absenpulang() {
     // throw new Error("Method not implemented.");
     var tanggal = this.txtDate;
-    var jamdatang= this.txtTimeArrived2;
-    if(!this.txtTimeBack){
-      var jamplg= "00:00";  
-    }else{
-      var jamplg= this.txtTimeBack2 ;
+    var jamdatang = this.txtTimeArrived2;
+    if (!this.txtTimeBack) {
+      var jamplg = "00:00";
+    } else {
+      var jamplg = this.txtTimeBack2;
     }
-    var nik = this.nik;
+    var nik = this.szUserId;
 
     let postdata = new FormData();
     postdata.append('user_nik', nik);
@@ -260,11 +249,16 @@ export class HomePage {
     postdata.append('tanggal', tanggal);
 
     var url = 'http://sihk.hutamakarya.com/apiabsen/absenpulang.php';
-    this.Data = this.http.post(url, postdata);
-    this.Data.subscribe(hasil => {
+    var data:Observable<any> = this.http.post(url, postdata);
+    data.subscribe(hasil => {
       this.kehadiran = hasil;
     });
   }
+
+  Logout() {
+    this.authService.logout();
+  }
+
   navigateToReportPage(indexReport: string) {
     let navigationExtras: NavigationExtras = {
       state: {
@@ -272,7 +266,6 @@ export class HomePage {
       }
     };
     this.router.navigate(['reports'], navigationExtras);
-
   }
 
   navigateToNotificationsPage() {
@@ -329,17 +322,17 @@ export class HomePage {
 }
 
 class DateData {
-  public day: string;
-  public date: number;
-  public month: string;
-  public year: number;
-  public hr: number;
-  public hrString: string;
-  public minute: number;
-  public minuteString: string;
-  public ampm: string;
-  public sec: number;
-  month2: number;
+  public szDay: string;
+  public decDate: number;
+  public decMonth: string;
+  public decYear: number;
+  public decHour: number;
+  public szHour: string;
+  public decMinute: number;
+  public szMinute: string;
+  public szAMPM: string;
+  public decSec: number;
+  decMonth2: number;
   day2: number;
 
   constructor() { }

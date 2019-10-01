@@ -11,8 +11,8 @@ import { ReportDaily2Component } from './report-daily2/report-daily2.component';
 
 
 @NgModule({
-  declarations: [PopoverComponent, ReportDailyComponent, ReportDaily2Component, ReportMonthlyComponent, FormLemburComponen],
-  exports: [PopoverComponent, ReportDailyComponent, ReportDaily2Component, ReportMonthlyComponent, FormLemburComponen],
+  declarations: [PopoverComponent, ReportDailyComponent, ReportDaily2Component, ReportMonthlyComponent, FormLemburComponent],
+  exports: [PopoverComponent, ReportDailyComponent, ReportDaily2Component, ReportMonthlyComponent, FormLemburComponent],
   imports: [
     CommonModule,
     FormsModule,
