@@ -7,12 +7,14 @@ import { ReportDailyComponent } from './report-daily/report-daily.component';
 import { FormLemburComponent } from './form-lembur/form-lembur.component';
 import { ReportMonthlyComponent } from './report-monthly/report-monthly.component';
 import { ReportDaily2Component } from './report-daily2/report-daily2.component';
+import { FormTerlambatComponent } from './form-terlambat/form-terlambat.component';
+import { FormPulangCepatComponent } from './form-pulang-cepat/form-pulang-cepat.component';
 
 
 
 @NgModule({
-  declarations: [PopoverComponent, ReportDailyComponent, ReportDaily2Component, ReportMonthlyComponent, FormLemburComponent],
-  exports: [PopoverComponent, ReportDailyComponent, ReportDaily2Component, ReportMonthlyComponent, FormLemburComponent],
+  declarations: [PopoverComponent, ReportDailyComponent, ReportDaily2Component, ReportMonthlyComponent, FormLemburComponent , FormTerlambatComponent, FormPulangCepatComponent],
+  exports: [PopoverComponent, ReportDailyComponent, ReportDaily2Component, ReportMonthlyComponent, FormLemburComponent , FormTerlambatComponent , FormPulangCepatComponent],
   imports: [
     CommonModule,
     FormsModule,

@@ -10,6 +10,7 @@ import { PopoverController, AlertController, NavController } from '@ionic/angula
 import { PopoverComponent } from 'src/app/components/popover/popover.component';
 import { AuthenticationService } from './../services/authentication.service';
 import { Observable } from 'rxjs/Observable';
+import { GlobalService, ActivityId } from '../services/global.service';
 
 @Component({
   selector: 'app-home',
@@ -29,7 +30,7 @@ export class HomePage {
   public txtDayNow: string;
   public inputVal: string = "variabel";
   public txtTimeArrived: string;
-  public txtTimeArrived2: string;
+  public timeArived: string;
   public txtDate: string;
   public txtTimeBack: string = "";
   public txtWorkStatus: string = "";
@@ -39,7 +40,7 @@ export class HomePage {
   colorStatus: string;
   public buttonPropertyDatas = [];
   error: void;
-  txtTimeBack2: string;
+  timeBack: string;
   options: GeolocationOptions;
   currentPos: Geoposition;
 
@@ -49,7 +50,8 @@ export class HomePage {
     public http: HttpClient,
     private storage: Storage,
     public popoverController: PopoverController,
-    private authService: AuthenticationService
+    private authService: AuthenticationService,
+    private globalService: GlobalService
   ) {
     this.GetUserId();
     this.GetTimeWorkingAndStatusUser();
@@ -152,13 +154,61 @@ export class HomePage {
       this.txtTimeArrived = dateData.szHour + ":" + dateData.szMinute + " " + dateData.szAMPM;
       this.txtTimeArrived2 = dateData.decHour + ":" + dateData.szMinute + ":" + dateData.decSec;
       this.txtDate = dateData.decYear + "/" + dateData.decMonth2 + "/" + dateData.decDate;
-      this.SetStatusWork(); //method untuk ubah status kerja
-      this.absenhadir();  //method untuk push api jam datang 
-    } else if (this.txtTimeBack == "") {
-      this.txtTimeBack = dateData.szHour + ":" + dateData.szMinute + " " + dateData.szAMPM;
-      this.txtTimeBack2 = dateData.decHour + ":" + dateData.szMinute + ":" + dateData.decSec;
-      this.SetStatusWork();
-      this.absenpulang(); //method untuk push api jam pulang
+      this.SetStatusWork(); //method untuk ubah status kerja // CEK
+      this.absenhadir();  //method untuk push api jam datang // CEK
+    } else if (this.txtTimeBack == "") {// CEK
+      this.txtTimeBack = dateData.szHour + ":" + dateData.szMinute + " " + dateData.szAMPM;// CEK
+      this.txtTimeBack2 = dateData.decHour + ":" + dateData.szMinute + ":" + dateData.decSec;// CEK
+      this.SetStatusWork();// CEK
+      this.absenpulang(); //method untuk push api jam pulang// CEK
+      
+      if(this.timeArived > "08:10:00"){
+        console.log("masuk");
+        
+        //mengarahkan ke component form-terlambat
+        let navigationExtras: NavigationExtras = {
+          state: {
+            indexForm: ActivityId.AC002 == "true" ;
+          }
+        }
+        this.router.navigate(['form-request', navigationExtras])
+
+      }else{
+        this.statusWork(); //method untuk  ubah status kerja
+        this.absenhadir();  //method untuk push api jam datang
+      }
+
+    }else if (this.txtTimeBack=="") {
+      this.txtTimeBack = dateData.hrString + ":" + dateData.minuteString + " " + dateData.ampm;
+      this.timeBack = dateData.hr+ ":" + dateData.minuteString + ":" + dateData.sec;
+      
+      
+      if(this.timeBack <  "17:00:00"){
+        //mengarahkan ke component form-pulang-cepat
+        let navigationExtras: NavigationExtras = {
+          state: {
+            indexForm: ActivityId.AC004 == "true"
+          }
+        }
+        this.router.navigate(['form-request', navigationExtras])
+        
+      }else if(this.timeBack > "17:45:00"){
+        
+        //mengarahkan ke component form-lembur
+        let navigationExtras: NavigationExtras = {
+          state: {
+            indexForm: ActivityId.AC005 == "true"
+          }
+        }
+        this.router.navigate(['form-request', navigationExtras])
+
+      }else{
+        this.statusWork(); //method untuk  ubah status kerja
+        this.absenhadir();  //method untuk push api jam datang
+      }
+      // this.statusWork();
+      // this.absenhadir();
+
     } else {
       this.SetStatusWork();
       const alert = await this.alertController.create({
@@ -206,11 +256,13 @@ export class HomePage {
   absenhadir() {
     // throw new Error("Method not implemented.");
     var tanggal = this.txtDate;
-    var jamdatang = this.txtTimeArrived2;
-    if (!this.txtTimeBack) {
-      var jamplg = "00:00:00";
-    } else {
-      var jamplg = this.txtTimeBack;
+    var jamdatang= this.timeArived;
+    if(!this.txtTimeBack){
+      var jamplg= "00:00:00";
+      var url = 'http://sihk.hutamakarya.com/apiabsen/absendatang.php';  
+    }else{
+      var jamplg= this.timeBack;
+      var url = 'http://sihk.hutamakarya.com/apiabsen/absenpulang.php';
     }
     var nik = this.szUserId;
 
@@ -222,38 +274,39 @@ export class HomePage {
     postdata.append('jamplgvld', jamplg);
     postdata.append('tanggal', tanggal);
 
-    var url = 'http://sihk.hutamakarya.com/apiabsen/absendatang.php';
+    // var url = 'http://sihk.hutamakarya.com/apiabsen/absendatang.php';
     var data:Observable<any> = this.http.post(url, postdata);
     data.subscribe(hasil => {
       this.kehadiran = hasil;
     });
   }
 
-  absenpulang() {
-    // throw new Error("Method not implemented.");
-    var tanggal = this.txtDate;
-    var jamdatang = this.txtTimeArrived2;
-    if (!this.txtTimeBack) {
-      var jamplg = "00:00";
-    } else {
-      var jamplg = this.txtTimeBack2;
-    }
-    var nik = this.szUserId;
+  // absenpulang() {
+  //   // throw new Error("Method not implemented.");
+  //   var tanggal = this.txtDate;
+  //   var jamdatang= this.txtTimeArrived2;
+  //   if(!this.txtTimeBack){
+  //     var jamplg= "00:00";  
+  //   }else{
+  //     var jamplg= this.txtTimeBack2 ;
+  //   }
+  //   var nik = this.nik;
 
-    let postdata = new FormData();
-    postdata.append('user_nik', nik);
-    postdata.append('jamdt', jamdatang);
-    postdata.append('jamdtvld', jamdatang);
-    postdata.append('jamplg', jamplg);
-    postdata.append('jamplgvld', jamplg);
-    postdata.append('tanggal', tanggal);
+  //   let postdata = new FormData();
+  //   postdata.append('user_nik', nik);
+  //   postdata.append('jamdt', jamdatang);
+  //   postdata.append('jamdtvld', jamdatang);
+  //   postdata.append('jamplg', jamplg);
+  //   postdata.append('jamplgvld', jamplg);
+  //   postdata.append('tanggal', tanggal);
 
-    var url = 'http://sihk.hutamakarya.com/apiabsen/absenpulang.php';
-    var data:Observable<any> = this.http.post(url, postdata);
-    data.subscribe(hasil => {
-      this.kehadiran = hasil;
-    });
-  }
+  //   var url = 'http://sihk.hutamakarya.com/apiabsen/absenpulang.php';
+  //   this.Data = this.http.post(url, postdata);
+  //   this.Data.subscribe(hasil => {
+  //     this.kehadiran = hasil;
+  //   });
+  // }
+
 
   Logout() {
     this.authService.logout();

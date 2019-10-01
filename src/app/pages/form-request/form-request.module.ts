@@ -8,6 +8,8 @@ import { IonicModule } from '@ionic/angular';
 import { FormRequestPage } from './form-request.page';
 import { ComponentsModule } from 'src/app/components/components.module';
 import { FormLemburComponent } from 'src/app/components/form-lembur/form-lembur.component';
+import { FormTerlambatComponent } from 'src/app/components/form-terlambat/form-terlambat.component';
+import { FormPulangCepatComponent } from 'src/app/components/form-pulang-cepat/form-pulang-cepat.component';
 
 const routes: Routes = [
   {
@@ -24,6 +26,6 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     ComponentsModule
   ],
-  declarations: [FormRequestPage] , entryComponents: [FormLemburComponent]
+  declarations: [FormRequestPage] , entryComponents: [FormLemburComponent, FormTerlambatComponent, FormPulangCepatComponent]
 })
 export class FormRequestPageModule {}

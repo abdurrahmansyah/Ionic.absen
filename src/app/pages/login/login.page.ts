@@ -42,7 +42,7 @@ export class LoginPage implements OnInit {
     this.data.subscribe(data => {
       this.result = data;
       if (this.result.error == false) {
-        this.storage.set('szUserId', this.Username);
+        this.storage.set('username', this.Username);
         this.storage.set('szFullName', this.result.user.name); // edit
         this.storage.set('szShortName', this.result.user.name);
         this.storage.set('szImage', this.result.user.name);
