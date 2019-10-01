@@ -1,6 +1,11 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>formRequest</ion-title>
+  <ion-toolbar color="hk-red">
+    <ion-buttons slot="start">
+      <ion-back-button color="hk-white-red"></ion-back-button>
+    </ion-buttons>
+    <ion-title *ngIf="AC005">form-lembur</ion-title>
+    <ion-title *ngIf="AC002">form-terlambat</ion-title>
+    <ion-title *ngIf="AC004">form-pulang-cepat</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -12,7 +17,6 @@
     <app-form-terlambat></app-form-terlambat>
   </div>
   <div *ngIf="AC004">
-      <app-form-pulang-cepat></app-form-pulang-cepat>
-    </div>
-
+    <app-form-pulang-cepat></app-form-pulang-cepat>
+  </div>
 </ion-content>

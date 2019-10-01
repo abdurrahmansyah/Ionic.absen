@@ -26,6 +26,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     ComponentsModule
   ],
-  declarations: [FormRequestPage] , entryComponents: [FormLemburComponent, FormTerlambatComponent, FormPulangCepatComponent]
+  entryComponents: [FormLemburComponent, FormTerlambatComponent, FormPulangCepatComponent],
+  declarations: [FormRequestPage]
 })
-export class FormRequestPageModule {}
+export class FormRequestPageModule { }

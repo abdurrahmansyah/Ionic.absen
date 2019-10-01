@@ -149,7 +149,7 @@ export class HomePage {
     // }
   }
 
-  GetUserPosition() {
+  private GetUserPosition() {
     this.options = {
       enableHighAccuracy: true
     };
@@ -171,21 +171,19 @@ export class HomePage {
       this.txtDate = dateData.decYear + "/" + dateData.decMonth2 + "/" + dateData.decDate;
 
       if (this.timeArived > "08:10:00") {
-        console.log("masuk");
-
         //mengarahkan ke component form-terlambat
         let navigationExtras: NavigationExtras = {
           state: {
-            indexForm: ActivityId.AC002 == "true"
+            indexForm: ActivityId.AC002
           }
         }
-        this.router.navigate(['form-request', navigationExtras])
-      } 
+        this.router.navigate(['form-request'], navigationExtras);
+      }
       else {
         this.SetStatusWork(); //method untuk  ubah status kerja
         this.DoingAbsen();  //method untuk push api jam datang
       }
-    } 
+    }
     else if (this.txtTimeBack == "") {
       this.txtTimeBack = dateData.szHour + ":" + dateData.szMinute + " " + dateData.szAMPM;// CEK
       this.timeBack = dateData.decHour + ":" + dateData.szMinute + ":" + dateData.decSec;// CEK
@@ -193,25 +191,25 @@ export class HomePage {
         //mengarahkan ke component form-pulang-cepat
         let navigationExtras: NavigationExtras = {
           state: {
-            indexForm: ActivityId.AC004 == "true"
+            indexForm: ActivityId.AC004
           }
         }
-        this.router.navigate(['form-request', navigationExtras])
-      } 
+        this.router.navigate(['form-request'], navigationExtras);
+      }
       else if (this.timeBack > "17:45:00") {
         //mengarahkan ke component form-lembur
         let navigationExtras: NavigationExtras = {
           state: {
-            indexForm: ActivityId.AC005 == "true"
+            indexForm: ActivityId.AC005
           }
         }
-        this.router.navigate(['form-request', navigationExtras])
-      } 
+        this.router.navigate(['form-request'], navigationExtras);
+      }
       else {
         this.SetStatusWork(); //method untuk  ubah status kerja
         this.DoingAbsen();  //method untuk push api jam datang
       }
-    } 
+    }
     else {
       this.SetStatusWork();
       const alert = await this.alertController.create({

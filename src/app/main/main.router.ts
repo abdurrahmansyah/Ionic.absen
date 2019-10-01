@@ -24,6 +24,12 @@ const routes: Routes = [
                 loadChildren: () => import('../pages/reports/reports.module').then(
                     m => m.ReportsPageModule
                 )
+            },
+            {
+                path: 'form-request',
+                loadChildren: () => import('../pages/form-request/form-request.module').then(
+                    m => m.FormRequestPageModule
+                )
             }
         ]
     }
