@@ -1,10 +1,35 @@
 <ion-card>
   <ion-card-header>
     <ion-card-subtitle>Form Terlambat</ion-card-subtitle>
-    <ion-card-title>terlambat</ion-card-title>
+    <!-- <ion-card-title>terlambat</ion-card-title> -->
   </ion-card-header>
 
   <ion-card-content>
-    Terlambat
+    <!-- Form Terlambat
+     -->
+    <ion-col>
+      <ion-item>
+        <!-- <ion-input type="text" placeholder="Jam Datang" [(ngModel)]="timeArrived" name="timeArrived" required>}</ion-input>
+         -->
+         {{txtTimeNow}}
+      </ion-item>
+    </ion-col>
+
+
+    <ion-col>
+      <ion-item>
+        <ion-input type="text" placeholder="Alasan Terlambat" [(ngModel)]="szDesc" name="szDesc" required></ion-input>
+      </ion-item>
+    </ion-col>
+
+    
   </ion-card-content>
+
+  <ion-row class="ion-align-items-center">
+    <ion-col class="signup-col">
+      <ion-button shape="round" expand="block" color='hk-red' (click)="submitLate()" type="submit">Submit
+      </ion-button>
+    </ion-col>
+  </ion-row>
+  
 </ion-card>

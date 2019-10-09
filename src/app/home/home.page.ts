@@ -55,7 +55,6 @@ export class HomePage {
     private globalService: GlobalService
   ) {
     this.GetUserId();
-    this.GetTimeWorkingAndStatusUser();
     this.Timer();
   }
 
@@ -64,12 +63,15 @@ export class HomePage {
     await this.storage.get('szUserId').then((szUserId) => {
       this.szUserId = szUserId;
     });
+    this.GetTimeWorkingAndStatusUser();
   }
 
-  private GetTimeWorkingAndStatusUser() {
-    //Fungsi untuk melakukan setup pengambilan api
+  async GetTimeWorkingAndStatusUser() {
+      //Fungsi untuk melakukan setup pengambilan api
     var url = 'http://sihk.hutamakarya.com/apiabsen/transaksi.php';
-    var data: Observable<any> = this.http.get(url + "?user_nik=" + this.szUserId);
+    var data: Observable<any> = this.http.get(url + "?szUserId=" + this.szUserId );
+    console.log("bla"+this.szUserId );
+    
     data.subscribe(hasil => {
       this.kehadiran = hasil;
       if (this.kehadiran.error == false) {
@@ -105,6 +107,7 @@ export class HomePage {
   }
 
   ngOnInit() {
+    
     var dateData = this.GetDate();
 
     this.txtDayNow = dateData.szDay + ", " + dateData.decDate + " " + dateData.decMonth + " " + dateData.decYear;
@@ -142,6 +145,8 @@ export class HomePage {
   async ButtonAbsen() {
     this.GetUserPosition();
     this.ValidateAbsen();
+    this.storage.set('saveTimeArrived', this.timeArived);
+    this.storage.set('saveTimeBack',this.timeBack);
     // if (this.geoLatitude <= -6.24508 && this.geoLatitude >= -6.24587 && this.geoLongitude >= 106.87269 && this.geoLongitude <= 106.87379) {
     //   this.ValidateAbsen();
     // } else {
@@ -149,7 +154,7 @@ export class HomePage {
     //   // this.presentPopover(1);
     // }
   }
-
+  
   private GetUserPosition() {
     this.options = {
       enableHighAccuracy: true
@@ -172,13 +177,13 @@ export class HomePage {
       this.txtDate = dateData.decYear + "/" + dateData.decMonth2 + "/" + dateData.decDate; // CEK TXTDATE
 
       if (this.timeArived > "08:10:00") {
-        //mengarahkan ke component form-terlambat
+
         szActivityId = ActivityId.AC002;
         let navigationExtras: NavigationExtras = {
           state: {
             indexForm: szActivityId
           }
-        }
+        }        
         await this.GetDecisionFromUser(szActivityId, navigationExtras);
       }
 
@@ -292,16 +297,16 @@ export class HomePage {
       var url = 'http://sihk.hutamakarya.com/apiabsen/absenpulang.php';
     }
     var nik = this.szUserId;
-
+    console.log(nik);
+    
     let postdata = new FormData();
-    postdata.append('user_nik', nik);
+    postdata.append('szUserId', nik);
     postdata.append('jamdt', jamdatang);
     postdata.append('jamdtvld', jamdatang);
     postdata.append('jamplg', jamplg);
     postdata.append('jamplgvld', jamplg);
     postdata.append('tanggal', tanggal);
 
-    // var url = 'http://sihk.hutamakarya.com/apiabsen/absendatang.php';
     var data: Observable<any> = this.http.post(url, postdata);
     data.subscribe(hasil => {
       this.kehadiran = hasil;

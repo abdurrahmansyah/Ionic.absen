@@ -32,17 +32,16 @@ export class LoginPage implements OnInit {
   navigateToHomePage() {
     var url = 'http://sihk.hutamakarya.com/apiabsen/loginabsen.php';
     let postdata = new FormData();
-    postdata.append('username', this.Username);
+    postdata.append('szUserId', this.Username);
     postdata.append('password', this.Password);
-
-    //postdata.append('username','hendra');
-    //postdata.append('password','admin');
 
     this.data = this.http.post(url, postdata);
     this.data.subscribe(data => {
       this.result = data;
       if (this.result.error == false) {
-        this.storage.set('username', this.Username);
+        this.storage.set('szUserId', this.Username);
+        console.log(this.storage.set('szUserId', this.Username));
+        
         this.storage.set('szFullName', this.result.user.name); // edit
         this.storage.set('szShortName', this.result.user.name);
         this.storage.set('szImage', this.result.user.name);
