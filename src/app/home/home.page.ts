@@ -43,6 +43,7 @@ export class HomePage {
   timeBack: string;
   options: GeolocationOptions;
   currentPos: Geoposition;
+  popoverParam: any;
 
   constructor(public navCtrl: NavController, public alertController: AlertController,
     public router: Router,
@@ -142,7 +143,7 @@ export class HomePage {
     this.GetUserPosition();
     this.ValidateAbsen();
     // if (this.geoLatitude <= -6.24508 && this.geoLatitude >= -6.24587 && this.geoLongitude >= 106.87269 && this.geoLongitude <= 106.87379) {
-    //   this.verAbsen();
+    //   this.ValidateAbsen();
     // } else {
     //   alert("Sorry you aren't in area");
     //   // this.presentPopover(1);
@@ -165,63 +166,102 @@ export class HomePage {
 
   async ValidateAbsen() {
     var dateData = this.GetDate();
+    var szActivityId: string;
     if (!this.txtTimeArrived) {
-      this.txtTimeArrived = dateData.szHour + ":" + dateData.szMinute + " " + dateData.szAMPM;
       this.timeArived = dateData.decHour + ":" + dateData.szMinute + ":" + dateData.decSec;
-      this.txtDate = dateData.decYear + "/" + dateData.decMonth2 + "/" + dateData.decDate;
+      this.txtDate = dateData.decYear + "/" + dateData.decMonth2 + "/" + dateData.decDate; // CEK TXTDATE
 
       if (this.timeArived > "08:10:00") {
         //mengarahkan ke component form-terlambat
+        szActivityId = ActivityId.AC002;
         let navigationExtras: NavigationExtras = {
           state: {
-            indexForm: ActivityId.AC002
+            indexForm: szActivityId
           }
         }
-        this.router.navigate(['form-request'], navigationExtras);
+        await this.GetDecisionFromUser(szActivityId, navigationExtras);
       }
-      else {
-        this.SetStatusWork(); //method untuk  ubah status kerja
-        this.DoingAbsen();  //method untuk push api jam datang
-      }
+
+      this.txtTimeArrived = dateData.szHour + ":" + dateData.szMinute + " " + dateData.szAMPM;
+      this.SetStatusWork(); //method untuk ubah status kerja
+      this.DoingAbsen();  //method untuk push api jam datang
     }
-    else if (this.txtTimeBack == "") {
-      this.txtTimeBack = dateData.szHour + ":" + dateData.szMinute + " " + dateData.szAMPM;// CEK
+    else {
       this.timeBack = dateData.decHour + ":" + dateData.szMinute + ":" + dateData.decSec;// CEK
       if (this.timeBack < "17:00:00") {
         //mengarahkan ke component form-pulang-cepat
+        szActivityId = ActivityId.AC004
         let navigationExtras: NavigationExtras = {
           state: {
-            indexForm: ActivityId.AC004
+            indexForm: szActivityId
           }
         }
-        this.router.navigate(['form-request'], navigationExtras);
+        await this.GetDecisionFromUser(szActivityId, navigationExtras);
       }
       else if (this.timeBack > "17:45:00") {
         //mengarahkan ke component form-lembur
+        szActivityId = ActivityId.AC005
         let navigationExtras: NavigationExtras = {
           state: {
-            indexForm: ActivityId.AC005
+            indexForm: szActivityId
           }
         }
-        this.router.navigate(['form-request'], navigationExtras);
+        await this.GetDecisionFromUser(szActivityId, navigationExtras);
       }
-      else {
-        this.SetStatusWork(); //method untuk  ubah status kerja
-        this.DoingAbsen();  //method untuk push api jam datang
-      }
+
+      this.txtTimeBack = dateData.szHour + ":" + dateData.szMinute + " " + dateData.szAMPM; // CEK
+      this.SetStatusWork(); //method untuk ubah status kerja
+      this.DoingAbsen();  //method untuk push api jam datang
     }
-    else {
-      this.SetStatusWork();
-      const alert = await this.alertController.create({
-        header: 'Alert',
-        subHeader: '',
-        message: 'See You Tomorrow Again.',
-        cssClass: 'alertcss',
-        buttons: ['OK', 'Cancel'],
-        mode: "ios"
-      });
-      await alert.present();
-    }
+  }
+
+  private async GetDecisionFromUser(szActivityId: string, navigationExtras: NavigationExtras) {
+    const alert = await this.alertController.create({
+      mode: 'ios',
+      message: 'This is an alert message.',
+      cssClass: szActivityId == ActivityId.AC001 ? 'alert-ontime' :
+        szActivityId == ActivityId.AC003 ? 'alert-diluarkantor' :
+          szActivityId == "DILUAR-WIFIAKSES" ? 'alert-wifiakses' :
+            szActivityId == ActivityId.AC005 ? 'alert-lembur' :
+              szActivityId == ActivityId.AC002 ? 'alert-terlambat' :
+                szActivityId == ActivityId.AC004 ? 'alert-pulangcepat' :
+                  'alert-pulang',
+      buttons: szActivityId == ActivityId.AC003 ? [{
+        text: 'BACK',
+        handler: () => {
+          console.log('Confirm Cancel: BACK');
+        }
+      }, {
+        text: 'NEXT',
+        handler: () => {
+          this.router.navigate(['form-request'], navigationExtras);
+        }
+      }] :
+        szActivityId == "DILUAR-WIFIAKSES" ? [{
+          text: 'BACK',
+          handler: () => {
+            console.log('Confirm Cancel: BACK');
+          }
+        }] : szActivityId == ActivityId.AC005 ||
+          szActivityId == ActivityId.AC002 ||
+          szActivityId == ActivityId.AC004 ? [{
+            text: 'NO',
+            handler: () => {
+              console.log('Confirm Cancel: NO');
+            }
+          }, {
+            text: 'YES',
+            handler: () => {
+              this.router.navigate(['form-request'], navigationExtras);
+            }
+          }] : [{
+            text: 'OK',
+            handler: () => {
+              console.log('Confirm Cancel: OK');
+            }
+          }]
+    });
+    await alert.present();
   }
 
   private SetStatusWork() {
@@ -297,20 +337,9 @@ export class HomePage {
     return await popover.present();
   }
 
-  async presentAlert() {
-    const alert = await this.alertController.create({
-      header: 'Alert',
-      subHeader: 'Subtitle',
-      message: 'This is an alert message.',
-      cssClass: 'alertcss',
-      buttons: ['OK']
-    });
-
-    await alert.present();
-  }
-
   async presentAlertConfirm() {
     const alert = await this.alertController.create({
+      mode: 'ios',
       header: 'Confirm!',
       message: 'Message <strong>text</strong>!!!',
       buttons: [
