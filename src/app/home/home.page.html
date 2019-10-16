@@ -16,6 +16,10 @@
 </ion-header>
 
 <ion-content padding scroll-y=false>
+  <ion-refresher slot="fixed" pullFactor="0.5" pullMin="100" pullMax="200" (ionRefresh)="DoRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+ 
   <ion-text style="font-size: 14px">Status: </ion-text>
   <ion-text style="font-size: 14px ;" color="{{colorStatus}}">{{ txtWorkStatus }}</ion-text>
   <!--<p>Example just hit <a target="_blank" rel="noopener" href="https://www.hutamakarya.com/id/">hutama karya</a>

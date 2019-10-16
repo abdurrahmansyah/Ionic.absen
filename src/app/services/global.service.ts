@@ -17,6 +17,14 @@ export class RequestData {
   public szStatusId: string;
   public szStatusName: string;
   public decTotal: number;
+
+  GetRequestDatasByUserId(){
+    
+  }
+
+  GetRequestDatasBySuperiorUserId(){
+    
+  }
 }
 
 export class ActivityId {

@@ -54,24 +54,28 @@ export class HomePage {
     private authService: AuthenticationService,
     private globalService: GlobalService
   ) {
-    this.GetUserId();
+    this.ShowFirstLoadData();
     this.Timer();
   }
 
-  async GetUserId() {
+  async ShowFirstLoadData() {
+    await this.GetUserId();
+    this.GetTimeWorkingAndStatusUser();
+    // this.GetUserActivities();
+  }
+
+  private async GetUserId() {
     //Fungsi untuk mengambil UserId pada local storage
     await this.storage.get('szUserId').then((szUserId) => {
       this.szUserId = szUserId;
     });
-    this.GetTimeWorkingAndStatusUser();
   }
 
-  async GetTimeWorkingAndStatusUser() {
-      //Fungsi untuk melakukan setup pengambilan api
+  private GetTimeWorkingAndStatusUser() {
+    //Fungsi untuk melakukan setup pengambilan api
     var url = 'http://sihk.hutamakarya.com/apiabsen/transaksi.php';
-    var data: Observable<any> = this.http.get(url + "?szUserId=" + this.szUserId );
-    console.log("bla"+this.szUserId );
-    
+    var data: Observable<any> = this.http.get(url + "?szUserId=" + this.szUserId);
+
     data.subscribe(hasil => {
       this.kehadiran = hasil;
       if (this.kehadiran.error == false) {
@@ -94,8 +98,8 @@ export class HomePage {
   }
 
   private ConvertTimeToViewFormat(timeFromDb: any) {
-    var hour = timeFromDb[0] < 10 && timeFromDb[0] != 0 ? "0" + timeFromDb[0] : timeFromDb[0];
-    var minute = timeFromDb[1] < 10 && timeFromDb[1] != 0 ? "0" + timeFromDb[1] : timeFromDb[1];
+    var hour = timeFromDb[0]; // < 10 && timeFromDb[0] != 0 ? "0" + timeFromDb[0] : timeFromDb[0];
+    var minute = timeFromDb[1]; // < 10 && timeFromDb[1] != 0 ? "0" + timeFromDb[1] : timeFromDb[1];
     var ampm = timeFromDb[2] > 12 ? "PM" : "AM";
     return { hour, minute, ampm };
   }
@@ -107,7 +111,6 @@ export class HomePage {
   }
 
   ngOnInit() {
-    
     var dateData = this.GetDate();
 
     this.txtDayNow = dateData.szDay + ", " + dateData.decDate + " " + dateData.decMonth + " " + dateData.decYear;
@@ -142,11 +145,19 @@ export class HomePage {
     return i;
   }
 
+  DoRefresh(event: any) {
+    this.ShowFirstLoadData();
+
+    setTimeout(() => {
+      event.target.complete();
+    }, 1000);
+  }
+
   async ButtonAbsen() {
     this.GetUserPosition();
     this.ValidateAbsen();
     this.storage.set('saveTimeArrived', this.timeArived);
-    this.storage.set('saveTimeBack',this.timeBack);
+    this.storage.set('saveTimeBack', this.timeBack);
     // if (this.geoLatitude <= -6.24508 && this.geoLatitude >= -6.24587 && this.geoLongitude >= 106.87269 && this.geoLongitude <= 106.87379) {
     //   this.ValidateAbsen();
     // } else {
@@ -154,7 +165,7 @@ export class HomePage {
     //   // this.presentPopover(1);
     // }
   }
-  
+
   private GetUserPosition() {
     this.options = {
       enableHighAccuracy: true
@@ -183,7 +194,7 @@ export class HomePage {
           state: {
             indexForm: szActivityId
           }
-        }        
+        }
         await this.GetDecisionFromUser(szActivityId, navigationExtras);
       }
 
@@ -298,7 +309,7 @@ export class HomePage {
     }
     var nik = this.szUserId;
     console.log(nik);
-    
+
     let postdata = new FormData();
     postdata.append('szUserId', nik);
     postdata.append('jamdt', jamdatang);
@@ -340,31 +351,6 @@ export class HomePage {
 
     popover.style.cssText = '--min-width: 300px; --box-shadow: #15ff00';
     return await popover.present();
-  }
-
-  async presentAlertConfirm() {
-    const alert = await this.alertController.create({
-      mode: 'ios',
-      header: 'Confirm!',
-      message: 'Message <strong>text</strong>!!!',
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          cssClass: 'background',
-          handler: (blah) => {
-            console.log('Confirm Cancel: blah');
-          }
-        }, {
-          text: 'Okay',
-          handler: () => {
-            console.log('Confirm Okay');
-          }
-        }
-      ]
-    });
-
-    await alert.present();
   }
 }
 

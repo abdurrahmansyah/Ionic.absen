@@ -8,6 +8,7 @@ import { IonicModule } from '@ionic/angular';
 import { NotificationsPage } from './notifications.page';
 import { ComponentsModule } from 'src/app/components/components.module';
 import { PopoverComponent } from 'src/app/components/popover/popover.component';
+import { CustomHeaderDirective } from 'src/app/directives/custom-header.directive';
 
 const routes: Routes = [
   {
@@ -25,6 +26,6 @@ const routes: Routes = [
     RouterModule.forChild(routes)
   ],
   entryComponents: [ PopoverComponent ],
-  declarations: [NotificationsPage]
+  declarations: [NotificationsPage, CustomHeaderDirective]
 })
 export class NotificationsPageModule {}

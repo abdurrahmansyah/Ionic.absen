@@ -1,31 +1,190 @@
-<ion-header>
+<ion-header #header>
   <ion-toolbar color="hk-red">
     <ion-buttons slot="start">
       <ion-back-button color="hk-white-red"></ion-back-button>
     </ion-buttons>
-    <ion-title>notifications</ion-title>
+    <ion-title #label>Notifications</ion-title>
+    <!-- style="visibility: hidden;" -->
   </ion-toolbar>
 </ion-header>
 
 
-<ion-content>
+<ion-content scrollEvents="true">
+  <!-- appCustomHeader [header]="header" [label]="label" -->
+  <!-- <ion-label padding color="hk-white-red" style="font-size: 34px; font-weight: bold;">Notifications</ion-label> -->
 
-  <ion-row class="nowrap ion-justify-content-center ion-align-items-center">
-    <ion-segment (ionChange)="segmentChanged()" [(ngModel)]="segment" color="hk-purple" mode="ios" shape="round">
-      <ion-segment-button value="0">
-        <ion-label>Harian</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="1">
-        <ion-label>Bulanan</ion-label>
-      </ion-segment-button>
-    </ion-segment>
-  </ion-row>
+  <ion-searchbar showCancelButton="focus" placeholder="Search Request" color="light" style="width: 90%; margin: 0 auto;"
+    mode="ios">
+  </ion-searchbar>
 
-  <div [ngSwitch]="segment">
-    <div *ngSwitchCase="'0'">
-      <app-report-daily></app-report-daily>
+  <ion-card style="margin-top: 0px;">
+    <ion-item lines="none" color="transparent">
+      <ion-avatar slot="start">
+        <img src="../../../assets/images/user-1.png">
+      </ion-avatar>
+      <ion-label style="font-size: 16px; color: dimgrey;">
+        <p>Wahyudi - Bagian TI</p>
+        <p>Divisi Sistem dan Risiko</p>
+      </ion-label>
+    </ion-item>
+    <div class="ion-text-start" padding style="padding-top: 0px; padding-bottom: 0px; line-height: 150%;">
+      <ion-text>Jumat, 18 Juli 2019</ion-text> <br>
+      <ion-text color="dark">Absen Diluar Kantor</ion-text>
+      <ion-text> - </ion-text>
+      <ion-text>Keterangan : Rapat</ion-text> <br>
+      <ion-text>Lokasi : Jalan Menteng Raya No 11b</ion-text>
     </div>
-  </div>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="full" color="hk-white-purple" shape="round">DECLINE</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button expand="full" color="hk-purple" shape="round">APPROVE</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-card>
 
-  <hr width="90%">
+  
+  <ion-card style="margin-top: 0px;">
+    <ion-grid no-padding>
+      <ion-row align-items-center no-padding>
+        <ion-col no-padding size="10" style="text-align: left;">
+          <div padding style="padding-bottom: 0px;">
+            <ion-text color="hk-red" style="font-size: 10px;"> Jumat, 18 November 2019 - Absen Diluar Kantor</ion-text>
+          </div>
+        </ion-col>
+        <ion-col no-padding size="2" style="text-align: right">
+          <div padding style="padding-bottom: 0px;">
+            <ion-icon name="close-circle" style="font-size: 24px; vertical-align: middle" color="hk-red"
+              (click)="DeleteRequest()"></ion-icon>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <div class="ion-text-start" padding style="padding-top: 0px; line-height: 150%;">
+      <ion-text>Your request has been approved by Mr. Joko Susilo Cus Aba Handayani Pangaribu</ion-text> <br>
+    </div>
+  </ion-card>
+
+
+  <ion-card style="margin-top: 0px;">
+    <ion-item-sliding>
+      <ion-item Lines="none" style="--background: #f0f0f0;" no-padding>
+        <ion-label class="ion-text-wrap" style="margin-right: 0px;">
+          <div class="ion-text-start" padding
+            style="padding-top: 0px; padding-bottom: 0px; padding-right: 0px; line-height: 150%;">
+            <ion-text color="hk-red" style="font-size: 10px;"> Jumat, 18 November 2019 - Absen Diluar Kantor</ion-text>
+            <br>
+            <ion-text style="font-size: 14px; color: dimgrey;">Your request has been approved by Mr. Joko Susilo Cus Aba
+              Handayani Pangaribu</ion-text>
+          </div>
+        </ion-label>
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-item-option color="hk-purple" (click)="DeleteRequest()">
+          Clear
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-card>
+
+
+  <!-- <ion-card *ngFor="let requestData of requestDatas">
+      <ion-item lines="none" color="transparent">
+        <ion-label>{{ requestData.szActivityName }}</ion-label>
+        <ion-button shape="round" slot="end" *ngIf="requestData.szStatusId == 'ST001'" color="hk-green">
+          {{ requestData.szStatusName }}</ion-button>
+        <ion-button shape="round" slot="end" *ngIf="requestData.szStatusId == 'ST002'" color="hk-red">
+          {{ requestData.szStatusName }}</ion-button>
+        <ion-button shape="round" slot="end" *ngIf="requestData.szStatusId == 'ST003'" color="hk-yellow">
+          {{ requestData.szStatusName }}</ion-button>
+      </ion-item>
+      <div class="ion-text-start" padding style="padding-top: 0px">
+        <ion-text>Keterangan : {{ requestData.szDesc }}</ion-text> <br>
+        <ion-text *ngIf="requestData.szActivityId != 'AC003'">Total : {{ requestData.decTotal }}</ion-text>
+        <ion-text *ngIf="requestData.szActivityId == 'AC003'">Lokasi : {{ requestData.szLocation }}</ion-text>
+      </div>
+    </ion-card> -->
+
+  <ion-item color="transparent">
+    <ion-text>Ehe</ion-text>
+  </ion-item>
+  <ion-item color="transparent">
+    <ion-text>Ehe</ion-text>
+  </ion-item>
+  <ion-item color="transparent">
+    <ion-text>Ehe</ion-text>
+  </ion-item>
+  <ion-item color="transparent">
+    <ion-text>Ehe</ion-text>
+  </ion-item>
+  <ion-item color="transparent">
+    <ion-text>Ehe</ion-text>
+  </ion-item>
+  <ion-item color="transparent">
+    <ion-text>Ehe</ion-text>
+  </ion-item>
+  <ion-item color="transparent">
+    <ion-text>Ehe</ion-text>
+  </ion-item>
+  <ion-item color="transparent">
+    <ion-text>Ehe</ion-text>
+  </ion-item>
+  <ion-item color="transparent">
+    <ion-text>Ehe</ion-text>
+  </ion-item>
+  <ion-item color="transparent">
+    <ion-text>Ehe</ion-text>
+  </ion-item>
+  <ion-item color="transparent">
+    <ion-text>Ehe</ion-text>
+  </ion-item>
+  <ion-item color="transparent">
+    <ion-text>Ehe</ion-text>
+  </ion-item>
+  <ion-item color="transparent">
+    <ion-text>Ehe</ion-text>
+  </ion-item>
+  <ion-item color="transparent">
+    <ion-text>Ehe</ion-text>
+  </ion-item>
+  <ion-item color="transparent">
+    <ion-text>Ehe</ion-text>
+  </ion-item>
+  <ion-item color="transparent">
+    <ion-text>Ehe</ion-text>
+  </ion-item>
+  <ion-item color="transparent">
+    <ion-text>Ehe</ion-text>
+  </ion-item>
+
+
+  <ion-card style="margin-top: 0px;">
+    <ion-grid>
+      <ion-row align-items-center>
+        <ion-col size="2.2" style="text-align: left">
+          <ion-avatar>
+            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAAAAAAALAAAAAABAAEAAAICTAEAOw==">
+          </ion-avatar>
+        </ion-col>
+        <ion-col size="7.6" style="text-align: left; font-size: 16px">
+          <div style="line-height: 150%;">
+            <ion-text>Wahyudi - Bagian TI</ion-text> <br>
+            <ion-text style="font-size: 16px;">Divisi Sistem dan Risiko</ion-text>
+          </div>
+        </ion-col>
+        <ion-col size="2.2" style="text-align: center">
+          <ion-icon name="close-circle" style="font-size: 26px;" color="hk-red" (click)="DeleteRequest()"></ion-icon>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <div class="ion-text-start" padding style="padding-top: 0px; line-height: 150%;">
+      <ion-text>Jumat, 18 Juli 2019</ion-text> <br>
+      <ion-text color="dark">Absen Diluar Kantor</ion-text>
+      <ion-text> - </ion-text>
+      <ion-text>Keterangan : Rapat</ion-text> <br>
+      <ion-text>Lokasi : Jalan Menteng Raya No 11b</ion-text>
+    </div>
+  </ion-card>
 </ion-content>
