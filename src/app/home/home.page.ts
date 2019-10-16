@@ -56,6 +56,7 @@ export class HomePage {
   ) {
     this.ShowFirstLoadData();
     this.Timer();
+    this.GetTimeWorkingAndStatusUser();
   }
 
   async ShowFirstLoadData() {
@@ -156,8 +157,8 @@ export class HomePage {
   async ButtonAbsen() {
     this.GetUserPosition();
     this.ValidateAbsen();
-    this.storage.set('saveTimeArrived', this.timeArived);
-    this.storage.set('saveTimeBack', this.timeBack);
+    // this.storage.set('saveTimeArrived', this.timeArived);
+    // this.storage.set('saveTimeBack',this.timeBack);
     // if (this.geoLatitude <= -6.24508 && this.geoLatitude >= -6.24587 && this.geoLongitude >= 106.87269 && this.geoLongitude <= 106.87379) {
     //   this.ValidateAbsen();
     // } else {
@@ -198,9 +199,9 @@ export class HomePage {
         await this.GetDecisionFromUser(szActivityId, navigationExtras);
       }
 
-      this.txtTimeArrived = dateData.szHour + ":" + dateData.szMinute + " " + dateData.szAMPM;
-      this.SetStatusWork(); //method untuk ubah status kerja
-      this.DoingAbsen();  //method untuk push api jam datang
+      // this.txtTimeArrived = dateData.szHour + ":" + dateData.szMinute + " " + dateData.szAMPM;
+      // this.SetStatusWork(); //method untuk ubah status kerja
+      // this.DoingAbsen();  //method untuk push api jam datang
     }
     else {
       this.timeBack = dateData.decHour + ":" + dateData.szMinute + ":" + dateData.decSec;// CEK

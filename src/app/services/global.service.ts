@@ -5,18 +5,23 @@ import { Injectable } from '@angular/core';
 })
 export class GlobalService {
   public requestDatas = [];
+  public timeArrived: string="";
+  public timeBack: string="";
   constructor() { }
 }
 
 export class RequestData {
   public dtmRequest: Date;
-  public szActivityId: string;
+  public szactivityid: string;
   public szActivityName: string;
   public szDesc: string;
   public szLocation: string;
   public szStatusId: string;
   public szStatusName: string;
+  public timeArrived : string;
+  public timeBack: string;
   public decTotal: number;
+  public jam_datang_valid : string;
 
   GetRequestDatasByUserId(){
     
