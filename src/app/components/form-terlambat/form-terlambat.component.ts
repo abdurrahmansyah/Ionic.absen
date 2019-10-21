@@ -4,7 +4,7 @@ import { Storage } from '@ionic/storage';
 import { AlertController, NavController, ToastController } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ActivityId, StatusId, GlobalService } from 'src/app/services/global.service';
+import { ActivityId, StatusId, GlobalService, RequestData, DateData } from 'src/app/services/global.service';
 
 @Component({
   selector: 'app-form-terlambat',
@@ -14,23 +14,22 @@ import { ActivityId, StatusId, GlobalService } from 'src/app/services/global.ser
 export class FormTerlambatComponent implements OnInit {
   public txtTimeNow: string;
   public txtDesc: string;
+  public dateData: DateData;
   szUserId: string;
 
   constructor(
-    private router: Router,
     public navCtrl: NavController,
     public http: HttpClient,
     private storage: Storage,
-    private globalService: GlobalService,
-    public toastController: ToastController,
+    private globalService: GlobalService
   ) {
-    this.GetStorage();
+    this.GetUserId();
     this.Timer();
   }
 
   ngOnInit() {
-    var dateData = this.globalService.GetDate();
-    this.txtTimeNow = this.CheckTime(dateData.decHour) + ":" + this.CheckTime(dateData.decMinute) + ":" + this.CheckTime(dateData.decSec) + " " + dateData.szAMPM;
+    this.dateData = this.globalService.GetDate();
+    this.txtTimeNow = this.CheckTime(this.dateData.decHour) + ":" + this.CheckTime(this.dateData.decMinute) + ":" + this.CheckTime(this.dateData.decSec) + " " + this.dateData.szAMPM;
   }
 
   private CheckTime(i: any) {
@@ -46,7 +45,7 @@ export class FormTerlambatComponent implements OnInit {
     }.bind(this), 500);
   }
 
-  async GetStorage() {
+  async GetUserId() {
     //Fungsi untuk mengambil value pada local storage
     await this.storage.get('szUserId').then((szUserId) => {
       this.szUserId = szUserId;
@@ -54,39 +53,13 @@ export class FormTerlambatComponent implements OnInit {
   }
 
   SaveLateRequest() {
-    var dateData = this.globalService.GetDate();
-    var date = dateData.decYear + "/" + dateData.decMonth + "/" + dateData.decDate;
-
-    // var url = 'http://sihk.hutamakarya.com/apiabsen/formrequest.php';
-    var url = 'http://sihk.hutamakarya.com/apiabsen/SaveRequestData.php';
-    var szRequestId = "HK_" + date + "_" + ActivityId.AC002 + "_" + this.szUserId;
-    var dtmRequest = dateData.date.toLocaleString();
-
-    let postdata = new FormData();
-    postdata.append('szRequestId', szRequestId);
-    postdata.append('szUserId', this.szUserId);
-    postdata.append('dateRequest', dtmRequest);
-    postdata.append('szActivityId', ActivityId.AC002);
-    postdata.append('szDesc', this.txtDesc);
-    postdata.append('szLocation', "");
-    postdata.append('szStatusId', StatusId.ST003);
-    postdata.append('decTotal', "0"); // NANTI FIELD DECTOTAL DIHAPUS KEKNYA // KALO GA YA DIBIKIN ITUNGANNYA
-    postdata.append('dtmCreated', dtmRequest);
-    postdata.append('dtmLastUpdated', dtmRequest);
-
-    var data: Observable<any> = this.http.post(url, postdata);
-    data.subscribe(hasil => { });
-    this.PresentToast("Berhasil mengajukan izin terlambat");
-    this.router.navigate(['home']);
-  }
-
-  async PresentToast(msg: string) {
-    const toast = await this.toastController.create({
-      message: msg,
-      duration: 2000,
-      color: "dark",
-      mode: "ios"
-    });
-    toast.present();
+    var requestData = new RequestData();
+    requestData.szUserId = this.szUserId;
+    requestData.szactivityid = ActivityId.AC002;
+    requestData.szDesc = this.txtDesc;
+    requestData.szLocation = "";
+    requestData.szStatusId = StatusId.ST003;
+    requestData.decTotal = "0";
+    this.globalService.SaveRequest(requestData, this.dateData);
   }
 }

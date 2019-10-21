@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { InjectorInstance } from '../app.module';
 import { Observable } from 'rxjs';
+import { ToastController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +14,8 @@ export class GlobalService {
   public timeReturn: string = "";
   httpClient = InjectorInstance.get<HttpClient>(HttpClient);
 
-  constructor() { }
+  constructor(private router: Router,
+    private toastController: ToastController) { }
 
   public GetDate(): DateData {
     var dateData = new DateData();
@@ -90,6 +93,43 @@ export class GlobalService {
       }
     });
   }
+
+  SaveRequest(requestData: RequestData, dateData: DateData) {
+    var date = dateData.decYear + "/" + dateData.decMonth + "/" + dateData.decDate;
+
+    // var url = 'http://sihk.hutamakarya.com/apiabsen/formrequest.php';
+    var url = 'http://sihk.hutamakarya.com/apiabsen/SaveRequestData.php';
+    requestData.szRequestId = "HK_" + date + "_" + requestData.szactivityid + "_" + requestData.szUserId;
+    requestData.dateRequest = dateData.date.toLocaleString();
+
+    let postdata = new FormData();
+    postdata.append('szRequestId', requestData.szRequestId);
+    postdata.append('szUserId', requestData.szUserId);
+    postdata.append('dateRequest', requestData.dateRequest);
+    postdata.append('szActivityId', requestData.szactivityid);
+    postdata.append('szDesc', requestData.szDesc);
+    postdata.append('szLocation', requestData.szLocation);
+    postdata.append('szStatusId', requestData.szStatusId);
+    postdata.append('decTotal', requestData.decTotal); // NANTI FIELD DECTOTAL DIHAPUS KEKNYA // KALO GA YA DIBIKIN ITUNGANNYA
+    postdata.append('dtmCreated', requestData.dateRequest);
+    postdata.append('dtmLastUpdated', requestData.dateRequest);
+
+    var data: Observable<any> = this.httpClient.post(url, postdata);
+    data.subscribe(hasil => { });
+    this.PresentToast(requestData.szactivityid == ActivityId.AC002 ? "Berhasil mengajukan izin terlambat" :
+      "");
+    this.router.navigate(['home']);
+  }
+
+  async PresentToast(msg: string) {
+    const toast = await this.toastController.create({
+      message: msg,
+      duration: 2000,
+      color: "dark",
+      mode: "ios"
+    });
+    toast.present();
+  }
 }
 
 export class DateData {
@@ -121,16 +161,17 @@ export class ReportData {
 }
 
 export class RequestData {
+  public szRequestId: string;
   public szUserId: string;
   public szUserName: string;
-  public dtmRequest: Date;
+  public dateRequest: string;
   public szactivityid: string;
   public szActivityName: string;
   public szDesc: string;
   public szLocation: string;
   public szStatusId: string;
   public szStatusName: string;
-  public decTotal: number;
+  public decTotal: string;
   public szSuperiorUserId: string; // cek dipakek bener ga
   public szSuperiorUserName: string; // cek dipakek bener ga
   public timeArrived: string; // cek dipakek bener ga
