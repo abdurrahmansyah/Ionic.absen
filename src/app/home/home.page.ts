@@ -1,5 +1,3 @@
-//import { Component } from '@angular/core';
-//import { NavController, AlertController } from '@ionic/angular';
 import { Router, NavigationExtras } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Storage } from '@ionic/storage';
@@ -10,7 +8,7 @@ import { PopoverController, AlertController, NavController } from '@ionic/angula
 import { PopoverComponent } from 'src/app/components/popover/popover.component';
 import { AuthenticationService } from './../services/authentication.service';
 import { Observable } from 'rxjs/Observable';
-import { GlobalService, ActivityId } from '../services/global.service';
+import { GlobalService, ActivityId, DateData, ReportData } from '../services/global.service';
 
 @Component({
   selector: 'app-home',
@@ -30,17 +28,14 @@ export class HomePage {
   public txtDayNow: string;
   public inputVal: string = "variabel";
   public txtTimeArrived: string;
-  public timeArived: string;
   public txtDate: string;
-  public txtTimeBack: string = "";
+  public txtTimeReturn: string = "";
   public txtWorkStatus: string = "";
   geoAccuracy: number;
   szUserId: any;
-  kehadiran: any;
   colorStatus: string;
   public buttonPropertyDatas = [];
   error: void;
-  timeBack: string;
   options: GeolocationOptions;
   currentPos: Geoposition;
   popoverParam: any;
@@ -62,7 +57,6 @@ export class HomePage {
   async ShowFirstLoadData() {
     await this.GetUserId();
     this.GetTimeWorkingAndStatusUser();
-    // this.GetUserActivities();
   }
 
   private async GetUserId() {
@@ -73,27 +67,22 @@ export class HomePage {
   }
 
   private GetTimeWorkingAndStatusUser() {
-    //Fungsi untuk melakukan setup pengambilan api
-    var url = 'http://sihk.hutamakarya.com/apiabsen/transaksi.php';
+    var url = 'http://sihk.hutamakarya.com/apiabsen/GetReportData.php';
     var data: Observable<any> = this.http.get(url + "?szUserId=" + this.szUserId);
-
-    data.subscribe(hasil => {
-      this.kehadiran = hasil;
-      if (this.kehadiran.error == false) {
-        var timeValidArrived = this.kehadiran.user.jam_datang_valid.split(':'); //get api read jam datang
+    data.subscribe(reportDatas => {
+      if (reportDatas.error == false) {
+        var timeValidArrived = reportDatas.user.timeValidArrived.split(':');
         var { hour, minute, ampm } = this.ConvertTimeToViewFormat(timeValidArrived);
         this.txtTimeArrived = hour + ":" + minute + " " + ampm;
-
-        var timeValidBack = this.kehadiran.user.jam_pulang_valid.split(':'); //get api read jam pulang 
+        var timeValidBack = reportDatas.user.timeValidReturn.split(':');
         var { hour, minute, ampm } = this.ConvertTimeToViewFormat(timeValidBack);
-        this.txtTimeBack = hour == 0 && minute == 0 ? "" : hour + ":" + minute + " " + ampm;
+        this.txtTimeReturn = hour == 0 && minute == 0 ? "" : hour + ":" + minute + " " + ampm;
       }
       else {
         this.txtTimeArrived = "";
-        this.txtTimeBack = "";
+        this.txtTimeReturn = "";
       }
 
-      //Method untuk mengubah status kerja
       this.SetStatusWork();
     });
   }
@@ -112,31 +101,10 @@ export class HomePage {
   }
 
   ngOnInit() {
-    var dateData = this.GetDate();
+    var dateData = this.globalService.GetDate();
 
-    this.txtDayNow = dateData.szDay + ", " + dateData.decDate + " " + dateData.decMonth + " " + dateData.decYear;
+    this.txtDayNow = dateData.szDay + ", " + dateData.decDate + " " + dateData.szMonth + " " + dateData.decYear;
     this.txtTimeNow = this.CheckTime(dateData.decHour) + ":" + this.CheckTime(dateData.decMinute) + ":" + this.CheckTime(dateData.decSec) + " " + dateData.szAMPM;
-  }
-
-  private GetDate(): DateData {
-    var dateData = new DateData();
-    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    var days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-    var date = new Date();
-
-    dateData.decYear = date.getFullYear();
-    dateData.decMonth = months[date.getMonth()];
-    dateData.decMonth2 = date.getMonth() + 1;
-    dateData.decDate = date.getDate();
-    dateData.szDay = days[date.getDay()];
-    dateData.decMinute = date.getMinutes();
-    dateData.szMinute = dateData.decMinute < 10 ? "0" + dateData.decMinute : dateData.decMinute.toString();
-    dateData.decHour = date.getHours();
-    dateData.szHour = dateData.decHour < 10 ? "0" + dateData.decHour : dateData.decHour.toString();
-    dateData.decSec = date.getSeconds();
-    dateData.szAMPM = dateData.decHour > 12 ? "PM" : "AM";
-
-    return dateData;
   }
 
   private CheckTime(i: any) {
@@ -158,7 +126,7 @@ export class HomePage {
     this.GetUserPosition();
     this.ValidateAbsen();
     // this.storage.set('saveTimeArrived', this.timeArived);
-    // this.storage.set('saveTimeBack',this.timeBack);
+    // this.storage.set('saveTimeBack',this.timeReturn);
     // if (this.geoLatitude <= -6.24508 && this.geoLatitude >= -6.24587 && this.geoLongitude >= 106.87269 && this.geoLongitude <= 106.87379) {
     //   this.ValidateAbsen();
     // } else {
@@ -182,13 +150,14 @@ export class HomePage {
   }
 
   async ValidateAbsen() {
-    var dateData = this.GetDate();
+    var dateData = this.globalService.GetDate();
+    var reportData = new ReportData();
     var szActivityId: string;
     if (!this.txtTimeArrived) {
-      this.timeArived = dateData.decHour + ":" + dateData.szMinute + ":" + dateData.decSec;
-      this.txtDate = dateData.decYear + "/" + dateData.decMonth2 + "/" + dateData.decDate; // CEK TXTDATE
+      reportData.timeArrived = dateData.szHour + ":" + dateData.szMinute + ":" + dateData.decSec;
+      console.log(reportData.timeArrived);
 
-      if (this.timeArived > "08:10:00") {
+      if (reportData.timeArrived > "08:10:00") {
 
         szActivityId = ActivityId.AC002;
         let navigationExtras: NavigationExtras = {
@@ -199,13 +168,15 @@ export class HomePage {
         await this.GetDecisionFromUser(szActivityId, navigationExtras);
       }
 
-      // this.txtTimeArrived = dateData.szHour + ":" + dateData.szMinute + " " + dateData.szAMPM;
-      // this.SetStatusWork(); //method untuk ubah status kerja
-      // this.DoingAbsen();  //method untuk push api jam datang
+      this.DoingAbsen(dateData, reportData);
+      this.txtTimeArrived = dateData.szHour + ":" + dateData.szMinute + " " + dateData.szAMPM;
+      this.SetStatusWork();
     }
     else {
-      this.timeBack = dateData.decHour + ":" + dateData.szMinute + ":" + dateData.decSec;// CEK
-      if (this.timeBack < "17:00:00") {
+      reportData.timeReturn = dateData.szHour + ":" + dateData.szMinute + ":" + dateData.decSec;
+      console.log(reportData.timeReturn);
+
+      if (reportData.timeReturn < "17:00:00") {
         //mengarahkan ke component form-pulang-cepat
         szActivityId = ActivityId.AC004
         let navigationExtras: NavigationExtras = {
@@ -215,7 +186,7 @@ export class HomePage {
         }
         await this.GetDecisionFromUser(szActivityId, navigationExtras);
       }
-      else if (this.timeBack > "17:45:00") {
+      else if (reportData.timeReturn > "17:45:00") {
         //mengarahkan ke component form-lembur
         szActivityId = ActivityId.AC005
         let navigationExtras: NavigationExtras = {
@@ -226,9 +197,9 @@ export class HomePage {
         await this.GetDecisionFromUser(szActivityId, navigationExtras);
       }
 
-      this.txtTimeBack = dateData.szHour + ":" + dateData.szMinute + " " + dateData.szAMPM; // CEK
-      this.SetStatusWork(); //method untuk ubah status kerja
-      this.DoingAbsen();  //method untuk push api jam datang
+      this.DoingAbsen(dateData, reportData);
+      this.txtTimeReturn = dateData.szHour + ":" + dateData.szMinute + " " + dateData.szAMPM;
+      this.SetStatusWork();
     }
   }
 
@@ -287,7 +258,7 @@ export class HomePage {
       this.colorStatus = "danger";
     }
     else {
-      if (this.txtTimeBack == "") {
+      if (this.txtTimeReturn == "") {
         this.txtWorkStatus = "Working";
         this.colorStatus = "primary";
       } else {
@@ -297,32 +268,12 @@ export class HomePage {
     }
   }
 
-  private DoingAbsen() {
-    // throw new Error("Method not implemented.");
-    var tanggal = this.txtDate;
-    var jamdatang = this.timeArived;
-    if (!this.txtTimeBack) {
-      var jamplg = "00:00:00";
-      var url = 'http://sihk.hutamakarya.com/apiabsen/absendatang.php';
-    } else {
-      var jamplg = this.timeBack;
-      var url = 'http://sihk.hutamakarya.com/apiabsen/absenpulang.php';
-    }
-    var nik = this.szUserId;
-    console.log(nik);
+  private DoingAbsen(dateData: DateData, reportData: ReportData) {
+    var dateAbsen = dateData.decYear + "/" + dateData.decMonth + "/" + dateData.decDate;
 
-    let postdata = new FormData();
-    postdata.append('szUserId', nik);
-    postdata.append('jamdt', jamdatang);
-    postdata.append('jamdtvld', jamdatang);
-    postdata.append('jamplg', jamplg);
-    postdata.append('jamplgvld', jamplg);
-    postdata.append('tanggal', tanggal);
-
-    var data: Observable<any> = this.http.post(url, postdata);
-    data.subscribe(hasil => {
-      this.kehadiran = hasil;
-    });
+    reportData.szUserId = this.szUserId;
+    reportData.dateAbsen = dateAbsen;
+    this.globalService.SaveReportData(reportData);
   }
 
   Logout() {
@@ -355,19 +306,3 @@ export class HomePage {
   }
 }
 
-class DateData {
-  public szDay: string;
-  public decDate: number;
-  public decMonth: string;
-  public decYear: number;
-  public decHour: number;
-  public szHour: string;
-  public decMinute: number;
-  public szMinute: string;
-  public szAMPM: string;
-  public decSec: number;
-  decMonth2: number;
-  day2: number;
-
-  constructor() { }
-}

@@ -44,7 +44,48 @@
     </ion-row>
   </ion-card>
 
-  
+  <ion-card style="margin-top: 0px;">
+    <div padding style="padding-bottom: 2px;">
+      <ion-text color="hk-red" style="font-size: 10px;">Jumat, 18 November 2019 - Absen Diluar Kantor</ion-text>
+    </div>
+    <div class="ion-text-start" padding style="padding-top: 0px; line-height: 150%;">
+      <ion-text>Your request has been approved by Mr. Joko Susilo Cus Aba Handayani Pangaribu</ion-text> <br>
+    </div>
+  </ion-card>
+
+  <ion-card style="margin-top: 0px;" *ngFor="let requestData of requestDatas">
+    <div padding style="padding-bottom: 2px;">
+      <ion-text color="hk-red" style="font-size: 10px;">{{ requestData.dtmRequest }} - {{ requestData.szActivityName }}
+      </ion-text>
+    </div>
+    <div class="ion-text-start" padding style="padding-top: 0px; line-height: 150%;">
+      <ion-text>Your request has been approved by {{ requestData.szSuperiorUserName }}</ion-text> <br>
+    </div>
+  </ion-card>
+
+  <!-- <ion-card *ngFor="let requestData of requestDatas">
+      <ion-item lines="none" color="transparent">
+        <ion-label>{{ requestData.szActivityName }}</ion-label>
+        <ion-button shape="round" slot="end" *ngIf="requestData.szStatusId == 'ST001'" color="hk-green">
+          {{ requestData.szStatusName }}</ion-button>
+        <ion-button shape="round" slot="end" *ngIf="requestData.szStatusId == 'ST002'" color="hk-red">
+          {{ requestData.szStatusName }}</ion-button>
+        <ion-button shape="round" slot="end" *ngIf="requestData.szStatusId == 'ST003'" color="hk-yellow">
+          {{ requestData.szStatusName }}</ion-button>
+      </ion-item>
+      <div class="ion-text-start" padding style="padding-top: 0px">
+        <ion-text>Keterangan : {{ requestData.szDesc }}</ion-text> <br>
+        <ion-text *ngIf="requestData.szActivityId != 'AC003'">Total : {{ requestData.decTotal }}</ion-text>
+        <ion-text *ngIf="requestData.szActivityId == 'AC003'">Lokasi : {{ requestData.szLocation }}</ion-text>
+      </div>
+    </ion-card> -->
+
+
+  <!-- ---------------------------------------------------------------------------------------------------- -->
+
+
+
+
   <ion-card style="margin-top: 0px;">
     <ion-grid no-padding>
       <ion-row align-items-center no-padding>

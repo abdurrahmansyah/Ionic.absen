@@ -9,7 +9,6 @@ import { GlobalService } from 'src/app/services/global.service';
 })
 export class NotificationsPage implements OnInit {
 
-  public szUserId: any;
   public requestDatas = [];
 
   constructor(private storage: Storage,
@@ -20,9 +19,9 @@ export class NotificationsPage implements OnInit {
   }
 
   async ShowFirstLoadData() {
-    this.GetRequestByUser();
-  }
-
-  GetRequestByUser() {
+    var szUserId = await this.storage.get('szUserId').then((x) => { return x });
+    
+    this.globalService.GetRequestDatasForNotifications(szUserId);
+    this.requestDatas = this.globalService.requestDatas;
   }
 }

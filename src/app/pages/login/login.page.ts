@@ -50,16 +50,16 @@ export class LoginPage implements OnInit {
         this.storage.set('szSectionId', this.result.user.name);
         this.storage.set('szToUserId', this.result.user.name);
 
-        this.presentToast("Login Berhasil");
+        this.PresentToast("Login Berhasil");
         this.authService.login();
 
         this.router.navigate(['home']);
       }
-      else { this.presentToast("Login Gagal"); }
+      else { this.PresentToast("Login Gagal"); }
     });
   }
 
-  async presentToast(msg: string) {
+  async PresentToast(msg: string) {
     const toast = await this.toastController.create({
       message: msg,
       duration: 2000,

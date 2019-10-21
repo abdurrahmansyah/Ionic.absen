@@ -4,6 +4,7 @@ import { Storage } from '@ionic/storage';
 import { AlertController, NavController, ToastController } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { ActivityId, StatusId, GlobalService } from 'src/app/services/global.service';
 
 @Component({
   selector: 'app-form-terlambat',
@@ -11,30 +12,24 @@ import { Observable } from 'rxjs';
   styleUrls: ['./form-terlambat.component.scss'],
 })
 export class FormTerlambatComponent implements OnInit {
-  public result: any;
   public txtTimeNow: string;
-  data: Observable<any>;
-  timeArrived: string;
-  szDesc: string;
+  public txtDesc: string;
   szUserId: string;
-  kehadiran: any;
-  timeArived: string;
-  txtDate: string;
 
   constructor(
     private router: Router,
     public navCtrl: NavController,
     public http: HttpClient,
     private storage: Storage,
-    public alertController: AlertController,
+    private globalService: GlobalService,
     public toastController: ToastController,
-  ) { 
+  ) {
     this.GetStorage();
     this.Timer();
   }
 
   ngOnInit() {
-    var dateData = this.GetDate();
+    var dateData = this.globalService.GetDate();
     this.txtTimeNow = this.CheckTime(dateData.decHour) + ":" + this.CheckTime(dateData.decMinute) + ":" + this.CheckTime(dateData.decSec) + " " + dateData.szAMPM;
   }
 
@@ -57,102 +52,41 @@ export class FormTerlambatComponent implements OnInit {
       this.szUserId = szUserId;
     });
   }
-  
-  private GetDate(): DateData {
-    var dateData = new DateData();
-    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    var days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-    var date = new Date();
 
-    dateData.decYear = date.getFullYear();
-    dateData.decMonth = months[date.getMonth()];
-    dateData.decMonth2 = date.getMonth() + 1;
-    dateData.decDate = date.getDate();
-    dateData.szDay = days[date.getDay()];
-    dateData.decMinute = date.getMinutes();
-    dateData.szMinute = dateData.decMinute < 10 ? "0" + dateData.decMinute : dateData.decMinute.toString();
-    dateData.decHour = date.getHours();
-    dateData.szHour = dateData.decHour < 10 ? "0" + dateData.decHour : dateData.decHour.toString();
-    dateData.decSec = date.getSeconds();
-    dateData.szAMPM = dateData.decHour > 12 ? "PM" : "AM";
+  SaveLateRequest() {
+    var dateData = this.globalService.GetDate();
+    var date = dateData.decYear + "/" + dateData.decMonth + "/" + dateData.decDate;
 
-    return dateData;
-  }
+    // var url = 'http://sihk.hutamakarya.com/apiabsen/formrequest.php';
+    var url = 'http://sihk.hutamakarya.com/apiabsen/SaveRequestData.php';
+    var szRequestId = "HK_" + date + "_" + ActivityId.AC002 + "_" + this.szUserId;
+    var dtmRequest = dateData.date.toLocaleString();
 
-  submitLate() {
-    this.submitTimeArrived();
-  }
-
-  submitTimeArrived(){
-    var dateData = this.GetDate();
-    this.timeArived = dateData.decHour + ":" + dateData.szMinute + ":" + dateData.decSec;
-    var jamdatang = this.timeArived;
-    var jamplg = "00:00:00";
-    var url = 'http://sihk.hutamakarya.com/apiabsen/absendatang.php';
-   
-    var nik = this.szUserId;
-    
     let postdata = new FormData();
-    postdata.append('szUserId', nik);
-    postdata.append('jamdt', jamdatang);
-    postdata.append('jamdtvld', jamdatang);
-    postdata.append('jamplg', jamplg);
-    postdata.append('jamplgvld', jamplg);
+    postdata.append('szRequestId', szRequestId);
+    postdata.append('szUserId', this.szUserId);
+    postdata.append('dateRequest', dtmRequest);
+    postdata.append('szActivityId', ActivityId.AC002);
+    postdata.append('szDesc', this.txtDesc);
+    postdata.append('szLocation', "");
+    postdata.append('szStatusId', StatusId.ST003);
+    postdata.append('decTotal', "0"); // NANTI FIELD DECTOTAL DIHAPUS KEKNYA // KALO GA YA DIBIKIN ITUNGANNYA
+    postdata.append('dtmCreated', dtmRequest);
+    postdata.append('dtmLastUpdated', dtmRequest);
 
     var data: Observable<any> = this.http.post(url, postdata);
-    data.subscribe(hasil => {
-      this.kehadiran = hasil;
-    });
-    this.submitRequestLate();
+    data.subscribe(hasil => { });
+    this.PresentToast("Berhasil mengajukan izin terlambat");
+    this.router.navigate(['home']);
   }
 
-  submitRequestLate(){
-    var dateData = this.GetDate();
-    this.timeArived = dateData.decHour + ":" + dateData.szMinute + ":" + dateData.decSec;
-    this.txtDate = dateData.decYear + "/" + dateData.decMonth2 + "/" + dateData.decDate;
-    
-    var ActivityId = "AC002";
-    var StatusId = "ST002";
-    var url = 'http://sihk.hutamakarya.com/apiabsen/formrequest.php';
-    var nik = this.szUserId;
-    var szRequestId = "HK_" + this.txtDate + "_" +  nik;
-    var szId = "HK_" + this.txtDate + "_" + ActivityId + "_" + nik; 
-    var dtmReq = this.txtDate + " " + this.timeArived;
-    console.log(nik);
-    
-    let postdata = new FormData();
-    postdata.append('szUserId', nik);
-    postdata.append('dtmRequest', dtmReq);
-    postdata.append('szActivityId', ActivityId);
-    postdata.append('szDesc', this.szDesc);
-    postdata.append('szStatusId',StatusId );
-    postdata.append('szRequestId',szRequestId );
-    postdata.append('szId',szId );
-
-    var data: Observable<any> = this.http.post(url, postdata);
-    data.subscribe(hasil => {
-      this.kehadiran = hasil;
+  async PresentToast(msg: string) {
+    const toast = await this.toastController.create({
+      message: msg,
+      duration: 2000,
+      color: "dark",
+      mode: "ios"
     });
-    this.router.navigate(['home']);  
+    toast.present();
   }
-}
-
-class DateData {
-  public szDay: string;
-  public decDate: number;
-  public decMonth: string;
-  public decYear: number;
-  public decHour: number;
-  public szHour: string;
-  public decMinute: number;
-  public szMinute: string;
-  public szAMPM: string;
-  public decSec: number;
-  decMonth2: number;
-  day2: number;
-  static decHour: string;
-  static szMinute: string;
-  static decSec: string;
-
-  constructor() { }
 }

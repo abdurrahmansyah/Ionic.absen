@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonSlides } from '@ionic/angular';
-import { GlobalService, RequestData } from 'src/app/services/global.service';
+import { GlobalService, RequestData, ActivityId } from 'src/app/services/global.service';
 import { HttpClient } from '@angular/common/http';
 import { Storage } from '@ionic/storage';
 import { map } from 'rxjs/operators';
@@ -29,13 +29,13 @@ export class ReportDailyComponent implements OnInit {
   txtTimeArrived: string;
 
   constructor(private globalService: GlobalService,
-    private http: HttpClient, public storage: Storage, ) {
+    private http: HttpClient, public storage: Storage) {
     this.GetRequestDatasForThisDay();
   }
 
   ngOnInit() {
     this.SetDataDaysInMonth(this.decCurrentMonth, this.decCurrentYear);
-    this.globalService.requestDatas = [];
+    // this.globalService.requestDatas = [];
   }
 
   async slideMonthChanged() {
@@ -100,90 +100,12 @@ export class ReportDailyComponent implements OnInit {
   }
 
   async GetRequestDatasForThisDay() {
-    this.GetRequestDatasFromDb();
-    // this.MappingDummyRequestDatas(); // NANTI DIHAPUS
-  }
-
-  async GetRequestDatasFromDb() {
-    this.requestDatas = [];
-    this.globalService.timeBack="";
-    this.globalService.timeArrived="";
-
     var szUserId = await this.storage.get('szUserId').then((x) => { return x });
-    var url = 'http://sihk.hutamakarya.com/apiabsen/GetRequestData.php';
-    var dtmRequest = this.decCurrentYear + "/" + this.decCurrentMonth + "/" + this.decCurrentDay;
+    var dateRequest = this.decCurrentYear + "/" + this.decCurrentMonth + "/" + this.decCurrentDay;
     
-    let postdata = new FormData();
-    postdata.append('szUserId', szUserId);
-    postdata.append('dtmRequest', dtmRequest);
-
-    this.data = this.http.post(url, postdata);
-    this.data.subscribe(data => {
-      this.result = data;
-      if (this.result.error == false) {
-        //get api read 
-        this.requestDatas = this.result.result;
-        console.log(this.requestDatas.length);
-        this.globalService.requestDatas = this.requestDatas;
-        this.globalService.timeArrived = this.result.user.jam_datang_valid;
-        this.globalService.timeBack = this.result.user.jam_pulang_valid;
-      }
-      else {
-        this.requestDatas = [];
-        this.globalService.requestDatas = this.requestDatas;
-      }
-    });
-
-    //INI RENCANA AWAL LANGSUNG MASUKIN HASIL
-
-    // this.http.post(url, postdata)
-    //   .pipe(map((data): any => { return data; }))
-    //   .subscribe((result) => {
-
-    //     if (result.length > 0) {
-    //       this.requestDatas = result.result;
-    //       console.log(result);
-
-    //     }
-    //   });
+    this.globalService.GetRequestDatasByUserId(szUserId, dateRequest);
+    this.requestDatas = this.globalService.requestDatas;
   }
-
-  // private MappingDummyRequestDatas() {
-  //   var requestData = new RequestData();
-
-  //   requestData.dtmRequest = new Date(this.decCurrentYear, this.decCurrentMonth, this.decCurrentDay);
-  //   requestData.szActivityId = "AC005";
-  //   requestData.szActivityName = "Lembur";
-  //   requestData.szDesc = "Mengerjakan rundown acara 17 agustus";
-  //   requestData.szLocation = "";
-  //   requestData.szStatusId = "ST001";
-  //   requestData.szStatusName = "Approved";
-  //   requestData.decTotal = 1.56;
-  //   this.requestDatas.push(requestData);
-
-  //   requestData = new RequestData();
-  //   requestData.dtmRequest = new Date();
-  //   requestData.szActivityId = "AC003";
-  //   requestData.szActivityName = "Diluar kantor";
-  //   requestData.szDesc = "Meeting";
-  //   requestData.szLocation = "Jalan Sisingamangaraja No 11, Menteng Timur, Jakarta Selatan";
-  //   requestData.szStatusId = "ST003";
-  //   requestData.szStatusName = "Need Approval";
-  //   requestData.decTotal = 0;
-  //   this.requestDatas.push(requestData);
-
-  //   var requestData = new RequestData();
-  //   requestData.dtmRequest = new Date();
-  //   requestData.szActivityId = "AC005";
-  //   requestData.szActivityName = "Lembur";
-  //   requestData.szDesc = "Mengerjakan project absensi mobile";
-  //   requestData.szLocation = "";
-  //   requestData.szStatusId = "ST002";
-  //   requestData.szStatusName = "Not Approved";
-  //   requestData.decTotal = 3.45;
-  //   this.requestDatas.push(requestData);
-  //   this.globalService.requestDatas = this.requestDatas;
-  // }
 
   next() {
     this.sliderMonth.slideNext();

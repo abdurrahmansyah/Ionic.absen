@@ -15,7 +15,7 @@
 
     <ion-col>
       <ion-item>
-        <ion-input type="text" placeholder="Alasan Terlambat" [(ngModel)]="szDesc" name="szDesc" required></ion-input>
+        <ion-input type="text" placeholder="Alasan Terlambat" [(ngModel)]="txtDesc" name="txtDesc" required></ion-input>
       </ion-item>
     </ion-col>
 
@@ -24,7 +24,7 @@
 
   <ion-row class="ion-align-items-center">
     <ion-col class="signup-col">
-      <ion-button shape="round" expand="block" color='hk-red' (click)="submitLate()" type="submit">Submit
+      <ion-button shape="round" expand="block" color='hk-red' (click)="SaveLateRequest()" type="submit">Submit
       </ion-button>
     </ion-col>
   </ion-row>
