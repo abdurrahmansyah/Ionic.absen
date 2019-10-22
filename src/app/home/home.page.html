@@ -16,8 +16,11 @@
 </ion-header>
 
 <ion-content padding scroll-y=false>
+  <ion-refresher slot="fixed" pullFactor="0.5" pullMin="100" pullMax="200" (ionRefresh)="DoRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
   <ion-text style="font-size: 14px">Status: </ion-text>
-  <ion-text style="font-size: 14px ;" color = "{{colorStatus}}" >{{ txtWorkStatus }}</ion-text>
+  <ion-text style="font-size: 14px ;" color="{{colorStatus}}">{{ txtWorkStatus }}</ion-text>
   <!--<p>Example just hit <a target="_blank" rel="noopener" href="https://www.hutamakarya.com/id/">hutama karya</a>
     text.
   </p>-->
@@ -34,7 +37,7 @@
       <ion-col class="ion-float-left" size="8" style="background: transparent">
         <ion-text>Datang : {{txtTimeArrived}}</ion-text>
         <br>
-        <ion-text>Pulang : {{txtTimeBack}}</ion-text>
+        <ion-text>Pulang : {{txtTimeReturn}}</ion-text>
       </ion-col>
       <ion-col class="ion-float-right" size="4" style="background: transparent">
         <ion-text (click)="navigateToReportPage(0)">Detail </ion-text>

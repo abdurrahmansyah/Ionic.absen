@@ -1,5 +1,3 @@
-//import { Component } from '@angular/core';
-//import { NavController, AlertController } from '@ionic/angular';
 import { Router, NavigationExtras } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Storage } from '@ionic/storage';
@@ -10,7 +8,7 @@ import { PopoverController, AlertController, NavController } from '@ionic/angula
 import { PopoverComponent } from 'src/app/components/popover/popover.component';
 import { AuthenticationService } from './../services/authentication.service';
 import { Observable } from 'rxjs/Observable';
-import { GlobalService, ActivityId } from '../services/global.service';
+import { GlobalService, ActivityId, DateData, ReportData } from '../services/global.service';
 
 @Component({
   selector: 'app-home',
@@ -30,19 +28,17 @@ export class HomePage {
   public txtDayNow: string;
   public inputVal: string = "variabel";
   public txtTimeArrived: string;
-  public timeArived: string;
   public txtDate: string;
-  public txtTimeBack: string = "";
+  public txtTimeReturn: string = "";
   public txtWorkStatus: string = "";
   geoAccuracy: number;
   szUserId: any;
-  kehadiran: any;
   colorStatus: string;
   public buttonPropertyDatas = [];
   error: void;
-  timeBack: string;
   options: GeolocationOptions;
   currentPos: Geoposition;
+  popoverParam: any;
 
   constructor(public navCtrl: NavController, public alertController: AlertController,
     public router: Router,
@@ -53,12 +49,17 @@ export class HomePage {
     private authService: AuthenticationService,
     private globalService: GlobalService
   ) {
-    this.GetUserId();
-    this.GetTimeWorkingAndStatusUser();
+    this.ShowFirstLoadData();
     this.Timer();
+    this.GetTimeWorkingAndStatusUser();
   }
 
-  async GetUserId() {
+  async ShowFirstLoadData() {
+    await this.GetUserId();
+    this.GetTimeWorkingAndStatusUser();
+  }
+
+  private async GetUserId() {
     //Fungsi untuk mengambil UserId pada local storage
     await this.storage.get('szUserId').then((szUserId) => {
       this.szUserId = szUserId;
@@ -66,33 +67,29 @@ export class HomePage {
   }
 
   private GetTimeWorkingAndStatusUser() {
-    //Fungsi untuk melakukan setup pengambilan api
-    var url = 'http://sihk.hutamakarya.com/apiabsen/transaksi.php';
-    var data: Observable<any> = this.http.get(url + "?user_nik=" + this.szUserId);
-    data.subscribe(hasil => {
-      this.kehadiran = hasil;
-      if (this.kehadiran.error == false) {
-        var timeValidArrived = this.kehadiran.user.jam_datang_valid.split(':'); //get api read jam datang
+    var url = 'http://sihk.hutamakarya.com/apiabsen/GetReportData.php';
+    var data: Observable<any> = this.http.get(url + "?szUserId=" + this.szUserId);
+    data.subscribe(reportDatas => {
+      if (reportDatas.error == false) {
+        var timeValidArrived = reportDatas.user.timeValidArrived.split(':');
         var { hour, minute, ampm } = this.ConvertTimeToViewFormat(timeValidArrived);
         this.txtTimeArrived = hour + ":" + minute + " " + ampm;
-
-        var timeValidBack = this.kehadiran.user.jam_pulang_valid.split(':'); //get api read jam pulang 
+        var timeValidBack = reportDatas.user.timeValidReturn.split(':');
         var { hour, minute, ampm } = this.ConvertTimeToViewFormat(timeValidBack);
-        this.txtTimeBack = hour == 0 && minute == 0 ? "" : hour + ":" + minute + " " + ampm;
+        this.txtTimeReturn = hour == 0 && minute == 0 ? "" : hour + ":" + minute + " " + ampm;
       }
       else {
         this.txtTimeArrived = "";
-        this.txtTimeBack = "";
+        this.txtTimeReturn = "";
       }
 
-      //Method untuk mengubah status kerja
       this.SetStatusWork();
     });
   }
 
   private ConvertTimeToViewFormat(timeFromDb: any) {
-    var hour = timeFromDb[0] < 10 && timeFromDb[0] != 0 ? "0" + timeFromDb[0] : timeFromDb[0];
-    var minute = timeFromDb[1] < 10 && timeFromDb[1] != 0 ? "0" + timeFromDb[1] : timeFromDb[1];
+    var hour = timeFromDb[0]; // < 10 && timeFromDb[0] != 0 ? "0" + timeFromDb[0] : timeFromDb[0];
+    var minute = timeFromDb[1]; // < 10 && timeFromDb[1] != 0 ? "0" + timeFromDb[1] : timeFromDb[1];
     var ampm = timeFromDb[2] > 12 ? "PM" : "AM";
     return { hour, minute, ampm };
   }
@@ -104,31 +101,10 @@ export class HomePage {
   }
 
   ngOnInit() {
-    var dateData = this.GetDate();
+    var dateData = this.globalService.GetDate();
 
-    this.txtDayNow = dateData.szDay + ", " + dateData.decDate + " " + dateData.decMonth + " " + dateData.decYear;
+    this.txtDayNow = dateData.szDay + ", " + dateData.decDate + " " + dateData.szMonth + " " + dateData.decYear;
     this.txtTimeNow = this.CheckTime(dateData.decHour) + ":" + this.CheckTime(dateData.decMinute) + ":" + this.CheckTime(dateData.decSec) + " " + dateData.szAMPM;
-  }
-
-  private GetDate(): DateData {
-    var dateData = new DateData();
-    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    var days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-    var date = new Date();
-
-    dateData.decYear = date.getFullYear();
-    dateData.decMonth = months[date.getMonth()];
-    dateData.decMonth2 = date.getMonth() + 1;
-    dateData.decDate = date.getDate();
-    dateData.szDay = days[date.getDay()];
-    dateData.decMinute = date.getMinutes();
-    dateData.szMinute = dateData.decMinute < 10 ? "0" + dateData.decMinute : dateData.decMinute.toString();
-    dateData.decHour = date.getHours();
-    dateData.szHour = dateData.decHour < 10 ? "0" + dateData.decHour : dateData.decHour.toString();
-    dateData.decSec = date.getSeconds();
-    dateData.szAMPM = dateData.decHour > 12 ? "PM" : "AM";
-
-    return dateData;
   }
 
   private CheckTime(i: any) {
@@ -138,11 +114,21 @@ export class HomePage {
     return i;
   }
 
+  DoRefresh(event: any) {
+    this.ShowFirstLoadData();
+
+    setTimeout(() => {
+      event.target.complete();
+    }, 1000);
+  }
+
   async ButtonAbsen() {
     this.GetUserPosition();
     this.ValidateAbsen();
+    // this.storage.set('saveTimeArrived', this.timeArived);
+    // this.storage.set('saveTimeBack',this.timeReturn);
     // if (this.geoLatitude <= -6.24508 && this.geoLatitude >= -6.24587 && this.geoLongitude >= 106.87269 && this.geoLongitude <= 106.87379) {
-    //   this.verAbsen();
+    //   this.ValidateAbsen();
     // } else {
     //   alert("Sorry you aren't in area");
     //   // this.presentPopover(1);
@@ -164,64 +150,106 @@ export class HomePage {
   }
 
   async ValidateAbsen() {
-    var dateData = this.GetDate();
+    var dateData = this.globalService.GetDate();
+    var reportData = new ReportData();
+    var szActivityId: string;
     if (!this.txtTimeArrived) {
-      this.txtTimeArrived = dateData.szHour + ":" + dateData.szMinute + " " + dateData.szAMPM;
-      this.timeArived = dateData.decHour + ":" + dateData.szMinute + ":" + dateData.decSec;
-      this.txtDate = dateData.decYear + "/" + dateData.decMonth2 + "/" + dateData.decDate;
+      reportData.timeArrived = dateData.szHour + ":" + dateData.szMinute + ":" + dateData.decSec;
+      console.log(reportData.timeArrived);
 
-      if (this.timeArived > "08:10:00") {
-        //mengarahkan ke component form-terlambat
+      if (reportData.timeArrived > "08:10:00") {
+
+        szActivityId = ActivityId.AC002;
         let navigationExtras: NavigationExtras = {
           state: {
-            indexForm: ActivityId.AC002
+            indexForm: szActivityId
           }
         }
-        this.router.navigate(['form-request'], navigationExtras);
+        await this.GetDecisionFromUser(szActivityId, navigationExtras);
       }
-      else {
-        this.SetStatusWork(); //method untuk  ubah status kerja
-        this.DoingAbsen();  //method untuk push api jam datang
-      }
-    }
-    else if (this.txtTimeBack == "") {
-      this.txtTimeBack = dateData.szHour + ":" + dateData.szMinute + " " + dateData.szAMPM;// CEK
-      this.timeBack = dateData.decHour + ":" + dateData.szMinute + ":" + dateData.decSec;// CEK
-      if (this.timeBack < "17:00:00") {
-        //mengarahkan ke component form-pulang-cepat
-        let navigationExtras: NavigationExtras = {
-          state: {
-            indexForm: ActivityId.AC004
-          }
-        }
-        this.router.navigate(['form-request'], navigationExtras);
-      }
-      else if (this.timeBack > "17:45:00") {
-        //mengarahkan ke component form-lembur
-        let navigationExtras: NavigationExtras = {
-          state: {
-            indexForm: ActivityId.AC005
-          }
-        }
-        this.router.navigate(['form-request'], navigationExtras);
-      }
-      else {
-        this.SetStatusWork(); //method untuk  ubah status kerja
-        this.DoingAbsen();  //method untuk push api jam datang
-      }
+
+      this.DoingAbsen(dateData, reportData);
+      this.txtTimeArrived = dateData.szHour + ":" + dateData.szMinute + " " + dateData.szAMPM;
+      this.SetStatusWork();
     }
     else {
+      reportData.timeReturn = dateData.szHour + ":" + dateData.szMinute + ":" + dateData.decSec;
+      console.log(reportData.timeReturn);
+
+      if (reportData.timeReturn < "17:00:00") {
+        //mengarahkan ke component form-pulang-cepat
+        szActivityId = ActivityId.AC004
+        let navigationExtras: NavigationExtras = {
+          state: {
+            indexForm: szActivityId
+          }
+        }
+        await this.GetDecisionFromUser(szActivityId, navigationExtras);
+      }
+      else if (reportData.timeReturn > "17:45:00") {
+        //mengarahkan ke component form-lembur
+        szActivityId = ActivityId.AC005
+        let navigationExtras: NavigationExtras = {
+          state: {
+            indexForm: szActivityId
+          }
+        }
+        await this.GetDecisionFromUser(szActivityId, navigationExtras);
+      }
+
+      this.DoingAbsen(dateData, reportData);
+      this.txtTimeReturn = dateData.szHour + ":" + dateData.szMinute + " " + dateData.szAMPM;
       this.SetStatusWork();
-      const alert = await this.alertController.create({
-        header: 'Alert',
-        subHeader: '',
-        message: 'See You Tomorrow Again.',
-        cssClass: 'alertcss',
-        buttons: ['OK', 'Cancel'],
-        mode: "ios"
-      });
-      await alert.present();
     }
+  }
+
+  private async GetDecisionFromUser(szActivityId: string, navigationExtras: NavigationExtras) {
+    const alert = await this.alertController.create({
+      mode: 'ios',
+      message: 'This is an alert message.',
+      cssClass: szActivityId == ActivityId.AC001 ? 'alert-ontime' :
+        szActivityId == ActivityId.AC003 ? 'alert-diluarkantor' :
+          szActivityId == "DILUAR-WIFIAKSES" ? 'alert-wifiakses' :
+            szActivityId == ActivityId.AC005 ? 'alert-lembur' :
+              szActivityId == ActivityId.AC002 ? 'alert-terlambat' :
+                szActivityId == ActivityId.AC004 ? 'alert-pulangcepat' :
+                  'alert-pulang',
+      buttons: szActivityId == ActivityId.AC003 ? [{
+        text: 'BACK',
+        handler: () => {
+          console.log('Confirm Cancel: BACK');
+        }
+      }, {
+        text: 'NEXT',
+        handler: () => {
+          this.router.navigate(['form-request'], navigationExtras);
+        }
+      }] :
+        szActivityId == "DILUAR-WIFIAKSES" ? [{
+          text: 'BACK',
+          handler: () => {
+            console.log('Confirm Cancel: BACK');
+          }
+        }] : szActivityId == ActivityId.AC005 ||
+          szActivityId == ActivityId.AC002 ||
+          szActivityId == ActivityId.AC004 ? [{
+            text: 'NO',
+            handler: () => {
+              console.log('Confirm Cancel: NO');
+            }
+          }, {
+            text: 'YES',
+            handler: () => {
+              this.router.navigate(['form-request'], navigationExtras);
+            }
+          }] : [{
+            text: 'OK',
+            handler: () => {
+              console.log('Confirm Cancel: OK');
+            }
+          }]
+    });
+    await alert.present();
   }
 
   private SetStatusWork() {
@@ -230,7 +258,7 @@ export class HomePage {
       this.colorStatus = "danger";
     }
     else {
-      if (this.txtTimeBack == "") {
+      if (this.txtTimeReturn == "") {
         this.txtWorkStatus = "Working";
         this.colorStatus = "primary";
       } else {
@@ -240,32 +268,12 @@ export class HomePage {
     }
   }
 
-  private DoingAbsen() {
-    // throw new Error("Method not implemented.");
-    var tanggal = this.txtDate;
-    var jamdatang = this.timeArived;
-    if (!this.txtTimeBack) {
-      var jamplg = "00:00:00";
-      var url = 'http://sihk.hutamakarya.com/apiabsen/absendatang.php';
-    } else {
-      var jamplg = this.timeBack;
-      var url = 'http://sihk.hutamakarya.com/apiabsen/absenpulang.php';
-    }
-    var nik = this.szUserId;
+  private DoingAbsen(dateData: DateData, reportData: ReportData) {
+    var dateAbsen = dateData.decYear + "/" + dateData.decMonth + "/" + dateData.decDate;
 
-    let postdata = new FormData();
-    postdata.append('user_nik', nik);
-    postdata.append('jamdt', jamdatang);
-    postdata.append('jamdtvld', jamdatang);
-    postdata.append('jamplg', jamplg);
-    postdata.append('jamplgvld', jamplg);
-    postdata.append('tanggal', tanggal);
-
-    // var url = 'http://sihk.hutamakarya.com/apiabsen/absendatang.php';
-    var data: Observable<any> = this.http.post(url, postdata);
-    data.subscribe(hasil => {
-      this.kehadiran = hasil;
-    });
+    reportData.szUserId = this.szUserId;
+    reportData.dateAbsen = dateAbsen;
+    this.globalService.SaveReportData(reportData);
   }
 
   Logout() {
@@ -296,57 +304,5 @@ export class HomePage {
     popover.style.cssText = '--min-width: 300px; --box-shadow: #15ff00';
     return await popover.present();
   }
-
-  async presentAlert() {
-    const alert = await this.alertController.create({
-      header: 'Alert',
-      subHeader: 'Subtitle',
-      message: 'This is an alert message.',
-      cssClass: 'alertcss',
-      buttons: ['OK']
-    });
-
-    await alert.present();
-  }
-
-  async presentAlertConfirm() {
-    const alert = await this.alertController.create({
-      header: 'Confirm!',
-      message: 'Message <strong>text</strong>!!!',
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          cssClass: 'background',
-          handler: (blah) => {
-            console.log('Confirm Cancel: blah');
-          }
-        }, {
-          text: 'Okay',
-          handler: () => {
-            console.log('Confirm Okay');
-          }
-        }
-      ]
-    });
-
-    await alert.present();
-  }
 }
 
-class DateData {
-  public szDay: string;
-  public decDate: number;
-  public decMonth: string;
-  public decYear: number;
-  public decHour: number;
-  public szHour: string;
-  public decMinute: number;
-  public szMinute: string;
-  public szAMPM: string;
-  public decSec: number;
-  decMonth2: number;
-  day2: number;
-
-  constructor() { }
-}

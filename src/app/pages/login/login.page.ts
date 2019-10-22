@@ -32,17 +32,16 @@ export class LoginPage implements OnInit {
   navigateToHomePage() {
     var url = 'http://sihk.hutamakarya.com/apiabsen/loginabsen.php';
     let postdata = new FormData();
-    postdata.append('username', this.Username);
+    postdata.append('szUserId', this.Username);
     postdata.append('password', this.Password);
-
-    //postdata.append('username','hendra');
-    //postdata.append('password','admin');
 
     this.data = this.http.post(url, postdata);
     this.data.subscribe(data => {
       this.result = data;
       if (this.result.error == false) {
-        this.storage.set('username', this.Username);
+        this.storage.set('szUserId', this.Username);
+        console.log(this.storage.set('szUserId', this.Username));
+        
         this.storage.set('szFullName', this.result.user.name); // edit
         this.storage.set('szShortName', this.result.user.name);
         this.storage.set('szImage', this.result.user.name);
@@ -51,16 +50,16 @@ export class LoginPage implements OnInit {
         this.storage.set('szSectionId', this.result.user.name);
         this.storage.set('szToUserId', this.result.user.name);
 
-        this.presentToast("Login Berhasil");
+        this.PresentToast("Login Berhasil");
         this.authService.login();
 
         this.router.navigate(['home']);
       }
-      else { this.presentToast("Login Gagal"); }
+      else { this.PresentToast("Login Gagal"); }
     });
   }
 
-  async presentToast(msg: string) {
+  async PresentToast(msg: string) {
     const toast = await this.toastController.create({
       message: msg,
       duration: 2000,

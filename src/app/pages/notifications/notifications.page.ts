@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { IonSlides } from '@ionic/angular';
+import { Storage } from '@ionic/storage';
+import { GlobalService } from 'src/app/services/global.service';
 
 @Component({
   selector: 'app-notifications',
@@ -7,19 +8,20 @@ import { IonSlides } from '@ionic/angular';
   styleUrls: ['./notifications.page.scss'],
 })
 export class NotificationsPage implements OnInit {
-  
-  @ViewChild('slides', { static: true }) slider: IonSlides;
-  segment = 0;
 
-  constructor() { }
+  public requestDatas = [];
 
-  ngOnInit() { }
+  constructor(private storage: Storage,
+    private globalService: GlobalService, ) { }
 
-  next() {
-    this.slider.slideNext();
+  ngOnInit() {
+    this.ShowFirstLoadData();
   }
 
-  prev() {
-    this.slider.slidePrev();
+  async ShowFirstLoadData() {
+    var szUserId = await this.storage.get('szUserId').then((x) => { return x });
+    
+    this.globalService.GetRequestDatasForNotifications(szUserId);
+    this.requestDatas = this.globalService.requestDatas;
   }
 }
