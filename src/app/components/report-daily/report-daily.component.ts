@@ -18,7 +18,6 @@ export class ReportDailyComponent implements OnInit {
   public decCurrentMonth = this.dtmNow.getMonth() + 1;
   public decCurrentYear = this.dtmNow.getFullYear();
   public buttonPropertyDatas = [];
-  public requestDatas = [];
 
   slideOpts = {
     initialSlide: new Date().getMonth(),
@@ -35,7 +34,6 @@ export class ReportDailyComponent implements OnInit {
 
   ngOnInit() {
     this.SetDataDaysInMonth(this.decCurrentMonth, this.decCurrentYear);
-    // this.globalService.requestDatas = [];
   }
 
   async slideMonthChanged() {
@@ -101,10 +99,10 @@ export class ReportDailyComponent implements OnInit {
 
   async GetRequestDatasForThisDay() {
     var szUserId = await this.storage.get('szUserId').then((x) => { return x });
-    var dateRequest = this.decCurrentYear + "/" + this.decCurrentMonth + "/" + this.decCurrentDay;
+    var date = this.decCurrentYear + "/" + this.decCurrentMonth + "/" + this.decCurrentDay;
     
-    this.globalService.GetRequestDatasByUserId(szUserId, dateRequest);
-    this.requestDatas = this.globalService.requestDatas;
+    this.globalService.GetRequestDatasByUserId(szUserId, date);
+    this.globalService.GetReportData(szUserId, date);
   }
 
   next() {

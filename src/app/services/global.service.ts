@@ -4,6 +4,8 @@ import { InjectorInstance } from '../app.module';
 import { Observable } from 'rxjs';
 import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { AuthenticationService } from './authentication.service';
+import { Storage } from '@ionic/storage';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +17,9 @@ export class GlobalService {
   httpClient = InjectorInstance.get<HttpClient>(HttpClient);
 
   constructor(private router: Router,
-    private toastController: ToastController) { }
+    private toastController: ToastController,
+    private authService: AuthenticationService,
+    private storage: Storage) { }
 
   public GetDate(): DateData {
     var dateData = new DateData();
@@ -39,6 +43,28 @@ export class GlobalService {
     return dateData;
   }
 
+  public GetUserData(szUserId: string, szPassword: string) {
+    var url = 'http://sihk.hutamakarya.com/apiabsen/GetUserData.php';
+
+    let postdata = new FormData();
+    postdata.append('szUserId', szUserId);
+    postdata.append('szPassword', szPassword);
+
+    var data: any = this.httpClient.post(url, postdata);
+    data.subscribe(data => {
+      if (data.error == false) {
+        this.storage.set('userData', data.result.find(x => x));
+
+        this.PresentToast("Login Berhasil");
+        this.authService.login();
+        this.router.navigate(['home']);
+      }
+      else {
+        this.PresentToast("Login Gagal");
+      }
+    });
+  }
+
   public SaveReportData(reportData: ReportData) {
     var url = 'http://sihk.hutamakarya.com/apiabsen/SaveReportData.php';
     let postdata = new FormData();
@@ -53,10 +79,39 @@ export class GlobalService {
     data.subscribe(reportDatas => { });
   }
 
+  public GetReportData(szUserId: string, dateAbsen: string) {
+    var url = 'http://sihk.hutamakarya.com/apiabsen/GetReportData.php';
+
+    let postdata = new FormData();
+    postdata.append('szUserId', szUserId);
+    postdata.append('dateAbsen', dateAbsen);
+
+    var data: any = this.httpClient.post(url, postdata);
+    data.subscribe(reportDatas => {
+      if (reportDatas.error == false) {
+        var timeValidArrived = reportDatas.user.timeValidArrived.split(':');
+        var { hour, minute, ampm } = this.ConvertTimeToViewFormat(timeValidArrived);
+        this.timeArrived = hour + ":" + minute + " " + ampm;
+        var timeValidBack = reportDatas.user.timeValidReturn.split(':');
+        var { hour, minute, ampm } = this.ConvertTimeToViewFormat(timeValidBack);
+        this.timeReturn = hour == 0 && minute == 0 ? "" : hour + ":" + minute + " " + ampm;
+      }
+      else {
+        this.timeArrived = "";
+        this.timeReturn = "";
+      }
+    });
+  }
+
+  private ConvertTimeToViewFormat(timeFromDb: any) {
+    var hour = timeFromDb[0]; // < 10 && timeFromDb[0] != 0 ? "0" + timeFromDb[0] : timeFromDb[0];
+    var minute = timeFromDb[1]; // < 10 && timeFromDb[1] != 0 ? "0" + timeFromDb[1] : timeFromDb[1];
+    var ampm = timeFromDb[2] > 12 ? "PM" : "AM";
+    return { hour, minute, ampm };
+  }
+
   public GetRequestDatasByUserId(szUserId: string, dateRequest: string) {
     this.requestDatas = [];
-    this.timeReturn = "";
-    this.timeArrived = "";
     var url = 'http://sihk.hutamakarya.com/apiabsen/GetRequestDatas.php';
 
     let postdata = new FormData();
@@ -65,14 +120,7 @@ export class GlobalService {
 
     var data: any = this.httpClient.post(url, postdata);
     data.subscribe(data => {
-      if (data.error == false) {
-        this.requestDatas = data.result;
-        this.timeArrived = data.user.timevalidarrived;
-        this.timeReturn = data.user.timevalidreturn;
-      }
-      else {
-        this.requestDatas = [];
-      }
+      if (data.error == false) { this.requestDatas = data.result; }
     });
   }
 
@@ -97,10 +145,10 @@ export class GlobalService {
   SaveRequest(requestData: RequestData, dateData: DateData) {
     var date = dateData.decYear + "/" + dateData.decMonth + "/" + dateData.decDate;
 
-    // var url = 'http://sihk.hutamakarya.com/apiabsen/formrequest.php';
     var url = 'http://sihk.hutamakarya.com/apiabsen/SaveRequestData.php';
-    requestData.szRequestId = "HK_" + date + "_" + requestData.szactivityid + "_" + requestData.szUserId;
+    requestData.szRequestId = "HK_" + dateData.date.toLocaleDateString() + "_" + requestData.szactivityid + "_" + requestData.szUserId;
     requestData.dateRequest = dateData.date.toLocaleString();
+    console.log(dateData.date.toLocaleDateString());
 
     let postdata = new FormData();
     postdata.append('szRequestId', requestData.szRequestId);
@@ -110,7 +158,7 @@ export class GlobalService {
     postdata.append('szDesc', requestData.szDesc);
     postdata.append('szLocation', requestData.szLocation);
     postdata.append('szStatusId', requestData.szStatusId);
-    postdata.append('decTotal', requestData.decTotal); // NANTI FIELD DECTOTAL DIHAPUS KEKNYA // KALO GA YA DIBIKIN ITUNGANNYA
+    postdata.append('decTotal', requestData.decTotal);
     postdata.append('dtmCreated', requestData.dateRequest);
     postdata.append('dtmLastUpdated', requestData.dateRequest);
 
@@ -179,16 +227,20 @@ export class RequestData {
 }
 
 export class ActivityId {
-  public static readonly AC001: string = "AC001"; //ON TIME 
-  public static readonly AC002: string = "AC002"; //TERLAMBAT
-  public static readonly AC003: string = "AC003"; //DILUAR KANTOR
-  public static readonly AC004: string = "AC004"; //PULANG CEPAT
-  public static readonly AC005: string = "AC005"; //LEMBUR
-  public static readonly AC006: string = "AC006"; //ABSEN
+  public static readonly AC001: string = "AC001"; //On Time
+  public static readonly AC002: string = "AC002"; //Terlambat
+  public static readonly AC003: string = "AC003"; //Datang Diluar Kantor
+  public static readonly AC004: string = "AC004"; //Pulang Diluar Kantor
+  public static readonly AC005: string = "AC005"; //Pulang Cepat
+  public static readonly AC006: string = "AC006"; //Lembur
+  public static readonly AC007: string = "AC007"; //Absen
+  public static readonly AC008: string = "AC008"; //Sakit
+  public static readonly AC009: string = "AC009"; //Izin
+  public static readonly AC010: string = "AC010"; //Cuti
 }
 
 export class StatusId {
-  public static readonly ST001: string = "ST001"; //APPROVED
-  public static readonly ST002: string = "ST002"; //NOT APPROVED 
-  public static readonly ST003: string = "ST003"; //NEED APPROVAL 
+  public static readonly ST001: string = "ST001"; //Approved
+  public static readonly ST002: string = "ST002"; //Not Approved 
+  public static readonly ST003: string = "ST003"; //Need Approval 
 }

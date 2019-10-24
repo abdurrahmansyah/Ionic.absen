@@ -1,17 +1,9 @@
 <ion-header>
   <ion-toolbar color="hk-red">
-    <ion-title>{{ txtDayNow }}</ion-title>
-    <ion-buttons slot="primary">
-      <ion-button color="hk-white-red" (click)="navigateToNotificationsPage()">
-        <ion-icon slot="icon-only" name="notifications"></ion-icon>
-      </ion-button>
-      <ion-button color="hk-white-red" (click)="navigateToReportPage(1)">
-        <ion-icon slot="icon-only" name="clipboard"></ion-icon>
-      </ion-button>
-      <ion-button color="hk-white-red" (click)="Logout()">
-        <ion-icon slot="icon-only" name="power"></ion-icon>
-      </ion-button>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
     </ion-buttons>
+    <ion-title>{{ txtDayNow }}</ion-title>
   </ion-toolbar>
 </ion-header>
 

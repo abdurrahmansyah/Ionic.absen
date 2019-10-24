@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { PopoverController, AlertController, IonSlides, Config } from '@ionic/angular';
+import { PopoverController, AlertController, IonSlides, Config, ActionSheetController } from '@ionic/angular';
 import { PopoverComponent } from 'src/app/components/popover/popover.component';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -17,8 +17,9 @@ export class ReportsPage implements OnInit {
 
   constructor(private popoverController: PopoverController,
     private activatedRoute: ActivatedRoute,
-    private router: Router) { 
-    }
+    private router: Router,
+    private actionSheetController: ActionSheetController) {
+  }
 
   ngOnInit() {
     this.SetFirstSlideBySegment();
@@ -34,34 +35,73 @@ export class ReportsPage implements OnInit {
     await this.slider.slideTo(this.segment);
   }
 
-  async segmentChanged() {
+  async SegmentChanged() {
     await this.slider.slideTo(this.segment);
-    
-    // if(this.segment == 0){
-    //   this.isSegment0 = true;
-    // } else {
-    //   this.isSegment0 = false;
-    // }
   }
 
-  async slideChanged() {
+  async SlideChanged() {
     this.segment = await this.slider.getActiveIndex();
   }
 
-  // nanti dipindah di home // belom // cek
-  async presentPopover(ev: any) {
-    const popover = await this.popoverController.create({
-      component: PopoverComponent,
-      componentProps: {
-        popoverParam: this.popoverParam
-      },
-      event: ev,
-      translucent: true,
-      cssClass: 'pop-over-style'
+  async AddNewRequest() {
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Add New Request',
+      mode: "ios",
+      buttons: [this.IsLembur() ? {
+        text: 'Lembur',
+        handler: () => {
+          console.log('Delete clicked');
+        }
+      } : {
+          text: 'Cancel', icon: 'close', role: 'cancel', handler: () => { console.log('Cancel clicked'); }
+        }, this.IsTerlambat() ? {
+          text: 'Terlambat',
+          handler: () => {
+            console.log('Share clicked');
+          }
+        } : {
+          text: 'Cancel', icon: 'close', role: 'cancel', handler: () => { console.log('Cancel clicked'); }
+        }, this.IsDatangDiluarKantor() ? {
+          text: 'Datang diluar kantor',
+          handler: () => {
+            console.log('Play clicked');
+          }
+        } : {
+          text: 'Cancel', icon: 'close', role: 'cancel', handler: () => { console.log('Cancel clicked'); }
+        }, this.IsPulangDiluarKantor() ? {
+          text: 'Pulang diluar kantor',
+          handler: () => {
+            console.log('Favorite clicked');
+          }
+        } : {
+          text: 'Cancel', icon: 'close', role: 'cancel', handler: () => { console.log('Cancel clicked'); }
+        }
+      ]
     });
 
-    popover.style.cssText = '--min-width: 80%';
-    // popover.style.background = '--background: #000000';
-    return await popover.present();
+    var isValidToShow: boolean = false;
+    actionSheet.buttons.forEach((x: any) => {
+      if (!x.role) {
+        isValidToShow = true;
+      }
+    });
+
+    if (isValidToShow) await actionSheet.present();
+  }
+
+  IsLembur(): boolean {
+    return false;
+  }
+
+  IsTerlambat(): boolean {
+    return true;
+  }
+
+  IsDatangDiluarKantor(): boolean {
+    return true;
+  }
+
+  IsPulangDiluarKantor(): boolean {
+    return false;
   }
 }

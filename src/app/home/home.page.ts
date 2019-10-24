@@ -67,8 +67,14 @@ export class HomePage {
   }
 
   private GetTimeWorkingAndStatusUser() {
+    var date = new Date();
     var url = 'http://sihk.hutamakarya.com/apiabsen/GetReportData.php';
-    var data: Observable<any> = this.http.get(url + "?szUserId=" + this.szUserId);
+    let postdata = new FormData();
+    
+    postdata.append('szUserId', this.szUserId);
+    postdata.append('dateAbsen', date.toLocaleString());
+
+    var data: Observable<any> = this.http.post(url, postdata);
     data.subscribe(reportDatas => {
       if (reportDatas.error == false) {
         var timeValidArrived = reportDatas.user.timeValidArrived.split(':');
@@ -178,7 +184,7 @@ export class HomePage {
 
       if (reportData.timeReturn < "17:00:00") {
         //mengarahkan ke component form-pulang-cepat
-        szActivityId = ActivityId.AC004
+        szActivityId = ActivityId.AC005
         let navigationExtras: NavigationExtras = {
           state: {
             indexForm: szActivityId
@@ -188,7 +194,7 @@ export class HomePage {
       }
       else if (reportData.timeReturn > "17:45:00") {
         //mengarahkan ke component form-lembur
-        szActivityId = ActivityId.AC005
+        szActivityId = ActivityId.AC006
         let navigationExtras: NavigationExtras = {
           state: {
             indexForm: szActivityId
@@ -208,13 +214,13 @@ export class HomePage {
       mode: 'ios',
       message: 'This is an alert message.',
       cssClass: szActivityId == ActivityId.AC001 ? 'alert-ontime' :
-        szActivityId == ActivityId.AC003 ? 'alert-diluarkantor' :
+        szActivityId == ActivityId.AC003 || szActivityId == ActivityId.AC004 ? 'alert-diluarkantor' :
           szActivityId == "DILUAR-WIFIAKSES" ? 'alert-wifiakses' :
-            szActivityId == ActivityId.AC005 ? 'alert-lembur' :
+            szActivityId == ActivityId.AC006 ? 'alert-lembur' :
               szActivityId == ActivityId.AC002 ? 'alert-terlambat' :
-                szActivityId == ActivityId.AC004 ? 'alert-pulangcepat' :
+                szActivityId == ActivityId.AC005 ? 'alert-pulangcepat' :
                   'alert-pulang',
-      buttons: szActivityId == ActivityId.AC003 ? [{
+      buttons: szActivityId == ActivityId.AC003 || szActivityId == ActivityId.AC004 ? [{
         text: 'BACK',
         handler: () => {
           console.log('Confirm Cancel: BACK');
@@ -230,9 +236,9 @@ export class HomePage {
           handler: () => {
             console.log('Confirm Cancel: BACK');
           }
-        }] : szActivityId == ActivityId.AC005 ||
-          szActivityId == ActivityId.AC002 ||
-          szActivityId == ActivityId.AC004 ? [{
+        }] : szActivityId == ActivityId.AC002 ||
+          szActivityId == ActivityId.AC005 ||
+          szActivityId == ActivityId.AC006 ? [{
             text: 'NO',
             handler: () => {
               console.log('Confirm Cancel: NO');

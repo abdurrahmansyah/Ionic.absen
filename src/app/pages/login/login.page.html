@@ -1,36 +1,36 @@
 <ion-content>
-<div class="bg-img" padding></div>
-    <form registerForm="ngForm" (ngSubmit)="navigateToHomePage()">
-      <ion-card mode="ios">
-        <ion-row class="ion-align-items-center">
-          <ion-col>
-            <h1>Login</h1>
-          </ion-col>
-        </ion-row>
+  <div class="bg-img" padding></div>
+  <form registerForm="ngForm" (ngSubmit)="Login()">
+    <ion-card mode="ios">
+      <ion-row class="ion-align-items-center">
+        <ion-col>
+          <h1>Login</h1>
+        </ion-col>
+      </ion-row>
 
-        <ion-row class="ion-align-items-center">
-          <ion-col>
-            <ion-item>
-              <ion-input type="text" placeholder="Username" [(ngModel)]="Username" name="Username" required></ion-input>
-            </ion-item>
-          </ion-col>
-        </ion-row>
+      <ion-row class="ion-align-items-center">
+        <ion-col>
+          <ion-item>
+            <ion-input type="text" placeholder="Username" [(ngModel)]="szUserId" name="szUserId" required></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
 
-        <ion-row class="ion-align-items-center">
-          <ion-col>
-            <ion-item>
-              <ion-input type="password" placeholder="Password" [(ngModel)]="Password" name="Password" required>
-              </ion-input>
-            </ion-item>
-          </ion-col>
-        </ion-row>
+      <ion-row class="ion-align-items-center">
+        <ion-col>
+          <ion-item>
+            <ion-input type="password" placeholder="Password" [(ngModel)]="szPassword" name="szPassword" required>
+            </ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
 
-        <ion-row class="ion-align-items-center">
-          <ion-col class="signup-col">
-            <ion-button shape="round" expand="block" color='hk-red' (click)="navigateToHomePage()" type="submit">Login
-            </ion-button>
-          </ion-col>
-        </ion-row>
-      </ion-card>
-    </form>
+      <ion-row class="ion-align-items-center">
+        <ion-col class="signup-col">
+          <ion-button shape="round" expand="block" color='hk-red' (click)="Login()" type="submit">Login
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+  </form>
 </ion-content>

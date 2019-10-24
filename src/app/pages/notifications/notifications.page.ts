@@ -20,7 +20,7 @@ export class NotificationsPage implements OnInit {
 
   async ShowFirstLoadData() {
     var szUserId = await this.storage.get('szUserId').then((x) => { return x });
-    
+
     this.globalService.GetRequestDatasForNotifications(szUserId);
     this.requestDatas = this.globalService.requestDatas;
   }

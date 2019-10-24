@@ -15,9 +15,6 @@ export class ReportDaily2Component implements OnInit {
   requestDatas = [];
   txtTimeArrived: string;
   txtTimeReturn: string;
-  txtTimeLate: string;
-  txtTimeOver: string;
-  txtTimeBelow: string;
 
   constructor(
     private globalService: GlobalService,
@@ -38,32 +35,6 @@ export class ReportDaily2Component implements OnInit {
     this.requestDatas = this.globalService.requestDatas;
     this.txtTimeArrived = this.globalService.timeArrived;
     this.txtTimeReturn = this.globalService.timeReturn;
-
-    var totalterlambat = this.txtTimeArrived.split(':');
-    var { hour, minute, ampm } = this.ConvertTimeToViewFormatLate(totalterlambat);
-    this.txtTimeLate = hour + ":" + minute + ":" + ampm;
-
-    // var totallembur = this.txtTimeReturn.split(':'); //get api read jam datang
-    // var { hour, minute, ampm } = this.ConvertTimeToViewFormat(totallembur);
-    // this.txtTimeOver = hour + ":" + minute + ":" + ampm;
-
-    // var totalpulang = this.txtTimeReturn.split(':'); //get api read jam datang
-    // var { hour, minute, ampm } = this.ConvertTimeToViewFormat(totalpulang);
-    // this.txtTimeBelow = hour + ":" + minute + ":" + ampm;
-  }
-
-  private ConvertTimeToViewFormatLate(timeFromDb: any) {
-    var hour1 = timeFromDb[0] - 8;
-    var minute1 = timeFromDb[1];
-    if (minute1 < 10) {
-      var hour = hour1 - 1;
-      var minute = 60 - minute1;
-    } else {
-      var hour = hour1;
-      var minute = minute1 - 10;
-    }
-    var ampm = timeFromDb[2];
-    return { hour, minute, ampm };
   }
 
   private ConvertTimeToViewFormat(timeFromDb: any) {
@@ -72,5 +43,4 @@ export class ReportDaily2Component implements OnInit {
     var ampm = timeFromDb[2];
     return { hour, minute, ampm };
   }
-
 }
