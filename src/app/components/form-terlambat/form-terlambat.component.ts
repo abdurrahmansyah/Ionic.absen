@@ -11,13 +11,11 @@ export class FormTerlambatComponent implements OnInit {
   public txtTimeNow: string;
   public txtDesc: string;
   public dateData: DateData;
-  szUserId: string;
 
   constructor(
     private storage: Storage,
     private globalService: GlobalService
   ) {
-    this.GetUserId();
     this.Timer();
   }
 
@@ -39,15 +37,9 @@ export class FormTerlambatComponent implements OnInit {
     }.bind(this), 500);
   }
 
-  async GetUserId() {
-    await this.storage.get('szUserId').then((szUserId) => {
-      this.szUserId = szUserId;
-    });
-  }
-
   public SaveLateRequest() {
     var requestData = new RequestData();
-    requestData.szUserId = this.szUserId;
+    requestData.szUserId = this.globalService.userData.szUserId;
     requestData.szactivityid = ActivityId.AC002;
     requestData.szDesc = this.txtDesc;
     requestData.szLocation = "";
@@ -66,6 +58,10 @@ export class FormTerlambatComponent implements OnInit {
     } else {
       decMinute = decMinute - 10;
     }
+    console.log(decMinute);
+    console.log(decHour + "." + decMinute);
+    console.log(decMinute);
+    
     return decHour + "." + decMinute;
   }
 }

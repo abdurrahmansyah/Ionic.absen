@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterEvent, NavigationExtras } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
 import { AuthenticationService } from '../services/authentication.service';
-import { HttpClient } from '@angular/common/http';
-import { Storage } from '@ionic/storage';
 import { GlobalService } from '../services/global.service';
 
 @Component({
@@ -31,37 +29,31 @@ export class MainPage implements OnInit {
   ];
 
   selectedPath: number;
-  userData: []; // nanti dipindah ke global service
   public txtUserId: string;
   public txtUserName: string;
   public txtDivisionName: string;
   public txtSectionName: string;
 
-  constructor(private router: Router, 
-    private authService: AuthenticationService, 
-    private http: HttpClient, 
-    private storage: Storage,
+  constructor(private router: Router,
+    private authService: AuthenticationService,
     private globalService: GlobalService) {
-    this.GetRequestDatasForThisDay();
+    this.Timer();
   }
 
-  ngOnInit() {
+  private Timer() {
+    setInterval(function () {
+      this.ShowFirstLoadData();
+    }.bind(this), 500);
   }
 
-  async GetRequestDatasForThisDay() {
-    // var szUserId = await this.storage.get('szUserId').then((x) => { return x });
-    var userData = await this.storage.get('userData').then((x) => { return x });
-    console.log(userData);
-    console.log(userData.szuserid);
+  private ShowFirstLoadData() {
+    this.txtUserId = this.globalService.userData.szUserId;
+    this.txtUserName = this.globalService.userData.szFullName;
+    this.txtDivisionName = this.globalService.userData.szDivisionName;
+    this.txtSectionName = this.globalService.userData.szSectionName;
+  }
 
-
-    // var data = userData.find(x => x);
-    // console.log(data);
-    // console.log(data.szuserid);
-    
-    // this.GetUserData(szUserId);
-    // this.globalService.GetRequestDatasByUserId(szUserId, dateRequest);
-    // this.requestDatas = this.globalService.requestDatas;
+  ngOnInit() { 
   }
 
   NavRouterMenu(index: number) {
@@ -80,24 +72,5 @@ export class MainPage implements OnInit {
     else if (index == 3) {
       this.authService.logout();
     }
-  }
-
-  public GetUserData(szUserId: string) {
-    this.userData = [];
-    var url = 'http://sihk.hutamakarya.com/apiabsen/GetUserData.php';
-
-    let postdata = new FormData();
-    postdata.append('szUserId', szUserId);
-
-    var data: any = this.http.post(url, postdata);
-    data.subscribe(data => {
-      if (data.error == false) {
-        this.userData = data.result;
-      }
-      else {
-        this.userData = [];
-      }
-      console.log(this.userData);
-    });
   }
 }

@@ -1,6 +1,5 @@
 import { Router, NavigationExtras } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { Storage } from '@ionic/storage';
 
 import { Geolocation, GeolocationOptions, Geoposition, PositionError } from '@ionic-native/geolocation/ngx';
 import { Component, OnInit } from '@angular/core';
@@ -8,7 +7,7 @@ import { PopoverController, AlertController, NavController } from '@ionic/angula
 import { PopoverComponent } from 'src/app/components/popover/popover.component';
 import { AuthenticationService } from './../services/authentication.service';
 import { Observable } from 'rxjs/Observable';
-import { GlobalService, ActivityId, DateData, ReportData } from '../services/global.service';
+import { GlobalService, ActivityId, DateData, ReportData, UserData } from '../services/global.service';
 
 @Component({
   selector: 'app-home',
@@ -32,7 +31,7 @@ export class HomePage {
   public txtTimeReturn: string = "";
   public txtWorkStatus: string = "";
   geoAccuracy: number;
-  szUserId: any;
+  // userData: UserData = new UserData();
   colorStatus: string;
   public buttonPropertyDatas = [];
   error: void;
@@ -44,26 +43,17 @@ export class HomePage {
     public router: Router,
     public geolocation: Geolocation,
     public http: HttpClient,
-    private storage: Storage,
     public popoverController: PopoverController,
-    private authService: AuthenticationService,
     private globalService: GlobalService
   ) {
     this.ShowFirstLoadData();
     this.Timer();
-    this.GetTimeWorkingAndStatusUser();
   }
 
   async ShowFirstLoadData() {
-    await this.GetUserId();
+    await this.globalService.GetUserDataFromStorage();
+    
     this.GetTimeWorkingAndStatusUser();
-  }
-
-  private async GetUserId() {
-    //Fungsi untuk mengambil UserId pada local storage
-    await this.storage.get('szUserId').then((szUserId) => {
-      this.szUserId = szUserId;
-    });
   }
 
   private GetTimeWorkingAndStatusUser() {
@@ -71,7 +61,7 @@ export class HomePage {
     var url = 'http://sihk.hutamakarya.com/apiabsen/GetReportData.php';
     let postdata = new FormData();
     
-    postdata.append('szUserId', this.szUserId);
+    postdata.append('szUserId', this.globalService.userData.szUserId);
     postdata.append('dateAbsen', date.toLocaleString());
 
     var data: Observable<any> = this.http.post(url, postdata);
@@ -161,10 +151,8 @@ export class HomePage {
     var szActivityId: string;
     if (!this.txtTimeArrived) {
       reportData.timeArrived = dateData.szHour + ":" + dateData.szMinute + ":" + dateData.decSec;
-      console.log(reportData.timeArrived);
 
       if (reportData.timeArrived > "08:10:00") {
-
         szActivityId = ActivityId.AC002;
         let navigationExtras: NavigationExtras = {
           state: {
@@ -277,26 +265,18 @@ export class HomePage {
   private DoingAbsen(dateData: DateData, reportData: ReportData) {
     var dateAbsen = dateData.decYear + "/" + dateData.decMonth + "/" + dateData.decDate;
 
-    reportData.szUserId = this.szUserId;
+    reportData.szUserId = this.globalService.userData.szUserId;
     reportData.dateAbsen = dateAbsen;
     this.globalService.SaveReportData(reportData);
   }
 
-  Logout() {
-    this.authService.logout();
-  }
-
-  navigateToReportPage(indexReport: string) {
+  NavigateToReportPage(indexReport: string) {
     let navigationExtras: NavigationExtras = {
       state: {
         indexReport: indexReport
       }
     };
     this.router.navigate(['reports'], navigationExtras);
-  }
-
-  navigateToNotificationsPage() {
-    this.router.navigate(['notifications'])
   }
 
   async presentPopover(ev: any) {

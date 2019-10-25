@@ -1,9 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonSlides } from '@ionic/angular';
-import { GlobalService, RequestData, ActivityId } from 'src/app/services/global.service';
-import { HttpClient } from '@angular/common/http';
-import { Storage } from '@ionic/storage';
-import { map } from 'rxjs/operators';
+import { GlobalService } from 'src/app/services/global.service';
 
 @Component({
   selector: 'app-report-daily',
@@ -23,12 +20,8 @@ export class ReportDailyComponent implements OnInit {
     initialSlide: new Date().getMonth(),
     speed: 400
   };
-  data: any;
-  result: any;
-  txtTimeArrived: string;
 
-  constructor(private globalService: GlobalService,
-    private http: HttpClient, public storage: Storage) {
+  constructor(private globalService: GlobalService) {
     this.GetRequestDatasForThisDay();
   }
 
@@ -98,11 +91,10 @@ export class ReportDailyComponent implements OnInit {
   }
 
   async GetRequestDatasForThisDay() {
-    var szUserId = await this.storage.get('szUserId').then((x) => { return x });
     var date = this.decCurrentYear + "/" + this.decCurrentMonth + "/" + this.decCurrentDay;
     
-    this.globalService.GetRequestDatasByUserId(szUserId, date);
-    this.globalService.GetReportData(szUserId, date);
+    this.globalService.GetRequestDatasByUserId(this.globalService.userData.szUserId, date);
+    this.globalService.GetReportData(this.globalService.userData.szUserId, date);
   }
 
   next() {

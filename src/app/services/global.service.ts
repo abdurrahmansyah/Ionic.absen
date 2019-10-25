@@ -14,6 +14,8 @@ export class GlobalService {
   public requestDatas = [];
   public timeArrived: string = "";
   public timeReturn: string = "";
+  public userData: UserData = new UserData();
+
   httpClient = InjectorInstance.get<HttpClient>(HttpClient);
 
   constructor(private router: Router,
@@ -43,6 +45,12 @@ export class GlobalService {
     return dateData;
   }
 
+  public async GetUserDataFromStorage() {
+    await this.storage.get('userData').then((userData) => {
+      this.userData = userData;
+    });
+  }
+
   public GetUserData(szUserId: string, szPassword: string) {
     var url = 'http://sihk.hutamakarya.com/apiabsen/GetUserData.php';
 
@@ -53,8 +61,10 @@ export class GlobalService {
     var data: any = this.httpClient.post(url, postdata);
     data.subscribe(data => {
       if (data.error == false) {
-        this.storage.set('userData', data.result.find(x => x));
+        var userDataFromDb = data.result.find(x => x);
+        var userData = this.MappingUserData(userDataFromDb);
 
+        this.storage.set('userData', userData);
         this.PresentToast("Login Berhasil");
         this.authService.login();
         this.router.navigate(['home']);
@@ -63,6 +73,26 @@ export class GlobalService {
         this.PresentToast("Login Gagal");
       }
     });
+  }
+
+  private MappingUserData(userDataFromDb: any) {
+    var userData = new UserData();
+    userData.szUserId = userDataFromDb.szuserid;
+    userData.szPassword = userDataFromDb.szpassword;
+    userData.szFullName = userDataFromDb.szfullname;
+    userData.szShortName = userDataFromDb.szshortname;
+    userData.szTitleId = userDataFromDb.sztitleid;
+    userData.szTitleName = userDataFromDb.sztitlename;
+    userData.szDivisionId = userDataFromDb.szdivisionid;
+    userData.szDivisionName = userDataFromDb.szdivisionname;
+    userData.szSectionId = userDataFromDb.szsectionid;
+    userData.szSectionName = userDataFromDb.szsectionname;
+    userData.bStatusAdmin = userDataFromDb.bstatusadmin;
+    userData.szImage = userDataFromDb.szimage;
+    userData.szEmail = userDataFromDb.szemail;
+    userData.szSuperiorUserId = userDataFromDb.szsuperioruserid;
+    userData.szSuperiorUserName = userDataFromDb.szsuperiorusername;
+    return userData;
   }
 
   public SaveReportData(reportData: ReportData) {
@@ -142,7 +172,7 @@ export class GlobalService {
     });
   }
 
-  SaveRequest(requestData: RequestData, dateData: DateData) {
+  public SaveRequest(requestData: RequestData, dateData: DateData) {
     var date = dateData.decYear + "/" + dateData.decMonth + "/" + dateData.decDate;
 
     var url = 'http://sihk.hutamakarya.com/apiabsen/SaveRequestData.php';
@@ -178,6 +208,26 @@ export class GlobalService {
     });
     toast.present();
   }
+}
+
+export class UserData {
+  public szUserId: string;
+  public szPassword: string;
+  public szFullName: string;
+  public szShortName: string;
+  public szTitleId: string;
+  public szTitleName: string;
+  public szDivisionId: string;
+  public szDivisionName: string;
+  public szSectionId: string;
+  public szSectionName: string;
+  public bStatusAdmin: boolean;
+  public szImage: string;
+  public szEmail: string;
+  public szSuperiorUserId: string;
+  public szSuperiorUserName: string;
+
+  constructor() { }
 }
 
 export class DateData {
