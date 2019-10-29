@@ -120,15 +120,23 @@ export class HomePage {
 
   async ButtonAbsen() {
     this.GetUserPosition();
-    this.ValidateAbsen();
+    // this.ValidateAbsen();
     // this.storage.set('saveTimeArrived', this.timeArived);
     // this.storage.set('saveTimeBack',this.timeReturn);
-    // if (this.geoLatitude <= -6.24508 && this.geoLatitude >= -6.24587 && this.geoLongitude >= 106.87269 && this.geoLongitude <= 106.87379) {
-    //   this.ValidateAbsen();
-    // } else {
-    //   alert("Sorry you aren't in area");
+    if (this.geoLatitude <= -6.24508 && this.geoLatitude >= -6.24587 && this.geoLongitude >= 106.87269 && this.geoLongitude <= 106.87379) {
+      this.ValidateAbsen();
+    } else {
+      // alert("Sorry you aren't in area");
+      var szActivityId: string;
+      szActivityId = ActivityId.AC003;
+        let navigationExtras: NavigationExtras = {
+          state: {
+            indexForm: szActivityId
+          }
+        }
+        await this.GetDecisionFromUser(szActivityId, navigationExtras);
     //   // this.presentPopover(1);
-    // }
+    }
   }
 
   private GetUserPosition() {

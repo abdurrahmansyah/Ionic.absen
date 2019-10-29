@@ -9,6 +9,7 @@ import { FormRequestPage } from './form-request.page';
 import { ComponentsModule } from 'src/app/components/components.module';
 import { FormLemburComponent } from 'src/app/components/form-lembur/form-lembur.component';
 import { FormTerlambatComponent } from 'src/app/components/form-terlambat/form-terlambat.component';
+import { FormAbsenDiluarComponent } from 'src/app/components/form-absen-diluar/form-absen-diluar.component';
 import { FormPulangCepatComponent } from 'src/app/components/form-pulang-cepat/form-pulang-cepat.component';
 
 const routes: Routes = [
@@ -26,7 +27,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     ComponentsModule
   ],
-  entryComponents: [FormLemburComponent, FormTerlambatComponent, FormPulangCepatComponent],
+  entryComponents: [FormLemburComponent, FormTerlambatComponent, FormAbsenDiluarComponent, FormPulangCepatComponent],
   declarations: [FormRequestPage]
 })
 export class FormRequestPageModule { }
