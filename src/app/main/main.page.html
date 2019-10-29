@@ -1,3 +1,41 @@
-<ion-content>
-  <ion-router-outlet></ion-router-outlet>
-</ion-content>
+<ion-split-pane>
+  <ion-menu contentId="content">
+    <ion-header mode="ios">
+      <div style="padding: 20px; padding-bottom: 10px; line-height: 140%; color: var(--ion-color-hk-red);">
+        <div style="padding-bottom: 10px;">
+          <ion-avatar>
+            <img src="../../../assets/images/popover-1.png">
+          </ion-avatar>
+        </div>
+        <ion-text style="font-size: 18px; font-weight: 700;">{{ txtUserName }}</ion-text><br>
+        <ion-text style="font-size: 14px;">{{ txtUserId }}</ion-text><br>
+        <ion-text style="font-size: 14px;">{{ txtDivisionName }}</ion-text><br>
+        <ion-text style="font-size: 14px;">{{ txtSectionName }}</ion-text>
+      </div>
+    </ion-header>
+    <ion-content>
+      <ion-menu-toggle auto-hide="false" *ngFor="let page of pages">
+        <ion-item button mode="md" (click)="NavRouterMenu(page.index)" [class.active-item]="selectedPath === page.index"
+          Lines="none" color="hk-white-red" style="--min-height: 55px;">
+          <ion-icon slot="start" name="{{ page.icon }}"></ion-icon>
+          <ion-text>{{ page.title }}</ion-text>
+        </ion-item>
+      </ion-menu-toggle>
+      <hr>
+      <ion-item button mode="md" Lines="none" color="hk-white-red" style="--min-height: 55px;">
+        <ion-text>Settings and Privacy</ion-text>
+      </ion-item>
+      <ion-item button mode="md" Lines="none" color="hk-white-red" style="--min-height: 55px;">
+        <ion-text>Help Center</ion-text>
+      </ion-item>
+    </ion-content>
+    <ion-footer>
+      <ion-toolbar>
+        <ion-button color="hk-white-red" mode="ios">
+          <ion-icon slot="icon-only" name="finger-print"></ion-icon>
+        </ion-button>
+      </ion-toolbar>
+    </ion-footer>
+  </ion-menu>
+  <ion-router-outlet id="content" main></ion-router-outlet>
+</ion-split-pane>

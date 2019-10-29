@@ -1,9 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonSlides } from '@ionic/angular';
-import { GlobalService, RequestData, ActivityId } from 'src/app/services/global.service';
-import { HttpClient } from '@angular/common/http';
-import { Storage } from '@ionic/storage';
-import { map } from 'rxjs/operators';
+import { GlobalService } from 'src/app/services/global.service';
 
 @Component({
   selector: 'app-report-daily',
@@ -18,24 +15,18 @@ export class ReportDailyComponent implements OnInit {
   public decCurrentMonth = this.dtmNow.getMonth() + 1;
   public decCurrentYear = this.dtmNow.getFullYear();
   public buttonPropertyDatas = [];
-  public requestDatas = [];
 
   slideOpts = {
     initialSlide: new Date().getMonth(),
     speed: 400
   };
-  data: any;
-  result: any;
-  txtTimeArrived: string;
 
-  constructor(private globalService: GlobalService,
-    private http: HttpClient, public storage: Storage) {
+  constructor(private globalService: GlobalService) {
     this.GetRequestDatasForThisDay();
   }
 
   ngOnInit() {
     this.SetDataDaysInMonth(this.decCurrentMonth, this.decCurrentYear);
-    // this.globalService.requestDatas = [];
   }
 
   async slideMonthChanged() {
@@ -100,11 +91,10 @@ export class ReportDailyComponent implements OnInit {
   }
 
   async GetRequestDatasForThisDay() {
-    var szUserId = await this.storage.get('szUserId').then((x) => { return x });
-    var dateRequest = this.decCurrentYear + "/" + this.decCurrentMonth + "/" + this.decCurrentDay;
+    var date = this.decCurrentYear + "/" + this.decCurrentMonth + "/" + this.decCurrentDay;
     
-    this.globalService.GetRequestDatasByUserId(szUserId, dateRequest);
-    this.requestDatas = this.globalService.requestDatas;
+    this.globalService.GetRequestDatasByUserId(this.globalService.userData.szUserId, date);
+    this.globalService.GetReportData(this.globalService.userData.szUserId, date);
   }
 
   next() {

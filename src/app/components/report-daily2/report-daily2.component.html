@@ -1,14 +1,14 @@
 <hr width="90%">
 
 <ion-grid style="width: 90%" no-padding>
-  <ion-row no-padding align-items-center >
+  <ion-row no-padding align-items-center>
     <ion-col size="2" no-padding style="text-align: left">
       <ion-icon name="card" style="font-size: 50px; vertical-align: middle" color="hk-red"></ion-icon>
     </ion-col>
     <ion-col size="10" style="text-align: left; font-size: 16px">
       <ion-text color="hk-darkgrey">Datang : </ion-text>
       <ion-text color="dark">{{ txtTimeArrived }}
-        
+
       </ion-text>
       <br>
       <ion-text color="hk-darkgrey">Pulang : </ion-text>
@@ -21,29 +21,20 @@
 
 <ion-card *ngFor="let requestData of requestDatas">
   <ion-item lines="none" color="transparent">
-    <ion-label *ngIf="requestData.szactivityid == 'AC002'">Terlambat {{ requestData.szActivityName }}</ion-label>
-    <ion-label *ngIf="requestData.szactivityid == 'AC003'">Diluar Kantor {{ requestData.szActivityName }}</ion-label>
-    <ion-label *ngIf="requestData.szactivityid == 'AC004'">Pulang Cepat {{ requestData.szActivityName }}</ion-label>
-    <ion-label *ngIf="requestData.szactivityid == 'AC005'">Lembur {{ requestData.szActivityName }}</ion-label>
+    <ion-label>{{ requestData.szactivityname }}</ion-label>
 
     <ion-button shape="round" slot="end" *ngIf="requestData.szstatusid == 'ST001'" color="hk-green">
-     Approved {{ requestData.szStatusName }}</ion-button>
+      {{ requestData.szstatusname }}</ion-button>
     <ion-button shape="round" slot="end" *ngIf="requestData.szstatusid == 'ST002'" color="hk-red">
-     Not Approved {{ requestData.szStatusName }}</ion-button>
+      {{ requestData.szstatusname }}</ion-button>
     <ion-button shape="round" slot="end" *ngIf="requestData.szstatusid == 'ST003'" color="hk-yellow">
-     Need Approval {{ requestData.szStatusName }}</ion-button>
+      {{ requestData.szstatusname }}</ion-button>
   </ion-item>
   <div class="ion-text-start" padding style="padding-top: 0px">
     <ion-text>Keterangan : {{ requestData.szdesc }}</ion-text> <br>
-    <ion-text *ngIf="requestData.szactivityid == 'AC002'">Total : {{ txtTimeLate }}</ion-text>
-    <ion-text *ngIf="requestData.szactivityid == 'AC004'">Total : {{ txtTimeBelow }}</ion-text>
-    <ion-text *ngIf="requestData.szactivityid == 'AC005'">Total : {{ txtTimeOver }}</ion-text>
+    <ion-text *ngIf="requestData.szactivityid == 'AC002'">Total : {{ requestData.dectotal }}</ion-text>
+    <ion-text *ngIf="requestData.szactivityid == 'AC004'">Total : {{ requestData.dectotal }}</ion-text>
+    <ion-text *ngIf="requestData.szactivityid == 'AC005'">Total : {{ requestData.dectotal }}</ion-text>
     <ion-text *ngIf="requestData.szactivityid == 'AC003'">Lokasi : {{ requestData.szLocation }}</ion-text>
   </div>
 </ion-card>
-
-<!-- <h1>Tab 1</h1>
-<br> -->
-
-<!-- contoh popover disini -->
-<!-- <ion-button expand="block" shape="round" color="hk-red" mode="ios" (click)="presentPopover()">ABSEN</ion-button> -->

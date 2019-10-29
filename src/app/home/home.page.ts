@@ -1,6 +1,5 @@
 import { Router, NavigationExtras } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { Storage } from '@ionic/storage';
 
 import { Geolocation, GeolocationOptions, Geoposition, PositionError } from '@ionic-native/geolocation/ngx';
 import { Component, OnInit } from '@angular/core';
@@ -8,7 +7,7 @@ import { PopoverController, AlertController, NavController } from '@ionic/angula
 import { PopoverComponent } from 'src/app/components/popover/popover.component';
 import { AuthenticationService } from './../services/authentication.service';
 import { Observable } from 'rxjs/Observable';
-import { GlobalService, ActivityId, DateData, ReportData } from '../services/global.service';
+import { GlobalService, ActivityId, DateData, ReportData, UserData } from '../services/global.service';
 
 @Component({
   selector: 'app-home',
@@ -32,7 +31,7 @@ export class HomePage {
   public txtTimeReturn: string = "";
   public txtWorkStatus: string = "";
   geoAccuracy: number;
-  szUserId: any;
+  // userData: UserData = new UserData();
   colorStatus: string;
   public buttonPropertyDatas = [];
   error: void;
@@ -44,31 +43,28 @@ export class HomePage {
     public router: Router,
     public geolocation: Geolocation,
     public http: HttpClient,
-    private storage: Storage,
     public popoverController: PopoverController,
-    private authService: AuthenticationService,
     private globalService: GlobalService
   ) {
     this.ShowFirstLoadData();
     this.Timer();
-    this.GetTimeWorkingAndStatusUser();
   }
 
   async ShowFirstLoadData() {
-    await this.GetUserId();
+    await this.globalService.GetUserDataFromStorage();
+    
     this.GetTimeWorkingAndStatusUser();
   }
 
-  private async GetUserId() {
-    //Fungsi untuk mengambil UserId pada local storage
-    await this.storage.get('szUserId').then((szUserId) => {
-      this.szUserId = szUserId;
-    });
-  }
-
   private GetTimeWorkingAndStatusUser() {
+    var date = new Date();
     var url = 'http://sihk.hutamakarya.com/apiabsen/GetReportData.php';
-    var data: Observable<any> = this.http.get(url + "?szUserId=" + this.szUserId);
+    let postdata = new FormData();
+    
+    postdata.append('szUserId', this.globalService.userData.szUserId);
+    postdata.append('dateAbsen', date.toLocaleString());
+
+    var data: Observable<any> = this.http.post(url, postdata);
     data.subscribe(reportDatas => {
       if (reportDatas.error == false) {
         var timeValidArrived = reportDatas.user.timeValidArrived.split(':');
@@ -155,10 +151,8 @@ export class HomePage {
     var szActivityId: string;
     if (!this.txtTimeArrived) {
       reportData.timeArrived = dateData.szHour + ":" + dateData.szMinute + ":" + dateData.decSec;
-      console.log(reportData.timeArrived);
 
       if (reportData.timeArrived > "08:10:00") {
-
         szActivityId = ActivityId.AC002;
         let navigationExtras: NavigationExtras = {
           state: {
@@ -178,7 +172,7 @@ export class HomePage {
 
       if (reportData.timeReturn < "17:00:00") {
         //mengarahkan ke component form-pulang-cepat
-        szActivityId = ActivityId.AC004
+        szActivityId = ActivityId.AC005
         let navigationExtras: NavigationExtras = {
           state: {
             indexForm: szActivityId
@@ -188,7 +182,7 @@ export class HomePage {
       }
       else if (reportData.timeReturn > "17:45:00") {
         //mengarahkan ke component form-lembur
-        szActivityId = ActivityId.AC005
+        szActivityId = ActivityId.AC006
         let navigationExtras: NavigationExtras = {
           state: {
             indexForm: szActivityId
@@ -208,13 +202,13 @@ export class HomePage {
       mode: 'ios',
       message: 'This is an alert message.',
       cssClass: szActivityId == ActivityId.AC001 ? 'alert-ontime' :
-        szActivityId == ActivityId.AC003 ? 'alert-diluarkantor' :
+        szActivityId == ActivityId.AC003 || szActivityId == ActivityId.AC004 ? 'alert-diluarkantor' :
           szActivityId == "DILUAR-WIFIAKSES" ? 'alert-wifiakses' :
-            szActivityId == ActivityId.AC005 ? 'alert-lembur' :
+            szActivityId == ActivityId.AC006 ? 'alert-lembur' :
               szActivityId == ActivityId.AC002 ? 'alert-terlambat' :
-                szActivityId == ActivityId.AC004 ? 'alert-pulangcepat' :
+                szActivityId == ActivityId.AC005 ? 'alert-pulangcepat' :
                   'alert-pulang',
-      buttons: szActivityId == ActivityId.AC003 ? [{
+      buttons: szActivityId == ActivityId.AC003 || szActivityId == ActivityId.AC004 ? [{
         text: 'BACK',
         handler: () => {
           console.log('Confirm Cancel: BACK');
@@ -230,9 +224,9 @@ export class HomePage {
           handler: () => {
             console.log('Confirm Cancel: BACK');
           }
-        }] : szActivityId == ActivityId.AC005 ||
-          szActivityId == ActivityId.AC002 ||
-          szActivityId == ActivityId.AC004 ? [{
+        }] : szActivityId == ActivityId.AC002 ||
+          szActivityId == ActivityId.AC005 ||
+          szActivityId == ActivityId.AC006 ? [{
             text: 'NO',
             handler: () => {
               console.log('Confirm Cancel: NO');
@@ -271,26 +265,18 @@ export class HomePage {
   private DoingAbsen(dateData: DateData, reportData: ReportData) {
     var dateAbsen = dateData.decYear + "/" + dateData.decMonth + "/" + dateData.decDate;
 
-    reportData.szUserId = this.szUserId;
+    reportData.szUserId = this.globalService.userData.szUserId;
     reportData.dateAbsen = dateAbsen;
     this.globalService.SaveReportData(reportData);
   }
 
-  Logout() {
-    this.authService.logout();
-  }
-
-  navigateToReportPage(indexReport: string) {
+  NavigateToReportPage(indexReport: string) {
     let navigationExtras: NavigationExtras = {
       state: {
         indexReport: indexReport
       }
     };
     this.router.navigate(['reports'], navigationExtras);
-  }
-
-  navigateToNotificationsPage() {
-    this.router.navigate(['notifications'])
   }
 
   async presentPopover(ev: any) {

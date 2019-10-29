@@ -1,9 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
-import { AlertController, NavController, ToastController } from '@ionic/angular';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
 import { ActivityId, StatusId, GlobalService, RequestData, DateData } from 'src/app/services/global.service';
 
 @Component({
@@ -15,15 +11,11 @@ export class FormTerlambatComponent implements OnInit {
   public txtTimeNow: string;
   public txtDesc: string;
   public dateData: DateData;
-  szUserId: string;
 
   constructor(
-    public navCtrl: NavController,
-    public http: HttpClient,
     private storage: Storage,
     private globalService: GlobalService
   ) {
-    this.GetUserId();
     this.Timer();
   }
 
@@ -45,21 +37,31 @@ export class FormTerlambatComponent implements OnInit {
     }.bind(this), 500);
   }
 
-  async GetUserId() {
-    //Fungsi untuk mengambil value pada local storage
-    await this.storage.get('szUserId').then((szUserId) => {
-      this.szUserId = szUserId;
-    });
-  }
-
-  SaveLateRequest() {
+  public SaveLateRequest() {
     var requestData = new RequestData();
-    requestData.szUserId = this.szUserId;
+    requestData.szUserId = this.globalService.userData.szUserId;
     requestData.szactivityid = ActivityId.AC002;
     requestData.szDesc = this.txtDesc;
     requestData.szLocation = "";
     requestData.szStatusId = StatusId.ST003;
-    requestData.decTotal = "0";
+    requestData.decTotal = this.ReturnDecTotal();
     this.globalService.SaveRequest(requestData, this.dateData);
+  }
+
+  private ReturnDecTotal() {
+    var decHour = this.dateData.decHour - 8;
+    var decMinute = this.dateData.decMinute;
+
+    if (decMinute < 10) {
+      decHour = decHour - 1;
+      decMinute = 60 - decMinute;
+    } else {
+      decMinute = decMinute - 10;
+    }
+    console.log(decMinute);
+    console.log(decHour + "." + decMinute);
+    console.log(decMinute);
+    
+    return decHour + "." + decMinute;
   }
 }

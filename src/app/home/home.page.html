@@ -1,17 +1,9 @@
 <ion-header>
   <ion-toolbar color="hk-red">
-    <ion-title>{{ txtDayNow }}</ion-title>
-    <ion-buttons slot="primary">
-      <ion-button color="hk-white-red" (click)="navigateToNotificationsPage()">
-        <ion-icon slot="icon-only" name="notifications"></ion-icon>
-      </ion-button>
-      <ion-button color="hk-white-red" (click)="navigateToReportPage(1)">
-        <ion-icon slot="icon-only" name="clipboard"></ion-icon>
-      </ion-button>
-      <ion-button color="hk-white-red" (click)="Logout()">
-        <ion-icon slot="icon-only" name="power"></ion-icon>
-      </ion-button>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
     </ion-buttons>
+    <ion-title>{{ txtDayNow }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -40,13 +32,13 @@
         <ion-text>Pulang : {{txtTimeReturn}}</ion-text>
       </ion-col>
       <ion-col class="ion-float-right" size="4" style="background: transparent">
-        <ion-text (click)="navigateToReportPage(0)">Detail </ion-text>
+        <ion-text (click)="NavigateToReportPage(0)">Detail </ion-text>
         <ion-icon name="arrow-forward" mode="ios" style="font-size: 14px; vertical-align: middle"></ion-icon>
       </ion-col>
     </ion-row>
   </ion-grid>
 
-  <ion-chip class="ontime">
+  <!-- <ion-chip class="ontime">
     <ion-label color="light">On Time</ion-label>
   </ion-chip>
 
@@ -56,7 +48,7 @@
 
   <ion-chip class="diluarkantor">
     <ion-label color="light">Absen Diluar Kantor</ion-label>
-  </ion-chip>
+  </ion-chip> -->
 
   <ion-button expand="block" shape="round" color="hk-red" (click)="ButtonAbsen()">ABSEN</ion-button>
 </ion-footer>
