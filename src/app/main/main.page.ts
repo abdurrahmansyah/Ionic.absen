@@ -23,6 +23,11 @@ export class MainPage implements OnInit {
     },
     {
       index: 3,
+      title: 'Permission',
+      icon: 'undo'
+    },
+    {
+      index: 4,
       title: 'Logout',
       icon: 'power'
     }
@@ -69,7 +74,7 @@ export class MainPage implements OnInit {
       };
       this.router.navigate(['reports'], navigationExtras);
     }
-    else if (index == 3) {
+    else if (index == 4) {
       this.authService.logout();
     }
   }

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { PopoverController, AlertController, IonSlides, Config, ActionSheetController } from '@ionic/angular';
-import { PopoverComponent } from 'src/app/components/popover/popover.component';
+import { IonSlides, ActionSheetController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
+import { GlobalService, ActivityId } from 'src/app/services/global.service';
 
 @Component({
   selector: 'app-reports',
@@ -12,10 +12,15 @@ export class ReportsPage implements OnInit {
 
   @ViewChild('slides', { static: true }) slider: IonSlides;
   segment = 0;
-  popoverParam: any;
   isSegment0: boolean = true;
+  isLeave: boolean = false;
+  isSpecialLeave: boolean = false;
+  isSick: boolean = false;
+  isLate: boolean = false;
+  isReturnEarly: boolean = false;
+  isOvertime: boolean = false;
 
-  constructor(private popoverController: PopoverController,
+  constructor(private globalService: GlobalService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private actionSheetController: ActionSheetController) {
@@ -44,37 +49,52 @@ export class ReportsPage implements OnInit {
   }
 
   async AddNewRequest() {
+    this.CheckValidActivitiesToShow();
     const actionSheet = await this.actionSheetController.create({
       header: 'Add New Request',
       mode: "ios",
-      buttons: [this.IsLembur() ? {
+      buttons: [this.isOvertime ? {
         text: 'Lembur',
         handler: () => {
           console.log('Delete clicked');
         }
       } : {
-          text: 'Cancel', icon: 'close', role: 'cancel', handler: () => { console.log('Cancel clicked'); }
-        }, this.IsTerlambat() ? {
+          text: 'Cancel', icon: 'close', role: 'cancel', handler: () => { }
+        }, this.isLate ? {
           text: 'Terlambat',
           handler: () => {
             console.log('Share clicked');
           }
         } : {
-          text: 'Cancel', icon: 'close', role: 'cancel', handler: () => { console.log('Cancel clicked'); }
-        }, this.IsDatangDiluarKantor() ? {
-          text: 'Datang diluar kantor',
+          text: 'Cancel', icon: 'close', role: 'cancel', handler: () => { }
+        }, this.isReturnEarly ? {
+          text: 'Pulang Cepat',
           handler: () => {
             console.log('Play clicked');
           }
         } : {
-          text: 'Cancel', icon: 'close', role: 'cancel', handler: () => { console.log('Cancel clicked'); }
-        }, this.IsPulangDiluarKantor() ? {
-          text: 'Pulang diluar kantor',
+          text: 'Cancel', icon: 'close', role: 'cancel', handler: () => { }
+        }, this.isLeave ? {
+          text: 'Izin Cuti',
           handler: () => {
             console.log('Favorite clicked');
           }
         } : {
-          text: 'Cancel', icon: 'close', role: 'cancel', handler: () => { console.log('Cancel clicked'); }
+          text: 'Cancel', icon: 'close', role: 'cancel', handler: () => { }
+        }, this.isSpecialLeave ? {
+          text: 'Izin Khusus',
+          handler: () => {
+            console.log('Favorite clicked');
+          }
+        } : {
+          text: 'Cancel', icon: 'close', role: 'cancel', handler: () => { }
+        }, this.isSick ? {
+          text: 'Sakit',
+          handler: () => {
+            console.log('Favorite clicked');
+          }
+        } : {
+          text: 'Cancel', icon: 'close', role: 'cancel', handler: () => { }
         }
       ]
     });
@@ -89,19 +109,20 @@ export class ReportsPage implements OnInit {
     if (isValidToShow) await actionSheet.present();
   }
 
-  IsLembur(): boolean {
-    return false;
-  }
+  CheckValidActivitiesToShow() {
+    var listActivities = this.globalService.requestDatas.map(x => x.szactivityid);
 
-  IsTerlambat(): boolean {
-    return true;
-  }
+    if (!this.globalService.timeArrived && "bukan weekend") {
+      this.isSick = true;
+      this.isLeave = true;
+      this.isSpecialLeave = true;
+    }
 
-  IsDatangDiluarKantor(): boolean {
-    return true;
-  }
-
-  IsPulangDiluarKantor(): boolean {
-    return false;
+    if (this.globalService.timeArrived > "08:10:00" && !listActivities.includes(ActivityId.AC002))
+      this.isLate = true;
+    if (this.globalService.timeReturn < "17:00:00" && !listActivities.includes(ActivityId.AC005))
+      this.isReturnEarly = true;
+    if (this.globalService.timeReturn > "17:45:00" && !listActivities.includes(ActivityId.AC006))
+      this.isOvertime = true;
   }
 }
