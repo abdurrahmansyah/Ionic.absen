@@ -52,25 +52,30 @@ export class HomePage {
 
   async ShowFirstLoadData() {
     await this.globalService.GetUserDataFromStorage();
-    
+
     this.GetTimeWorkingAndStatusUser();
   }
 
   private GetTimeWorkingAndStatusUser() {
     var date = new Date();
-    var url = 'http://sihk.hutamakarya.com/apiabsen/GetReportData.php';
+    var url = 'http://sihk.hutamakarya.com/apiabsen/GetReportDatas.php';
     let postdata = new FormData();
-    
+
     postdata.append('szUserId', this.globalService.userData.szUserId);
-    postdata.append('dateAbsen', date.toLocaleString());
+    postdata.append('dateStart', date.toLocaleString());
+    postdata.append('dateEnd', date.toLocaleString());
 
     var data: Observable<any> = this.http.post(url, postdata);
-    data.subscribe(reportDatas => {
-      if (reportDatas.error == false) {
-        var timeValidArrived = reportDatas.user.timeValidArrived.split(':');
+    data.subscribe(data => {
+      if (data.error == false) {
+        var reportDataFromDb = data.result.find(x => x);
+        var reportData = this.MappingReportData(reportDataFromDb);
+
+        var timeValidArrived = reportData.timeValidArrived.split(':');
         var { hour, minute, ampm } = this.ConvertTimeToViewFormat(timeValidArrived);
         this.txtTimeArrived = hour + ":" + minute + " " + ampm;
-        var timeValidBack = reportDatas.user.timeValidReturn.split(':');
+
+        var timeValidBack = reportData.timeValidReturn.split(':');
         var { hour, minute, ampm } = this.ConvertTimeToViewFormat(timeValidBack);
         this.txtTimeReturn = hour == 0 && minute == 0 ? "" : hour + ":" + minute + " " + ampm;
       }
@@ -81,6 +86,19 @@ export class HomePage {
 
       this.SetStatusWork();
     });
+  }
+
+  private MappingReportData(reportDataFromDb: any) {
+    var reportData = new ReportData();
+    reportData.szUserId = reportDataFromDb.szuserid;
+    reportData.dateAbsen = reportDataFromDb.dateabsen;
+    reportData.timeArrived = reportDataFromDb.timearrived;
+    reportData.timeValidArrived = reportDataFromDb.timevalidarrived;
+    reportData.timeReturn = reportDataFromDb.timereturn;
+    reportData.timeValidReturn = reportDataFromDb.timevalidreturn;
+    reportData.decMonth = reportDataFromDb.decmonth;
+  
+    return reportData;
   }
 
   private ConvertTimeToViewFormat(timeFromDb: any) {

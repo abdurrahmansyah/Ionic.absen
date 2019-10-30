@@ -12,6 +12,7 @@ import { Storage } from '@ionic/storage';
 })
 export class GlobalService {
   public requestDatas = [];
+  public summaryReportDatas = [];
   public timeArrived: string = "";
   public timeReturn: string = "";
   public userData: UserData = new UserData();
@@ -110,19 +111,26 @@ export class GlobalService {
   }
 
   public GetReportData(szUserId: string, dateAbsen: string) {
-    var url = 'http://sihk.hutamakarya.com/apiabsen/GetReportData.php';
+    var url = 'http://sihk.hutamakarya.com/apiabsen/GetReportDatas.php';
+
+    console.log("aa" + dateAbsen);
 
     let postdata = new FormData();
     postdata.append('szUserId', szUserId);
-    postdata.append('dateAbsen', dateAbsen);
+    postdata.append('dateStart', dateAbsen);
+    postdata.append('dateEnd', dateAbsen);
 
     var data: any = this.httpClient.post(url, postdata);
-    data.subscribe(reportDatas => {
-      if (reportDatas.error == false) {
-        var timeValidArrived = reportDatas.user.timeValidArrived.split(':');
+    data.subscribe(data => {
+      if (data.error == false) {
+        var reportDataFromDb = data.result.find(x => x);
+        var reportData = this.MappingReportData(reportDataFromDb);
+
+        var timeValidArrived = reportData.timeValidArrived.split(':');
         var { hour, minute, ampm } = this.ConvertTimeToViewFormat(timeValidArrived);
         this.timeArrived = hour + ":" + minute + " " + ampm;
-        var timeValidBack = reportDatas.user.timeValidReturn.split(':');
+
+        var timeValidBack = reportData.timeValidReturn.split(':');
         var { hour, minute, ampm } = this.ConvertTimeToViewFormat(timeValidBack);
         this.timeReturn = hour == 0 && minute == 0 ? "" : hour + ":" + minute + " " + ampm;
       }
@@ -133,11 +141,58 @@ export class GlobalService {
     });
   }
 
+  private MappingReportData(reportDataFromDb: any) {
+    var reportData = new ReportData();
+    reportData.szUserId = reportDataFromDb.szuserid;
+    reportData.dateAbsen = reportDataFromDb.dateabsen;
+    reportData.timeArrived = reportDataFromDb.timearrived;
+    reportData.timeValidArrived = reportDataFromDb.timevalidarrived;
+    reportData.timeReturn = reportDataFromDb.timereturn;
+    reportData.timeValidReturn = reportDataFromDb.timevalidreturn;
+    reportData.decMonth = reportDataFromDb.decmonth;
+
+    return reportData;
+  }
+
   private ConvertTimeToViewFormat(timeFromDb: any) {
     var hour = timeFromDb[0]; // < 10 && timeFromDb[0] != 0 ? "0" + timeFromDb[0] : timeFromDb[0];
     var minute = timeFromDb[1]; // < 10 && timeFromDb[1] != 0 ? "0" + timeFromDb[1] : timeFromDb[1];
     var ampm = timeFromDb[2] > 12 ? "PM" : "AM";
     return { hour, minute, ampm };
+  }
+
+  public GetSummaryReportData(currentYear: string) {
+    var url = 'http://sihk.hutamakarya.com/apiabsen/GetReportDatas.php';
+    var months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+    let postdata = new FormData();
+    postdata.append('szUserId', this.userData.szUserId);
+    postdata.append('dateStart', '01/01/' + currentYear);
+    postdata.append('dateEnd', '12/31/' + currentYear);
+
+    var data: any = this.httpClient.post(url, postdata);
+    data.subscribe(data => {
+      if (data.error == false) {
+        var reportDatas = data.result;
+        var decMonths = [...new Set(reportDatas.map(x => x.decmonth))];
+
+        decMonths.forEach((x: number) => {
+          var reportDatasPerMonth = reportDatas.filter(y => y.decmonth == x);
+
+          var summaryReportData = new SummaryReportData();
+          summaryReportData.szMonthAttendance = months[x - 1];
+          summaryReportData.decTotalAttendance = [...new Set(reportDatasPerMonth.map(y => y.dateabsen))].length;
+          summaryReportData.decTotalAbsen = 22 - summaryReportData.decTotalAttendance; // call fungsi bulan ini ada berapa hari
+          summaryReportData.decTotalLate = reportDatasPerMonth.filter(y => y.szstatusid == "ST001" && y.szactivityid == "AC002").reduce((sum, current) => sum + +current.dectotal, 0);
+          summaryReportData.decTotalBackEarly = reportDatasPerMonth.filter(y => y.szstatusid == "ST001" && y.szactivityid == "AC005").reduce((sum, current) => sum + +current.dectotal, 0);
+          summaryReportData.decTotalOvertime = reportDatasPerMonth.filter(y => y.szstatusid == "ST001" && y.szactivityid == "AC006").reduce((sum, current) => sum + +current.dectotal, 0);
+          this.summaryReportDatas.push(summaryReportData)
+        });
+      }
+      else {
+        console.log("Tidak ada yang dapat ditampilkan");
+      }
+    });
   }
 
   public GetRequestDatasByUserId(szUserId: string, dateRequest: string) {
@@ -250,12 +305,21 @@ export class DateData {
 
 export class ReportData {
   public szUserId: string;
-  public szUserName: string;
   public dateAbsen: string;
   public timeArrived: string;
   public timeValidArrived: string;
   public timeReturn: string = "00:00:00";
   public timeValidReturn: string;
+  public decMonth: number;
+}
+
+export class SummaryReportData {
+  public szMonthAttendance: string;
+  public decTotalAttendance: number;
+  public decTotalAbsen: number;
+  public decTotalLate: number;
+  public decTotalBackEarly: number;
+  public decTotalOvertime: number;
 }
 
 export class RequestData {
