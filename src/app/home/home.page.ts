@@ -97,7 +97,7 @@ export class HomePage {
     reportData.timeReturn = reportDataFromDb.timereturn;
     reportData.timeValidReturn = reportDataFromDb.timevalidreturn;
     reportData.decMonth = reportDataFromDb.decmonth;
-  
+
     return reportData;
   }
 
@@ -138,23 +138,7 @@ export class HomePage {
 
   async ButtonAbsen() {
     this.GetUserPosition();
-    // this.ValidateAbsen();
-    // this.storage.set('saveTimeArrived', this.timeArived);
-    // this.storage.set('saveTimeBack',this.timeReturn);
-    if (this.geoLatitude <= -6.24508 && this.geoLatitude >= -6.24587 && this.geoLongitude >= 106.87269 && this.geoLongitude <= 106.87379) {
-      this.ValidateAbsen();
-    } else {
-      // alert("Sorry you aren't in area");
-      var szActivityId: string;
-      szActivityId = ActivityId.AC003;
-        let navigationExtras: NavigationExtras = {
-          state: {
-            indexForm: szActivityId
-          }
-        }
-        await this.GetDecisionFromUser(szActivityId, navigationExtras);
-    //   // this.presentPopover(1);
-    }
+    this.ValidateAbsen();
   }
 
   private GetUserPosition() {
@@ -172,54 +156,64 @@ export class HomePage {
   }
 
   async ValidateAbsen() {
-    var dateData = this.globalService.GetDate();
-    var reportData = new ReportData();
-    var szActivityId: string;
-    if (!this.txtTimeArrived) {
-      reportData.timeArrived = dateData.szHour + ":" + dateData.szMinute + ":" + dateData.decSec;
+    if (1 == 1) {//this.geoLatitude <= -6.24508 && this.geoLatitude >= -6.24587 && this.geoLongitude >= 106.87269 && this.geoLongitude <= 106.87379) {
+      var dateData = this.globalService.GetDate();
+      var reportData = new ReportData();
+      var szActivityId: string;
+      if (!this.txtTimeArrived) {
+        reportData.timeArrived = dateData.szHour + ":" + dateData.szMinute + ":" + dateData.decSec;
 
-      if (reportData.timeArrived > "08:10:00") {
-        szActivityId = ActivityId.AC002;
-        let navigationExtras: NavigationExtras = {
-          state: {
-            indexForm: szActivityId
+        if (reportData.timeArrived > "08:10:00") {
+          szActivityId = ActivityId.AC002;
+          let navigationExtras: NavigationExtras = {
+            state: {
+              indexForm: szActivityId
+            }
           }
+          await this.GetDecisionFromUser(szActivityId, navigationExtras);
         }
-        await this.GetDecisionFromUser(szActivityId, navigationExtras);
+
+        this.DoingAbsen(dateData, reportData);
+        this.txtTimeArrived = dateData.szHour + ":" + dateData.szMinute + " " + dateData.szAMPM;
+        this.SetStatusWork();
       }
+      else {
+        reportData.timeReturn = dateData.szHour + ":" + dateData.szMinute + ":" + dateData.decSec;
+        console.log(reportData.timeReturn);
 
-      this.DoingAbsen(dateData, reportData);
-      this.txtTimeArrived = dateData.szHour + ":" + dateData.szMinute + " " + dateData.szAMPM;
-      this.SetStatusWork();
-    }
-    else {
-      reportData.timeReturn = dateData.szHour + ":" + dateData.szMinute + ":" + dateData.decSec;
-      console.log(reportData.timeReturn);
-
-      if (reportData.timeReturn < "17:00:00") {
-        //mengarahkan ke component form-pulang-cepat
-        szActivityId = ActivityId.AC005
-        let navigationExtras: NavigationExtras = {
-          state: {
-            indexForm: szActivityId
+        if (reportData.timeReturn < "17:00:00") {
+          //mengarahkan ke component form-pulang-cepat
+          szActivityId = ActivityId.AC005
+          let navigationExtras: NavigationExtras = {
+            state: {
+              indexForm: szActivityId
+            }
           }
+          await this.GetDecisionFromUser(szActivityId, navigationExtras);
         }
-        await this.GetDecisionFromUser(szActivityId, navigationExtras);
-      }
-      else if (reportData.timeReturn > "17:45:00") {
-        //mengarahkan ke component form-lembur
-        szActivityId = ActivityId.AC006
-        let navigationExtras: NavigationExtras = {
-          state: {
-            indexForm: szActivityId
+        else if (reportData.timeReturn > "17:45:00") {
+          //mengarahkan ke component form-lembur
+          szActivityId = ActivityId.AC006
+          let navigationExtras: NavigationExtras = {
+            state: {
+              indexForm: szActivityId
+            }
           }
+          await this.GetDecisionFromUser(szActivityId, navigationExtras);
         }
-        await this.GetDecisionFromUser(szActivityId, navigationExtras);
-      }
 
-      this.DoingAbsen(dateData, reportData);
-      this.txtTimeReturn = dateData.szHour + ":" + dateData.szMinute + " " + dateData.szAMPM;
-      this.SetStatusWork();
+        this.DoingAbsen(dateData, reportData);
+        this.txtTimeReturn = dateData.szHour + ":" + dateData.szMinute + " " + dateData.szAMPM;
+        this.SetStatusWork();
+      }
+    } else {
+      szActivityId = ActivityId.AC003;
+      let navigationExtras: NavigationExtras = {
+        state: {
+          indexForm: szActivityId
+        }
+      }
+      await this.GetDecisionFromUser(szActivityId, navigationExtras);
     }
   }
 
