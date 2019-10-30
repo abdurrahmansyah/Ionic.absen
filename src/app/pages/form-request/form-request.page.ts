@@ -11,6 +11,7 @@ export class FormRequestPage implements OnInit {
 
   AC005: boolean = false;
   AC002: boolean = false;
+  AC003: boolean = false;
   AC004: boolean = false;
   constructor(public activatedRoute: ActivatedRoute, public router: Router) { }
 
@@ -23,6 +24,7 @@ export class FormRequestPage implements OnInit {
       if (this.router.getCurrentNavigation().extras.state) {
         this.AC005 = this.router.getCurrentNavigation().extras.state.indexForm == ActivityId.AC005 ? true : false; // lembur
         this.AC002 = this.router.getCurrentNavigation().extras.state.indexForm == ActivityId.AC002 ? true : false;
+        this.AC003 = this.router.getCurrentNavigation().extras.state.indexForm == ActivityId.AC003 ? true : false;
         this.AC004 = this.router.getCurrentNavigation().extras.state.indexForm == ActivityId.AC004 ? true : false;
       }
     });

@@ -22,7 +22,9 @@
     "@angular/router": "~8.1.2",
     "@ionic-native/background-geolocation": "^5.13.0",
     "@ionic-native/calendar": "^5.14.0",
+    "@ionic-native/camera": "^5.15.1",
     "@ionic-native/core": "^5.1.0",
+    "@ionic-native/file": "^5.15.1",
     "@ionic-native/geolocation": "^5.14.0",
     "@ionic-native/http": "^5.13.0",
     "@ionic-native/network-interface": "^5.13.0",
@@ -92,7 +94,9 @@
       "cordova-plugin-networkinterface": {},
       "cordova-sqlite-storage": {},
       "cordova-plugin-advanced-http": {},
-      "cordova-plugin-calendar": {}
+      "cordova-plugin-calendar": {},
+      "cordova-plugin-camera": {},
+      "cordova-plugin-file": {}
     },
     "platforms": [
       "android"

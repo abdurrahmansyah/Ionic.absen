@@ -1,3 +1,11 @@
-<p>
-  form-absen-diluar works!
-</p>
+<ion-card>
+  <ion-card-header>
+    <ion-card-subtitle>Form Absen Diluar</ion-card-subtitle>
+  </ion-card-header>
+
+  <ion-card-content>
+      <img src="{{ photos }}" class="center" />
+  </ion-card-content>
+
+  <ion-button (click)="TakePhotos()" expand="block" shape="round" color="hk-red">Take Photo</ion-button>
+</ion-card>
