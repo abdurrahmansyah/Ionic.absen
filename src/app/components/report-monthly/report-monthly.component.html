@@ -1,6 +1,6 @@
-<ion-card *ngFor="let reportData of reportDatas">
+<ion-card *ngFor="let summaryReportData of summaryReportDatas">
   <ion-item lines="none" color="transparent">
-    <ion-label text-center>{{ reportData.szMonthAttendance }}</ion-label>
+    <ion-label text-center>{{ summaryReportData.szMonthAttendance }} {{ txtCurrentYear }}</ion-label>
   </ion-item>
   <div class="ion-text-start" padding style="padding-top: 0px">
     <ion-grid no-padding>
@@ -13,15 +13,13 @@
           <ion-text>Total lembur</ion-text>
         </ion-col>
         <ion-col size="4" style="background: transparent" no-padding>
-          <ion-text>: {{ reportData.decTotalAttendance }} Hari</ion-text> <br>
-          <ion-text>: {{ reportData.decTotalAbsen }} Hari</ion-text> <br>
-          <ion-text>: {{ reportData.decTotalLate }}</ion-text> <br>
-          <ion-text>: {{ reportData.decTotalBackEarly }}</ion-text> <br>
-          <ion-text>: {{ reportData.decTotalOvertime }}</ion-text>
+          <ion-text>: {{ summaryReportData.decTotalAttendance }} Hari</ion-text> <br>
+          <ion-text>: {{ summaryReportData.decTotalAbsen }} Hari</ion-text> <br>
+          <ion-text>: {{ summaryReportData.decTotalLate }}</ion-text> <br>
+          <ion-text>: {{ summaryReportData.decTotalBackEarly }}</ion-text> <br>
+          <ion-text>: {{ summaryReportData.decTotalOvertime }}</ion-text>
         </ion-col>
       </ion-row>
     </ion-grid>
   </div>
 </ion-card>
-
-<h1>Tab 2</h1>
