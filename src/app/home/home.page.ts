@@ -156,7 +156,7 @@ export class HomePage {
   }
 
   async ValidateAbsen() {
-    if (1 == 1) {//this.geoLatitude <= -6.24508 && this.geoLatitude >= -6.24587 && this.geoLongitude >= 106.87269 && this.geoLongitude <= 106.87379) {
+    if (this.geoLatitude <= -6.24508 && this.geoLatitude >= -6.24587 && this.geoLongitude >= 106.87269 && this.geoLongitude <= 106.87379) {//this.geoLatitude <= -6.24508 && this.geoLatitude >= -6.24587 && this.geoLongitude >= 106.87269 && this.geoLongitude <= 106.87379) {
       var dateData = this.globalService.GetDate();
       var reportData = new ReportData();
       var szActivityId: string;

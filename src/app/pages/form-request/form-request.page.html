@@ -3,24 +3,24 @@
     <ion-buttons slot="start">
       <ion-back-button color="hk-white-red"></ion-back-button>
     </ion-buttons>
-    <ion-title *ngIf="AC005">form-lembur</ion-title>
     <ion-title *ngIf="AC002">form-terlambat</ion-title>
     <ion-title *ngIf="AC003">form-absen-diluar</ion-title>
-    <ion-title *ngIf="AC004">form-pulang-cepat</ion-title>
+    <ion-title *ngIf="AC005">form-pulang-cepat</ion-title>
+    <!-- <ion-title *ngIf="AC004">form-pulang-diluar</ion-title> -->
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <div *ngIf="AC005">
-    <app-form-lembur></app-form-lembur>
-  </div>
   <div *ngIf="AC002">
     <app-form-terlambat></app-form-terlambat>
   </div>
   <div *ngIf="AC003">
       <app-form-absen-diluar></app-form-absen-diluar>
   </div>
-  <div *ngIf="AC004">
+  <div *ngIf="AC005">
     <app-form-pulang-cepat></app-form-pulang-cepat>
   </div>
+  <!-- <div *ngIf="AC004">
+    <app-form-pulang-diluar></app-form-pulang-diluar>
+  </div> -->
 </ion-content>

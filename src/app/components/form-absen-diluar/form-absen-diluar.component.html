@@ -4,8 +4,33 @@
   </ion-card-header>
 
   <ion-card-content>
+    <ion-col>
+      <ion-item>
+        <!-- <ion-input type="text" placeholder="Jam Datang" [(ngModel)]="timeArrived" name="timeArrived" required>}</ion-input>
+         -->
+         {{txtTimeNow}}
+      </ion-item>
+    </ion-col>
+
+
+    <ion-col>
+      <ion-item>
+        <ion-input type="text" placeholder="Alasan Absen Diluar" [(ngModel)]="txtDesc" name="txtDesc" required>
+        </ion-input>
+        <ion-icon class="takepicture" (click)="TakePhotos()" name="camera" color="hk-red">
+        </ion-icon>
+      </ion-item>
+    </ion-col>
+
+    <ion-col class="picture">
       <img src="{{ photos }}" class="center" />
+    </ion-col>
   </ion-card-content>
 
-  <ion-button (click)="TakePhotos()" expand="block" shape="round" color="hk-red">Take Photo</ion-button>
+  <ion-row class="ion-align-items-center">
+    <ion-col class="signup-col">
+      <ion-button shape="round" expand="block" color='hk-red' (click)="SaveLateRequest()" type="submit">Submit
+      </ion-button>
+    </ion-col>
+  </ion-row>
 </ion-card>
