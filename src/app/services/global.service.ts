@@ -227,13 +227,28 @@ export class GlobalService {
     });
   }
 
+  public CloseRequestData(szUserId: string, dateRequest: string, szActivityId: string) {
+    this.requestDatas = [];
+    var url = 'http://sihk.hutamakarya.com/apiabsen/CloseRequestData.php';
+
+    let postdata = new FormData();
+    postdata.append('szUserId', szUserId);
+    postdata.append('dateRequest', dateRequest);
+    postdata.append('szActivityId', szActivityId);
+    postdata.append('dtmLastUpdated', new Date().toLocaleString());
+
+    var data: any = this.httpClient.post(url, postdata);
+    data.subscribe(data => {
+      if (data.error == true) { console.log("BUG: 'Gagal'"); }
+    });
+  }
+
   public SaveRequest(requestData: RequestData, dateData: DateData) {
     var date = dateData.decYear + "/" + dateData.decMonth + "/" + dateData.decDate;
 
     var url = 'http://sihk.hutamakarya.com/apiabsen/SaveRequestData.php';
     requestData.szRequestId = "HK_" + dateData.date.toLocaleDateString() + "_" + requestData.szactivityid + "_" + requestData.szUserId;
     requestData.dateRequest = dateData.date.toLocaleString();
-    console.log(dateData.date.toLocaleDateString());
 
     let postdata = new FormData();
     postdata.append('szRequestId', requestData.szRequestId);
@@ -244,6 +259,8 @@ export class GlobalService {
     postdata.append('szLocation', requestData.szLocation);
     postdata.append('szStatusId', requestData.szStatusId);
     postdata.append('decTotal', requestData.decTotal);
+    postdata.append('szReasonImage', requestData.szReasonImage);
+    postdata.append('bActiveRequest', String(requestData.bActiveRequest));
     postdata.append('dtmCreated', requestData.dateRequest);
     postdata.append('dtmLastUpdated', requestData.dateRequest);
 
@@ -334,6 +351,8 @@ export class RequestData {
   public szStatusId: string;
   public szStatusName: string;
   public decTotal: string;
+  public szReasonImage: string;
+  public bActiveRequest: boolean;
   public szSuperiorUserId: string; // cek dipakek bener ga
   public szSuperiorUserName: string; // cek dipakek bener ga
   public timeArrived: string; // cek dipakek bener ga

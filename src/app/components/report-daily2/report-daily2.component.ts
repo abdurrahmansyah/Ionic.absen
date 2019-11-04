@@ -37,10 +37,7 @@ export class ReportDaily2Component implements OnInit {
     this.txtTimeReturn = this.globalService.timeReturn;
   }
 
-  private ConvertTimeToViewFormat(timeFromDb: any) {
-    var hour = timeFromDb[0] - 17;
-    var minute = timeFromDb[1] - 0;
-    var ampm = timeFromDb[2];
-    return { hour, minute, ampm };
+  public DeleteRequest(szActivityId: string) {
+    this.globalService.CloseRequestData(this.globalService.userData.szUserId, new Date().toLocaleString(), szActivityId);
   }
 }

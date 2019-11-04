@@ -9,7 +9,7 @@
 </ion-header>
 
 
-<ion-content scrollEvents="true">
+<ion-content scrollEvents="true" class="content">
   <!-- appCustomHeader [header]="header" [label]="label" -->
   <!-- <ion-label padding color="hk-white-red" style="font-size: 34px; font-weight: bold;">Notifications</ion-label> -->
 
@@ -63,27 +63,8 @@
     </div>
   </ion-card>
 
-  <!-- <ion-card *ngFor="let requestData of requestDatas">
-      <ion-item lines="none" color="transparent">
-        <ion-label>{{ requestData.szActivityName }}</ion-label>
-        <ion-button shape="round" slot="end" *ngIf="requestData.szStatusId == 'ST001'" color="hk-green">
-          {{ requestData.szStatusName }}</ion-button>
-        <ion-button shape="round" slot="end" *ngIf="requestData.szStatusId == 'ST002'" color="hk-red">
-          {{ requestData.szStatusName }}</ion-button>
-        <ion-button shape="round" slot="end" *ngIf="requestData.szStatusId == 'ST003'" color="hk-yellow">
-          {{ requestData.szStatusName }}</ion-button>
-      </ion-item>
-      <div class="ion-text-start" padding style="padding-top: 0px">
-        <ion-text>Keterangan : {{ requestData.szDesc }}</ion-text> <br>
-        <ion-text *ngIf="requestData.szActivityId != 'AC003'">Total : {{ requestData.decTotal }}</ion-text>
-        <ion-text *ngIf="requestData.szActivityId == 'AC003'">Lokasi : {{ requestData.szLocation }}</ion-text>
-      </div>
-    </ion-card> -->
-
 
   <!-- ---------------------------------------------------------------------------------------------------- -->
-
-
 
 
   <ion-card style="margin-top: 0px;">
@@ -200,32 +181,5 @@
   </ion-item>
 
 
-  <ion-card style="margin-top: 0px;">
-    <ion-grid>
-      <ion-row align-items-center>
-        <ion-col size="2.2" style="text-align: left">
-          <ion-avatar>
-            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAAAAAAALAAAAAABAAEAAAICTAEAOw==">
-          </ion-avatar>
-        </ion-col>
-        <ion-col size="7.6" style="text-align: left; font-size: 16px">
-          <div style="line-height: 150%;">
-            <ion-text>Wahyudi - Bagian TI</ion-text> <br>
-            <ion-text style="font-size: 16px;">Divisi Sistem dan Risiko</ion-text>
-          </div>
-        </ion-col>
-        <ion-col size="2.2" style="text-align: center">
-          <ion-icon name="close-circle" style="font-size: 26px;" color="hk-red" (click)="DeleteRequest()"></ion-icon>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-
-    <div class="ion-text-start" padding style="padding-top: 0px; line-height: 150%;">
-      <ion-text>Jumat, 18 Juli 2019</ion-text> <br>
-      <ion-text color="dark">Absen Diluar Kantor</ion-text>
-      <ion-text> - </ion-text>
-      <ion-text>Keterangan : Rapat</ion-text> <br>
-      <ion-text>Lokasi : Jalan Menteng Raya No 11b</ion-text>
-    </div>
-  </ion-card>
+ 
 </ion-content>

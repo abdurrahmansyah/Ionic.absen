@@ -22,13 +22,13 @@
 <ion-card *ngFor="let requestData of requestDatas">
   <ion-item lines="none" color="transparent">
     <ion-label>{{ requestData.szactivityname }}</ion-label>
-
     <ion-button shape="round" slot="end" *ngIf="requestData.szstatusid == 'ST001'" color="hk-green">
       {{ requestData.szstatusname }}</ion-button>
     <ion-button shape="round" slot="end" *ngIf="requestData.szstatusid == 'ST002'" color="hk-red">
       {{ requestData.szstatusname }}</ion-button>
     <ion-button shape="round" slot="end" *ngIf="requestData.szstatusid == 'ST003'" color="hk-yellow">
       {{ requestData.szstatusname }}</ion-button>
+    <ion-icon name="close-circle" slot="end" color="hk-red" (click)="DeleteRequest(requestData.szactivityid)"></ion-icon>
   </ion-item>
   <div class="ion-text-start" padding style="padding-top: 0px">
     <ion-text>Keterangan : {{ requestData.szdesc }}</ion-text> <br>
