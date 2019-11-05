@@ -38,7 +38,7 @@ export class FormPulangCepatComponent implements OnInit {
     }.bind(this), 500);
   }
 
-  public SaveLateRequest() {
+  public SaveBackRequest() {
     var requestData = new RequestData();
     requestData.szUserId = this.globalService.userData.szUserId;
     requestData.szactivityid = ActivityId.AC005;

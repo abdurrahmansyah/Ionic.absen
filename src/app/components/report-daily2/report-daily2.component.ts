@@ -15,6 +15,7 @@ export class ReportDaily2Component implements OnInit {
   requestDatas = [];
   txtTimeArrived: string;
   txtTimeReturn: string;
+  photo: string;
 
   constructor(
     private globalService: GlobalService,
@@ -35,6 +36,15 @@ export class ReportDaily2Component implements OnInit {
     this.requestDatas = this.globalService.requestDatas;
     this.txtTimeArrived = this.globalService.timeArrived;
     this.txtTimeReturn = this.globalService.timeReturn;
+    // console.log(this.requestDatas);
+    if(!this.requestDatas.map(x => x.szreasonimage).find(x => x) ||this.requestDatas.map(x => x.szreasonimage).find(x => x) =="undefined" ){
+      this.photo="";
+    }else{
+      this.photo = 'data:image/jpeg;base64,' + this.requestDatas.map(x => x.szreasonimage).find(x => x);
+      // console.log(this.photo);
+      
+    }
+    
   }
 
   public DeleteRequest(szActivityId: string) {

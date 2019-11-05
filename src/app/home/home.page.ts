@@ -160,9 +160,9 @@ export class HomePage {
       var dateData = this.globalService.GetDate();
       var reportData = new ReportData();
       var szActivityId: string;
+
       if (!this.txtTimeArrived) {
         reportData.timeArrived = dateData.szHour + ":" + dateData.szMinute + ":" + dateData.decSec;
-
         if (reportData.timeArrived > "08:10:00") {
           szActivityId = ActivityId.AC002;
           let navigationExtras: NavigationExtras = {
@@ -206,8 +206,17 @@ export class HomePage {
         this.txtTimeReturn = dateData.szHour + ":" + dateData.szMinute + " " + dateData.szAMPM;
         this.SetStatusWork();
       }
-    } else {
-      szActivityId = ActivityId.AC003;
+    } 
+    else {
+      if (!this.txtTimeArrived) {
+        this.globalService.isArrived = true;
+        szActivityId = ActivityId.AC003;
+      }
+      else {
+        this.globalService.isArrived = false;
+        szActivityId = ActivityId.AC004;
+      }
+
       let navigationExtras: NavigationExtras = {
         state: {
           indexForm: szActivityId
@@ -254,7 +263,9 @@ export class HomePage {
           }, {
             text: 'YES',
             handler: () => {
-              this.router.navigate(['form-request'], navigationExtras);
+              var aa = this.router.navigate(['form-request'], navigationExtras);
+              console.log(aa);
+
             }
           }] : [{
             text: 'OK',
