@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Storage } from '@ionic/storage';
 import { ActivityId, StatusId, GlobalService, RequestData, DateData } from 'src/app/services/global.service';
 
 @Component({
@@ -13,7 +12,6 @@ export class FormTerlambatComponent implements OnInit {
   public dateData: DateData;
 
   constructor(
-    private storage: Storage,
     private globalService: GlobalService
   ) {
     this.Timer();
@@ -21,7 +19,10 @@ export class FormTerlambatComponent implements OnInit {
 
   ngOnInit() {
     this.dateData = this.globalService.GetDate();
-    this.txtTimeNow = this.CheckTime(this.dateData.decHour) + ":" + this.CheckTime(this.dateData.decMinute) + ":" + this.CheckTime(this.dateData.decSec) + " " + this.dateData.szAMPM;
+    if (this.globalService.timeRequest)
+      this.txtTimeNow = this.globalService.timeRequest;
+    else
+      this.txtTimeNow = this.CheckTime(this.dateData.decHour) + ":" + this.CheckTime(this.dateData.decMinute) + ":" + this.CheckTime(this.dateData.decSec) + " " + this.dateData.szAMPM;
   }
 
   private CheckTime(i: any) {
@@ -51,8 +52,10 @@ export class FormTerlambatComponent implements OnInit {
   }
 
   private ReturnDecTotal() {
-    var decHour = this.dateData.decHour - 8;
-    var decMinute = this.dateData.decMinute;
+    var time = this.txtTimeNow.split(':');
+    
+    var decHour = +time[0] - 8;
+    var decMinute = +time[1].split(' ')[0];
 
     if (decMinute < 10) {
       decHour = decHour - 1;
@@ -60,10 +63,7 @@ export class FormTerlambatComponent implements OnInit {
     } else {
       decMinute = decMinute - 10;
     }
-    console.log(decMinute);
-    console.log(decHour + "." + decMinute);
-    console.log(decMinute);
-    
+
     return decHour + "." + decMinute;
   }
 }

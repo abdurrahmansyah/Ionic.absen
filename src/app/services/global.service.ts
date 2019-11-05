@@ -16,6 +16,7 @@ export class GlobalService {
   public summaryReportDatas = [];
   public timeArrived: string = "";
   public timeReturn: string = "";
+  public timeRequest: string = "";
   public isArrived: boolean = true;
   public userData: UserData = new UserData();
   public photo: any = [];
@@ -249,8 +250,6 @@ export class GlobalService {
   }
 
   public SaveRequest(requestData: RequestData, dateData: DateData) {
-    var date = dateData.decYear + "/" + dateData.decMonth + "/" + dateData.decDate;
-
     var url = 'http://sihk.hutamakarya.com/apiabsen/SaveRequestData.php';
     requestData.szRequestId = "HK_" + dateData.date.toLocaleDateString() + "_" + requestData.szactivityid + "_" + requestData.szUserId;
     requestData.dateRequest = dateData.date.toLocaleString();
@@ -274,6 +273,7 @@ export class GlobalService {
     this.PresentToast(requestData.szactivityid == ActivityId.AC002 ? "Berhasil mengajukan izin terlambat" :
       "");
     this.router.navigate(['home']);
+    this.timeRequest = "";
   }
 
   async PresentToast(msg: string) {
@@ -395,8 +395,8 @@ export class ActivityId {
   public static readonly AC006: string = "AC006"; //Lembur
   public static readonly AC007: string = "AC007"; //Absen
   public static readonly AC008: string = "AC008"; //Sakit
-  public static readonly AC009: string = "AC009"; //Izin
-  public static readonly AC010: string = "AC010"; //Cuti
+  public static readonly AC009: string = "AC009"; //Izin Khusus
+  public static readonly AC010: string = "AC010"; //Izin Cuti
 }
 
 export class StatusId {
