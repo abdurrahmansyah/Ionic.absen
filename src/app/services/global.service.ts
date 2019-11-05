@@ -246,11 +246,9 @@ export class GlobalService {
 
   public SaveRequest(requestData: RequestData, dateData: DateData) {
     var url = 'http://sihk.hutamakarya.com/apiabsen/SaveRequestData.php';
-    requestData.szRequestId = "HK_" + dateData.date.toLocaleDateString() + "_" + requestData.szactivityid + "_" + requestData.szUserId;
     requestData.dateRequest = dateData.date.toLocaleString();
 
     let postdata = new FormData();
-    postdata.append('szRequestId', requestData.szRequestId);
     postdata.append('szUserId', requestData.szUserId);
     postdata.append('dateRequest', requestData.dateRequest);
     postdata.append('szActivityId', requestData.szactivityid);
