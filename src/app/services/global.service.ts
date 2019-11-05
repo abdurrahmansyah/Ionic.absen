@@ -6,6 +6,7 @@ import { ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { AuthenticationService } from './authentication.service';
 import { Storage } from '@ionic/storage';
+import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 
 @Injectable({
   providedIn: 'root'
@@ -16,14 +17,18 @@ export class GlobalService {
   public timeArrived: string = "";
   public timeReturn: string = "";
   public timeRequest: string = "";
+  public isArrived: boolean = true;
   public userData: UserData = new UserData();
+  public photo: any = [];
 
   httpClient = InjectorInstance.get<HttpClient>(HttpClient);
+  dataimage: any;
 
   constructor(private router: Router,
     private toastController: ToastController,
     private authService: AuthenticationService,
-    private storage: Storage) { }
+    private storage: Storage,
+    private camera: Camera) { }
 
   public GetDate(): DateData {
     var dateData = new DateData();
@@ -278,6 +283,28 @@ export class GlobalService {
     });
     toast.present();
   }
+
+  async TakePhotos() {
+    const options: CameraOptions = {
+      quality: 100,
+      mediaType: this.camera.MediaType.PICTURE,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      sourceType: this.camera.PictureSourceType.CAMERA,
+      encodingType: this.camera.EncodingType.JPEG,
+      targetWidth: 500,
+      targetHeight: 500,
+      allowEdit: true,
+      saveToPhotoAlbum: false
+    }
+
+    await this.camera.getPicture(options).then((imageData) => {
+      this.dataimage= imageData;
+      this.photo = 'data:image/jpeg;base64,' + imageData;
+    }, (err) => {
+      // Handle error
+      console.log("Camera issue:" + err);
+    });
+  }
 }
 
 export class UserData {
@@ -375,3 +402,4 @@ export class StatusId {
   public static readonly ST002: string = "ST002"; //Not Approved 
   public static readonly ST003: string = "ST003"; //Need Approval 
 }
+

@@ -33,8 +33,8 @@
   <div class="ion-text-start" padding style="padding-top: 0px">
     <ion-text>Keterangan : {{ requestData.szdesc }}</ion-text> <br>
     <ion-text *ngIf="requestData.szactivityid == 'AC002'">Total : {{ requestData.dectotal }}</ion-text>
-    <ion-text *ngIf="requestData.szactivityid == 'AC004'">Total : {{ requestData.dectotal }}</ion-text>
-    <ion-text *ngIf="requestData.szactivityid == 'AC005'">Total : {{ requestData.dectotal }}</ion-text>
-    <ion-text *ngIf="requestData.szactivityid == 'AC003'">Lokasi : {{ requestData.szLocation }}</ion-text>
+    <ion-text *ngIf="requestData.szactivityid == 'AC003'"> Lokasi : {{ requestData.szLocation }} <br/>  <img src="{{ photo }}"class="center" /></ion-text>
+    <ion-text *ngIf="requestData.szactivityid == 'AC004'"> Lokasi : {{ requestData.szLocation }} <br/>  <img src="{{ photo }}" class="center" /></ion-text>
+    <ion-text *ngIf="requestData.szactivityid == 'AC005'">Total : {{ requestData.dectotal }} </ion-text>
   </div>
 </ion-card>

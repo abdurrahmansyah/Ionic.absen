@@ -23,7 +23,7 @@ export class MainPage implements OnInit {
     },
     {
       index: 3,
-      title: 'Permission',
+      title: 'Work Permit',
       icon: 'undo'
     },
     {
