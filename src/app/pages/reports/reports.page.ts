@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { IonSlides, ActionSheetController } from '@ionic/angular';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { GlobalService, ActivityId } from 'src/app/services/global.service';
 
 @Component({
@@ -56,42 +56,75 @@ export class ReportsPage implements OnInit {
       buttons: [this.isOvertime ? {
         text: 'Lembur',
         handler: () => {
-          console.log('Delete clicked');
+          this.globalService.timeRequest = this.globalService.timeReturn;
+          let navigationExtras: NavigationExtras = {
+            state: {
+              indexForm: ActivityId.AC006
+            }
+          }
+          this.router.navigate(['form-request'], navigationExtras);
         }
       } : {
           text: 'Cancel', icon: 'close', role: 'cancel', handler: () => { }
         }, this.isLate ? {
           text: 'Terlambat',
           handler: () => {
-            console.log('Share clicked');
+            this.globalService.timeRequest = this.globalService.timeArrived;
+            let navigationExtras: NavigationExtras = {
+              state: {
+                indexForm: ActivityId.AC002
+              }
+            }
+            this.router.navigate(['form-request'], navigationExtras);
           }
         } : {
           text: 'Cancel', icon: 'close', role: 'cancel', handler: () => { }
         }, this.isReturnEarly ? {
           text: 'Pulang Cepat',
           handler: () => {
-            console.log('Play clicked');
+            this.globalService.timeRequest = this.globalService.timeReturn;
+            let navigationExtras: NavigationExtras = {
+              state: {
+                indexForm: ActivityId.AC005
+              }
+            }
+            this.router.navigate(['form-request'], navigationExtras);
           }
         } : {
           text: 'Cancel', icon: 'close', role: 'cancel', handler: () => { }
         }, this.isLeave ? {
           text: 'Izin Cuti',
           handler: () => {
-            console.log('Favorite clicked');
+            let navigationExtras: NavigationExtras = {
+              state: {
+                indexForm: ActivityId.AC010
+              }
+            }
+            this.router.navigate(['form-request'], navigationExtras);
           }
         } : {
           text: 'Cancel', icon: 'close', role: 'cancel', handler: () => { }
         }, this.isSpecialLeave ? {
           text: 'Izin Khusus',
           handler: () => {
-            console.log('Favorite clicked');
+            let navigationExtras: NavigationExtras = {
+              state: {
+                indexForm: ActivityId.AC009
+              }
+            }
+            this.router.navigate(['form-request'], navigationExtras);
           }
         } : {
           text: 'Cancel', icon: 'close', role: 'cancel', handler: () => { }
         }, this.isSick ? {
           text: 'Sakit',
           handler: () => {
-            console.log('Favorite clicked');
+            let navigationExtras: NavigationExtras = {
+              state: {
+                indexForm: ActivityId.AC008
+              }
+            }
+            this.router.navigate(['form-request'], navigationExtras);
           }
         } : {
           text: 'Cancel', icon: 'close', role: 'cancel', handler: () => { }
