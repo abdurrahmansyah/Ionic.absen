@@ -19,7 +19,7 @@ export class GlobalService {
   public timeRequest: string = "";
   public isArrived: boolean = true;
   public userData: UserData = new UserData();
-  public photo: any = [];
+  public photo: any =[];
 
   httpClient = InjectorInstance.get<HttpClient>(HttpClient);
   dataimage: any;
@@ -284,7 +284,7 @@ export class GlobalService {
     toast.present();
   }
 
-  async TakePhotos() {
+  TakePhotos() {
     const options: CameraOptions = {
       quality: 100,
       mediaType: this.camera.MediaType.PICTURE,
@@ -297,8 +297,8 @@ export class GlobalService {
       saveToPhotoAlbum: false
     }
 
-    await this.camera.getPicture(options).then((imageData) => {
-      this.dataimage= imageData;
+    this.camera.getPicture(options).then((imageData) => {
+      this.dataimage = imageData;
       this.photo = 'data:image/jpeg;base64,' + imageData;
     }, (err) => {
       // Handle error

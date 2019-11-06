@@ -16,13 +16,14 @@ export class FormAbsenDiluarComponent implements OnInit {
   public dateData: DateData;
   photo: any = [];
   timeReport: string;
-  dataimage: any;
+  dataimage: string;
   timeReturn: string;
   timeArrived: string;
 
   constructor(public navCtrl: NavController, public file: File, private camera: Camera, private storage: Storage,
     private globalService: GlobalService) {
     this.Timer();
+    // this.photo = this.globalService.photo;
   }
 
 
@@ -99,27 +100,28 @@ export class FormAbsenDiluarComponent implements OnInit {
   }
 
   TakePhotos() {
-    this.globalService.TakePhotos();
-    this.photo = this.globalService.photo;
-    this.dataimage = this.globalService.dataimage;
-    // const options: CameraOptions = {
-    //   quality: 100,
-    //   mediaType: this.camera.MediaType.PICTURE,
-    //   destinationType: this.camera.DestinationType.DATA_URL,
-    //   sourceType: this.camera.PictureSourceType.CAMERA,
-    //   encodingType: this.camera.EncodingType.JPEG,
-    //   targetWidth: 500,
-    //   targetHeight: 500,
-    //   allowEdit: true,
-    //   saveToPhotoAlbum: false
-    // }
+    // this.globalService.TakePhotos();
+    // this.photo = this.globalService.photo;
+    // this.dataimage = this.globalService.dataimage;
+    const options: CameraOptions = {
+      quality: 100,
+      mediaType: this.camera.MediaType.PICTURE,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      sourceType: this.camera.PictureSourceType.CAMERA,
+      encodingType: this.camera.EncodingType.JPEG,
+      targetWidth: 500,
+      targetHeight: 500,
+      allowEdit: true,
+      saveToPhotoAlbum: false
+    }
 
-    // this.camera.getPicture(options).then((imageData) => {
-    //   this.photo = 'data:image/jpeg;base64,' + imageData;
-    // }, (err) => {
-    //   // Handle error
-    //   console.log("Camera issue:" + err);
-    // });
+    this.camera.getPicture(options).then((imageData) => {
+      this.photo = 'data:image/jpeg;base64,' + imageData;
+      this.dataimage = imageData ;
+    }, (err) => {
+      // Handle error
+      console.log("Camera issue:" + err);
+    });
   }
 
 }
