@@ -174,8 +174,7 @@ export class HomePage {
         }
 
         this.DoingAbsen(dateData, reportData);
-        this.txtTimeArrived = dateData.szHour + ":" + dateData.szMinute + " " + dateData.szAMPM;
-        this.SetStatusWork();
+        this.GetTimeWorkingAndStatusUser();
       }
       else {
         reportData.timeReturn = dateData.szHour + ":" + dateData.szMinute + ":" + dateData.decSec;
@@ -203,10 +202,9 @@ export class HomePage {
         }
 
         this.DoingAbsen(dateData, reportData);
-        this.txtTimeReturn = dateData.szHour + ":" + dateData.szMinute + " " + dateData.szAMPM;
-        this.SetStatusWork();
+        this.GetTimeWorkingAndStatusUser();
       }
-    } 
+    }
     else {
       if (!this.txtTimeArrived) {
         this.globalService.isArrived = true;
