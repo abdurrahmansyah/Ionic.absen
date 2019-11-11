@@ -151,9 +151,9 @@ export class ReportsPage implements OnInit {
       this.isSpecialLeave = true;
     }
 
-    if (this.globalService.timeArrived > "08:10:00" && !listActivities.includes(ActivityId.AC002))
+    if (this.globalService.timeArrived > "08:10:00" && !listActivities.includes(ActivityId.AC002) && !listActivities.includes(ActivityId.AC003))
       this.isLate = true;
-    if (this.globalService.timeReturn < "17:00:00" && !listActivities.includes(ActivityId.AC005))
+    if (this.globalService.timeReturn < "17:00:00" && !listActivities.includes(ActivityId.AC005) && !listActivities.includes(ActivityId.AC004))
       this.isReturnEarly = true;
     if (this.globalService.timeReturn > "17:45:00" && !listActivities.includes(ActivityId.AC006))
       this.isOvertime = true;

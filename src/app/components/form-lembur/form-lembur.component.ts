@@ -45,7 +45,7 @@ export class FormLemburComponent implements OnInit {
     requestData.szLocation = "";
     requestData.szStatusId = StatusId.ST003;
     requestData.decTotal = this.ReturnDecTotal();
-    this.globalService.SaveRequest(requestData, this.dateData);
+    this.globalService.SaveRequestData(requestData);
   }
 
   private ReturnDecTotal() {

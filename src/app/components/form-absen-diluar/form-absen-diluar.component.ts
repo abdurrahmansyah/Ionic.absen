@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Storage } from '@ionic/storage';
-import { ActivityId, StatusId, GlobalService, RequestData, DateData, ReportData } from 'src/app/services/global.service';
-import { NavController } from '@ionic/angular';
+import { ActivityId, StatusId, GlobalService, RequestData, ReportData } from 'src/app/services/global.service';
+import { AlertController } from '@ionic/angular';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
-import { File } from '@ionic-native/file/ngx';
 
 @Component({
   selector: 'app-form-absen-diluar',
@@ -11,98 +9,87 @@ import { File } from '@ionic-native/file/ngx';
   styleUrls: ['./form-absen-diluar.component.scss'],
 })
 export class FormAbsenDiluarComponent implements OnInit {
-  public txtTimeNow: string;
+  public txtTimeRequest: string;
   public txtDesc: string;
-  public dateData: DateData;
-  photo: any = [];
-  timeReport: string;
-  dataimage: string;
-  timeReturn: string;
-  timeArrived: string;
+  public photo: any = [];
+  private timeReport: string;
+  private dataimage: string;
 
-  constructor(public navCtrl: NavController, public file: File, private camera: Camera, private storage: Storage,
+  constructor(private camera: Camera,
+    private alertController: AlertController,
     private globalService: GlobalService) {
-    this.Timer();
-    // this.photo = this.globalService.photo;
   }
-
 
   ngOnInit() {
-    this.dateData = this.globalService.GetDate();
-    this.timeReport = this.CheckTime(this.dateData.decHour) + ":" + this.CheckTime(this.dateData.decMinute) + ":" + this.CheckTime(this.dateData.decSec);
-    this.txtTimeNow = this.timeReport + " " + this.dateData.szAMPM;
-  }
-
-  private CheckTime(i: any) {
-    if (i < 10) {
-      i = "0" + i;
-    }
-    return i;
-  }
-
-  private Timer() {
-    setInterval(function () {
-      this.ngOnInit();
-    }.bind(this), 500);
+    this.txtTimeRequest = this.globalService.timeRequest;
+    this.timeReport = this.globalService.timeRequest.split(' ')[0] + ":00";
   }
 
   public SaveOutsideRequest() {
-    if (this.globalService.isArrived) {
-      this.timeArrived = this.timeReport;
-      this.timeReturn = "00:00:00"
-      this.MappingData(ActivityId.AC003, this.timeArrived, this.timeReturn);
+    try {
+      this.ValidateData();
 
-    } else {
-      this.timeArrived = "00:00:00";
-      this.timeReturn = this.timeReport;
-      this.MappingData(ActivityId.AC004, this.timeArrived, this.timeReturn);
+      var timeArrived: string;
+      var timeReturn: string;
+
+      if (this.globalService.isArrived) {
+        timeArrived = this.timeReport;
+        timeReturn = "00:00:00"
+        this.SaveRequestData(ActivityId.AC003);
+      } 
+      else {
+        timeArrived = "00:00:00";
+        timeReturn = this.timeReport;
+        this.SaveRequestData(ActivityId.AC004);
+      }
+      this.SaveReportData(timeArrived, timeReturn);
+    } catch (e) {
+      this.alertController.create({
+        mode: 'ios',
+        message: e.message,
+        buttons: ['OK']
+      }).then(alert => {
+        return alert.present();
+      });
     }
   }
 
-  private MappingData(szActivityId: string, timeArrived: string, timeReturn: string) {
+  private ValidateData() {
+    if (!this.txtDesc) {
+      throw new Error("Alasan wajib diisi.");
+    }
+
+    if (!this.dataimage) {
+      throw new Error("Foto wajib diisi.");
+    }
+  }
+
+  private SaveRequestData(szActivityId: string) {
     var requestData = new RequestData();
-    requestData.szactivityid = szActivityId; // Datang Diluar
     requestData.szUserId = this.globalService.userData.szUserId;
+    requestData.dateRequest = this.globalService.dateRequest;
+    requestData.szactivityid = szActivityId;
     requestData.szDesc = this.txtDesc;
-    requestData.szLocation = "";
+    requestData.szLocation = this.globalService.geoLatitude + ", " + this.globalService.geoLongitude;
     requestData.szStatusId = StatusId.ST003;
-    requestData.decTotal = this.ReturnDecTotal();
+    requestData.decTotal = "";
     requestData.szReasonImage = this.dataimage;
     requestData.bActiveRequest = true;
-    this.globalService.SaveRequest(requestData, this.dateData);
+    this.globalService.SaveRequestData(requestData);
+  }
 
+  private SaveReportData(timeArrived: string, timeReturn: string) {
     var reportData = new ReportData();
     reportData.timeArrived = timeArrived;
     reportData.timeValidArrived = timeArrived;
     reportData.timeReturn = timeReturn;
     reportData.timeValidReturn = timeReturn;
     reportData.szUserId = this.globalService.userData.szUserId;
-    reportData.dateAbsen = this.dateData.date.toDateString();
+    reportData.dateAbsen = this.globalService.dateRequest;
     this.globalService.SaveReportData(reportData);
-    return { requestData, reportData };
-  }
-
-  private ReturnDecTotal() {
-    var decHour = this.dateData.decHour - 8;
-    var decMinute = this.dateData.decMinute;
-
-    if (decMinute < 10) {
-      decHour = decHour - 1;
-      decMinute = 60 - decMinute;
-    } else {
-      decMinute = decMinute - 10;
-    }
-    // console.log(decMinute);
-    // console.log(decHour + "." + decMinute);
-    // console.log(decMinute);
-
-    return decHour + "." + decMinute;
   }
 
   TakePhotos() {
-    // this.globalService.TakePhotos();
-    // this.photo = this.globalService.photo;
-    // this.dataimage = this.globalService.dataimage;
     const options: CameraOptions = {
       quality: 100,
       mediaType: this.camera.MediaType.PICTURE,
@@ -117,7 +104,7 @@ export class FormAbsenDiluarComponent implements OnInit {
 
     this.camera.getPicture(options).then((imageData) => {
       this.photo = 'data:image/jpeg;base64,' + imageData;
-      this.dataimage = imageData ;
+      this.dataimage = imageData;
     }, (err) => {
       // Handle error
       console.log("Camera issue:" + err);
