@@ -2,12 +2,11 @@ import { Router, NavigationExtras } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 
 import { Geolocation, GeolocationOptions, Geoposition, PositionError } from '@ionic-native/geolocation/ngx';
-import { Component, OnInit } from '@angular/core';
-import { PopoverController, AlertController, NavController } from '@ionic/angular';
-import { PopoverComponent } from 'src/app/components/popover/popover.component';
-import { AuthenticationService } from './../services/authentication.service';
+import { Component } from '@angular/core';
+import { PopoverController, AlertController, NavController, Platform, IonRouterOutlet } from '@ionic/angular';
 import { Observable } from 'rxjs/Observable';
-import { GlobalService, ActivityId, DateData, ReportData, UserData } from '../services/global.service';
+import { GlobalService, ActivityId, DateData, ReportData } from '../services/global.service';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 @Component({
   selector: 'app-home',
@@ -16,44 +15,35 @@ import { GlobalService, ActivityId, DateData, ReportData, UserData } from '../se
 })
 
 export class HomePage {
-
-  timeDatas: any = [];
-  geoLatitude: number;
-  geoLongitude: number;
-  lat: number;
-  long: number;
-  waktu: string;
-  public txtTimeNow: string;
   public txtDayNow: string;
-  public inputVal: string = "variabel";
+  public txtTimeNow: string;
   public txtTimeArrived: string;
-  public txtDate: string;
   public txtTimeReturn: string = "";
   public txtWorkStatus: string = "";
-  geoAccuracy: number;
-  // userData: UserData = new UserData();
-  colorStatus: string;
-  public buttonPropertyDatas = [];
-  error: void;
-  options: GeolocationOptions;
-  currentPos: Geoposition;
-  popoverParam: any;
+  public colorStatus: string;
 
   constructor(public navCtrl: NavController, public alertController: AlertController,
     public router: Router,
     public geolocation: Geolocation,
     public http: HttpClient,
     public popoverController: PopoverController,
-    private globalService: GlobalService
+    private globalService: GlobalService,
+    private platform: Platform,
+    private statusBar: StatusBar
   ) {
-    this.ShowFirstLoadData();
+    this.InitializeApp();
+    this.InitializeData();
     this.Timer();
   }
 
-  async ShowFirstLoadData() {
-    await this.globalService.GetUserDataFromStorage();
+  InitializeApp() {
+    this.platform.ready().then(() => {
+      this.statusBar.styleBlackTranslucent();
+    });
+  }
 
-    this.GetTimeWorkingAndStatusUser();
+  async InitializeData() {
+    await this.globalService.GetUserDataFromStorage();
   }
 
   private GetTimeWorkingAndStatusUser() {
@@ -78,6 +68,11 @@ export class HomePage {
         var timeValidBack = reportData.timeValidReturn.split(':');
         var { hour, minute, ampm } = this.ConvertTimeToViewFormat(timeValidBack);
         this.txtTimeReturn = hour == 0 && minute == 0 ? "" : hour + ":" + minute + " " + ampm;
+
+        if (this.txtTimeReturn != "")
+          this.globalService.timeRequest = this.txtTimeReturn;
+        else
+          this.globalService.timeRequest = this.txtTimeArrived;
       }
       else {
         this.txtTimeArrived = "";
@@ -110,12 +105,12 @@ export class HomePage {
 
   private Timer() {
     setInterval(function () {
-      this.ngOnInit();
+      this.ShowRepeatData();
       // this.GetTimeWorkingAndStatusUser();
     }.bind(this), 500);
   }
 
-  ngOnInit() {
+  ShowRepeatData() {
     var dateData = this.globalService.GetDate();
 
     this.txtDayNow = dateData.szDay + ", " + dateData.decDate + " " + dateData.szMonth + " " + dateData.decYear;
@@ -129,8 +124,13 @@ export class HomePage {
     return i;
   }
 
+  ionViewWillEnter() {
+    this.GetTimeWorkingAndStatusUser();
+  }
+
   DoRefresh(event: any) {
-    this.ShowFirstLoadData();
+    this.InitializeData();
+    this.GetTimeWorkingAndStatusUser();
 
     setTimeout(() => {
       event.target.complete();
@@ -138,32 +138,47 @@ export class HomePage {
   }
 
   async ButtonAbsen() {
-    this.GetUserPosition();
-    this.ValidateAbsen();
+    try {
+      this.GetUserPosition();
+      this.ValidateAbsen();
+    }
+    catch (e) {
+      this.alertController.create({
+        mode: 'ios',
+        message: e.message,
+        buttons: ['OK']
+      }).then(alert => {
+        return alert.present();
+      });
+    }
   }
 
   private GetUserPosition() {
-    this.options = {
+    var options: GeolocationOptions = {
       enableHighAccuracy: true
     };
-    this.geolocation.getCurrentPosition(this.options).then((pos: Geoposition) => {
-      this.currentPos = pos;
-      console.log(pos);
-      this.geoLatitude = pos.coords.latitude;
-      this.geoLongitude = pos.coords.longitude;
+    this.geolocation.getCurrentPosition(options).then((pos: Geoposition) => {
+      this.globalService.geoLatitude = pos.coords.latitude;
+      this.globalService.geoLongitude = pos.coords.longitude;
     }, (err: PositionError) => {
       console.log("error : " + err.message);
     });
   }
 
-  async ValidateAbsen() {
-    if (this.geoLatitude <= -6.24508 && this.geoLatitude >= -6.24587 && this.geoLongitude >= 106.87269 && this.geoLongitude <= 106.87379) {//this.geoLatitude <= -6.24508 && this.geoLatitude >= -6.24587 && this.geoLongitude >= 106.87269 && this.geoLongitude <= 106.87379) {
-      var dateData = this.globalService.GetDate();
+  ValidateAbsen() {
+    var dateData = this.globalService.GetDate();
+
+    if (this.globalService.geoLatitude <= -6.24508 && this.globalService.geoLatitude >= -6.24587 && this.globalService.geoLongitude >= 106.87269 && this.globalService.geoLongitude <= 106.87379) {
       var reportData = new ReportData();
       var szActivityId: string;
 
       if (!this.txtTimeArrived) {
         reportData.timeArrived = dateData.szHour + ":" + dateData.szMinute + ":" + dateData.decSec;
+        reportData.timeReturn = "00:00:00";
+        this.DoingAbsen(dateData, reportData);
+        this.GetTimeWorkingAndStatusUser();
+        this.globalService.dateRequest = dateData.date.toLocaleDateString();
+
         if (reportData.timeArrived > "08:10:00") {
           szActivityId = ActivityId.AC002;
           let navigationExtras: NavigationExtras = {
@@ -171,16 +186,15 @@ export class HomePage {
               indexForm: szActivityId
             }
           }
-          await this.GetDecisionFromUser(szActivityId, navigationExtras);
+          this.GetDecisionFromUser(szActivityId, navigationExtras);
         }
-
-        this.DoingAbsen(dateData, reportData);
-        this.txtTimeArrived = dateData.szHour + ":" + dateData.szMinute + " " + dateData.szAMPM;
-        this.SetStatusWork();
       }
       else {
+        reportData.timeArrived = "00:00:00";
         reportData.timeReturn = dateData.szHour + ":" + dateData.szMinute + ":" + dateData.decSec;
-        console.log(reportData.timeReturn);
+        this.DoingAbsen(dateData, reportData);
+        this.GetTimeWorkingAndStatusUser();
+        this.globalService.dateRequest = dateData.date.toLocaleDateString();
 
         if (reportData.timeReturn < "17:00:00") {
           //mengarahkan ke component form-pulang-cepat
@@ -190,7 +204,7 @@ export class HomePage {
               indexForm: szActivityId
             }
           }
-          await this.GetDecisionFromUser(szActivityId, navigationExtras);
+          this.GetDecisionFromUser(szActivityId, navigationExtras);
         }
         else if (reportData.timeReturn > "17:45:00") {
           //mengarahkan ke component form-lembur
@@ -200,15 +214,14 @@ export class HomePage {
               indexForm: szActivityId
             }
           }
-          await this.GetDecisionFromUser(szActivityId, navigationExtras);
+          this.GetDecisionFromUser(szActivityId, navigationExtras);
         }
-
-        this.DoingAbsen(dateData, reportData);
-        this.txtTimeReturn = dateData.szHour + ":" + dateData.szMinute + " " + dateData.szAMPM;
-        this.SetStatusWork();
       }
-    } 
+    }
     else {
+      this.globalService.dateRequest = dateData.date.toLocaleDateString();
+      this.globalService.timeRequest = dateData.szHour + ":" + dateData.szMinute + " " + dateData.szAMPM;
+
       if (!this.txtTimeArrived) {
         this.globalService.isArrived = true;
         szActivityId = ActivityId.AC003;
@@ -223,12 +236,12 @@ export class HomePage {
           indexForm: szActivityId
         }
       }
-      await this.GetDecisionFromUser(szActivityId, navigationExtras);
+      this.GetDecisionFromUser(szActivityId, navigationExtras);
     }
   }
 
   private async GetDecisionFromUser(szActivityId: string, navigationExtras: NavigationExtras) {
-    const alert = await this.alertController.create({
+    await this.alertController.create({
       mode: 'ios',
       message: 'This is an alert message.',
       cssClass: szActivityId == ActivityId.AC001 ? 'alert-ontime' :
@@ -240,9 +253,7 @@ export class HomePage {
                   'alert-pulang',
       buttons: szActivityId == ActivityId.AC003 || szActivityId == ActivityId.AC004 ? [{
         text: 'BACK',
-        handler: () => {
-          console.log('Confirm Cancel: BACK');
-        }
+        role: 'Cancel'
       }, {
         text: 'NEXT',
         handler: () => {
@@ -251,31 +262,24 @@ export class HomePage {
       }] :
         szActivityId == "DILUAR-WIFIAKSES" ? [{
           text: 'BACK',
-          handler: () => {
-            console.log('Confirm Cancel: BACK');
-          }
+          role: 'Cancel'
         }] : szActivityId == ActivityId.AC002 ||
           szActivityId == ActivityId.AC005 ||
           szActivityId == ActivityId.AC006 ? [{
             text: 'NO',
-            handler: () => {
-              console.log('Confirm Cancel: NO');
-            }
+            role: 'Cancel'
           }, {
             text: 'YES',
             handler: () => {
-              var aa = this.router.navigate(['form-request'], navigationExtras);
-              console.log(aa);
-
+              this.router.navigate(['form-request'], navigationExtras);
             }
           }] : [{
             text: 'OK',
-            handler: () => {
-              console.log('Confirm Cancel: OK');
-            }
+            role: 'Cancel'
           }]
+    }).then(alert => {
+      return alert.present();
     });
-    await alert.present();
   }
 
   private SetStatusWork() {
@@ -295,10 +299,8 @@ export class HomePage {
   }
 
   private DoingAbsen(dateData: DateData, reportData: ReportData) {
-    var dateAbsen = dateData.decYear + "/" + dateData.decMonth + "/" + dateData.decDate;
-
     reportData.szUserId = this.globalService.userData.szUserId;
-    reportData.dateAbsen = dateAbsen;
+    reportData.dateAbsen = dateData.date.toDateString();
     this.globalService.SaveReportData(reportData);
   }
 
@@ -309,18 +311,6 @@ export class HomePage {
       }
     };
     this.router.navigate(['reports'], navigationExtras);
-  }
-
-  async presentPopover(ev: any) {
-    const popover = await this.popoverController.create({
-      component: PopoverComponent,
-      event: ev,
-      translucent: true,
-      cssClass: 'pop-over-style'
-    });
-
-    popover.style.cssText = '--min-width: 300px; --box-shadow: #15ff00';
-    return await popover.present();
   }
 }
 

@@ -93,6 +93,7 @@ export class ReportDailyComponent implements OnInit {
   async GetRequestDatasForThisDay() {
     var date = this.decCurrentYear + "/" + this.decCurrentMonth + "/" + this.decCurrentDay;
     
+    this.globalService.dateRequest = date;
     this.globalService.GetRequestDatasByUserId(this.globalService.userData.szUserId, date);
     this.globalService.GetReportData(this.globalService.userData.szUserId, date);
   }

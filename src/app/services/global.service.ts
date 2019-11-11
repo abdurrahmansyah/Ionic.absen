@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { InjectorInstance } from '../app.module';
 import { Observable } from 'rxjs';
-import { ToastController } from '@ionic/angular';
+import { ToastController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { AuthenticationService } from './authentication.service';
 import { Storage } from '@ionic/storage';
@@ -17,9 +17,11 @@ export class GlobalService {
   public timeArrived: string = "";
   public timeReturn: string = "";
   public timeRequest: string = "";
+  public dateRequest: string = "";
   public isArrived: boolean = true;
   public userData: UserData = new UserData();
-  public photo: any =[];
+  public geoLatitude: number;
+  public geoLongitude: number;
 
   httpClient = InjectorInstance.get<HttpClient>(HttpClient);
   dataimage: any;
@@ -28,8 +30,8 @@ export class GlobalService {
   constructor(private router: Router,
     private toastController: ToastController,
     private authService: AuthenticationService,
-    private storage: Storage,
-    private camera: Camera) { }
+    private alertController: AlertController,
+    private storage: Storage) { }
 
   public GetDate(): DateData {
     var dateData = new DateData();
@@ -114,13 +116,16 @@ export class GlobalService {
     postdata.append('timeValidReturn', reportData.timeReturn);
 
     var data: Observable<any> = this.httpClient.post(url, postdata);
-    data.subscribe(reportDatas => { });
+    data.subscribe(data => {
+      if (data.error == true) {
+        this.PresentAlert(data.error_msg);
+        throw new Error(data.error_msg);
+      }
+    });
   }
 
   public GetReportData(szUserId: string, dateAbsen: string) {
     var url = 'http://sihk.hutamakarya.com/apiabsen/GetReportDatas.php';
-
-    console.log("aa" + dateAbsen);
 
     let postdata = new FormData();
     postdata.append('szUserId', szUserId);
@@ -251,9 +256,8 @@ export class GlobalService {
     });
   }
 
-  public SaveRequest(requestData: RequestData, dateData: DateData) {
+  public SaveRequestData(requestData: RequestData) {
     var url = 'http://sihk.hutamakarya.com/apiabsen/SaveRequestData.php';
-    requestData.dateRequest = dateData.date.toLocaleString();
 
     let postdata = new FormData();
     postdata.append('szUserId', requestData.szUserId);
@@ -269,11 +273,22 @@ export class GlobalService {
     postdata.append('dtmLastUpdated', requestData.dateRequest);
 
     var data: Observable<any> = this.httpClient.post(url, postdata);
-    data.subscribe(hasil => { });
-    this.PresentToast(requestData.szactivityid == ActivityId.AC002 ? "Berhasil mengajukan izin terlambat" :
-      "");
-    this.router.navigate(['home']);
-    this.timeRequest = "";
+    data.subscribe(data => {
+      if (data.error == false) {
+        this.PresentToast(requestData.szactivityid == ActivityId.AC002 ? "Berhasil mengajukan izin terlambat" :
+          requestData.szactivityid == ActivityId.AC003 ? "Berhasil mengajukan izin datang diluar kantor" :
+            requestData.szactivityid == ActivityId.AC004 ? "Berhasil mengajukan izin pulang diluar kantor" : "");
+        this.router.navigate(['home']);
+        this.dateRequest = "";
+        this.timeRequest = "";
+      }
+      else {
+        if (data.error == true) {
+          this.PresentAlert(data.error_msg);
+          throw new Error(data.error_msg);
+        }
+      }
+    });
   }
 
   async PresentToast(msg: string) {
@@ -286,25 +301,13 @@ export class GlobalService {
     toast.present();
   }
 
-  TakePhotos() {
-    const options: CameraOptions = {
-      quality: 100,
-      mediaType: this.camera.MediaType.PICTURE,
-      destinationType: this.camera.DestinationType.DATA_URL,
-      sourceType: this.camera.PictureSourceType.CAMERA,
-      encodingType: this.camera.EncodingType.JPEG,
-      targetWidth: 500,
-      targetHeight: 500,
-      allowEdit: true,
-      saveToPhotoAlbum: false
-    }
-
-    this.camera.getPicture(options).then((imageData) => {
-      this.dataimage = imageData;
-      this.photo = 'data:image/jpeg;base64,' + imageData;
-    }, (err) => {
-      // Handle error
-      console.log("Camera issue:" + err);
+  PresentAlert(msg: string) {
+    this.alertController.create({
+      mode: 'ios',
+      message: msg,
+      buttons: ['OK']
+    }).then(alert => {
+      return alert.present();
     });
   }
 }
