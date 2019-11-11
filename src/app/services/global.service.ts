@@ -23,6 +23,7 @@ export class GlobalService {
 
   httpClient = InjectorInstance.get<HttpClient>(HttpClient);
   dataimage: any;
+  requestDataStatus: string = "";
 
   constructor(private router: Router,
     private toastController: ToastController,
@@ -220,10 +221,11 @@ export class GlobalService {
     var url = 'http://sihk.hutamakarya.com/apiabsen/GetRequestDatasForNotifications.php';
 
     let postdata = new FormData();
-    postdata.append('szUserId', szUserId);
+    postdata.append('szUserId', this.userData.szUserId);
 
     var data: any = this.httpClient.post(url, postdata);
     data.subscribe(data => {
+      this.requestDataStatus = data.status;
       if (data.error == false) {
         this.requestDatas = data.result;
       }

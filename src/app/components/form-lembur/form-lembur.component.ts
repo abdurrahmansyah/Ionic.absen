@@ -37,7 +37,7 @@ export class FormLemburComponent implements OnInit {
     }.bind(this), 500);
   }
 
-  public SaveLateRequest() {
+  public SaveOvertimeRequest() {
     var requestData = new RequestData();
     requestData.szUserId = this.globalService.userData.szUserId;
     requestData.szactivityid = ActivityId.AC006;
@@ -45,6 +45,8 @@ export class FormLemburComponent implements OnInit {
     requestData.szLocation = "";
     requestData.szStatusId = StatusId.ST003;
     requestData.decTotal = this.ReturnDecTotal();
+    requestData.szReasonImage = "";
+    requestData.bActiveRequest = true;
     this.globalService.SaveRequest(requestData, this.dateData);
   }
 

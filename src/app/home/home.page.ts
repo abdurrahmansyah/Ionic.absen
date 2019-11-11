@@ -111,6 +111,7 @@ export class HomePage {
   private Timer() {
     setInterval(function () {
       this.ngOnInit();
+      // this.GetTimeWorkingAndStatusUser();
     }.bind(this), 500);
   }
 

@@ -15,7 +15,7 @@ export class ReportDaily2Component implements OnInit {
   requestDatas = [];
   txtTimeArrived: string;
   txtTimeReturn: string;
-  photo: string;
+  photo: any = [];
 
   constructor(
     private globalService: GlobalService,
@@ -32,21 +32,23 @@ export class ReportDaily2Component implements OnInit {
     }.bind(this), 500);
   }
 
-  GetRequestDatas() {
+  async GetRequestDatas() {
+    // var szUserId = await this.storage.get('szUserId').then((x) => { return x; });
+    // this.globalService.GetRequestDatasByUserId(szUserId,new Date().toLocaleString())
+
     this.requestDatas = this.globalService.requestDatas;
     this.txtTimeArrived = this.globalService.timeArrived;
     this.txtTimeReturn = this.globalService.timeReturn;
+    var i = 0;
     // console.log(this.requestDatas);
-    if(!this.requestDatas.map(x => x.szreasonimage).find(x => x) ||this.requestDatas.map(x => x.szreasonimage).find(x => x) =="undefined" ){
-      this.photo="";
-    }else{
+    if (!this.requestDatas.map(x => x.szreasonimage).find(x => x) || this.requestDatas.map(x => x.szreasonimage).find(x => x) == "undefined") {
+      this.photo = "";
+    } else {
       this.photo = 'data:image/jpeg;base64,' + this.requestDatas.map(x => x.szreasonimage).find(x => x);
-      // console.log(this.photo);
-      
+      console.log();
     }
-    
   }
-
+  
   public DeleteRequest(szActivityId: string) {
     this.globalService.CloseRequestData(this.globalService.userData.szUserId, new Date().toLocaleString(), szActivityId);
   }

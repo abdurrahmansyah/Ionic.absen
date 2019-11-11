@@ -47,16 +47,23 @@ export class FormAbsenDiluarComponent implements OnInit {
   }
 
   public SaveOutsideRequest() {
-    if (this.globalService.isArrived) {
-      this.timeArrived = this.timeReport;
-      this.timeReturn = "00:00:00"
-      this.MappingData(ActivityId.AC003, this.timeArrived, this.timeReturn);
+    console.log(this.dataimage);
+    
+    // if (!this.dataimage) {
+    //   alert("Silahkan Lampirkan Foto");
+    // } else {
+      if (this.globalService.isArrived) {
+        this.timeArrived = this.timeReport;
+        this.timeReturn = "00:00:00"
+        this.MappingData(ActivityId.AC003, this.timeArrived, this.timeReturn);
 
-    } else {
-      this.timeArrived = "00:00:00";
-      this.timeReturn = this.timeReport;
-      this.MappingData(ActivityId.AC004, this.timeArrived, this.timeReturn);
-    }
+      } else {
+        this.timeArrived = "00:00:00";
+        this.timeReturn = this.timeReport;
+        this.MappingData(ActivityId.AC004, this.timeArrived, this.timeReturn);
+      }
+    // }
+
   }
 
   private MappingData(szActivityId: string, timeArrived: string, timeReturn: string) {
@@ -117,7 +124,7 @@ export class FormAbsenDiluarComponent implements OnInit {
 
     this.camera.getPicture(options).then((imageData) => {
       this.photo = 'data:image/jpeg;base64,' + imageData;
-      this.dataimage = imageData ;
+      this.dataimage = imageData;
     }, (err) => {
       // Handle error
       console.log("Camera issue:" + err);

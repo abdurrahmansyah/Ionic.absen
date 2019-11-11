@@ -17,7 +17,7 @@
     mode="ios">
   </ion-searchbar>
 
-  <ion-card style="margin-top: 0px;">
+  <ion-card *ngIf="requestDataStatus == 'atasan'" style="margin-top: 0px;">
     <ion-item lines="none" color="transparent">
       <ion-avatar slot="start">
         <img src="../../../assets/images/user-1.png">
@@ -44,7 +44,7 @@
     </ion-row>
   </ion-card>
 
-  <ion-card style="margin-top: 0px;">
+  <ion-card  style="margin-top: 0px;">
     <div padding style="padding-bottom: 2px;">
       <ion-text color="hk-red" style="font-size: 10px;">Jumat, 18 November 2019 - Absen Diluar Kantor</ion-text>
     </div>
