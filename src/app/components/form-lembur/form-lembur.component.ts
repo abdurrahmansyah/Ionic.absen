@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { ActivityId, StatusId, GlobalService, RequestData, DateData } from 'src/app/services/global.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-form-lembur',
@@ -8,60 +9,66 @@ import { ActivityId, StatusId, GlobalService, RequestData, DateData } from 'src/
   styleUrls: ['./form-lembur.component.scss'],
 })
 export class FormLemburComponent implements OnInit {
-  public txtTimeNow: string;
+  public txtTimeRequest: string;
   public txtDesc: string;
-  public dateData: DateData;
 
-  constructor(
-    private storage: Storage,
-    private globalService: GlobalService
-  ) {
-    this.Timer();
-  }
+  constructor(private globalService: GlobalService,
+    private alertController: AlertController
+  ) { }
 
   ngOnInit() {
-    this.dateData = this.globalService.GetDate();
-    this.txtTimeNow = this.CheckTime(this.dateData.decHour) + ":" + this.CheckTime(this.dateData.decMinute) + ":" + this.CheckTime(this.dateData.decSec) + " " + this.dateData.szAMPM;
-  }
-
-  private CheckTime(i: any) {
-    if (i < 10) {
-      i = "0" + i;
-    }
-    return i;
-  }
-
-  private Timer() {
-    setInterval(function () {
-      this.ngOnInit();
-    }.bind(this), 500);
+    this.txtTimeRequest = this.globalService.timeRequest;
   }
 
   public SaveOvertimeRequest() {
+    try {
+      this.ValidateData();
+      this.SaveRequestData();
+    }
+    catch (e) {
+      this.alertController.create({
+        mode: 'ios',
+        message: e.message,
+        buttons: ['OK']
+      }).then(alert => {
+        return alert.present();
+      });
+    }
+  }
+
+  private ValidateData() {
+    if (!this.txtDesc) {
+      throw new Error("Alasan wajib diisi.");
+    }
+  }
+
+  private SaveRequestData() {
     var requestData = new RequestData();
     requestData.szUserId = this.globalService.userData.szUserId;
+    requestData.dateRequest = this.globalService.dateRequest;
     requestData.szactivityid = ActivityId.AC006;
     requestData.szDesc = this.txtDesc;
     requestData.szLocation = "";
     requestData.szStatusId = StatusId.ST003;
     requestData.decTotal = this.ReturnDecTotal();
+    requestData.szReasonImage = "";
+    requestData.bActiveRequest = true;
     this.globalService.SaveRequestData(requestData);
   }
 
   private ReturnDecTotal() {
-    var decHour = this.dateData.decHour - 8;
-    var decMinute = this.dateData.decMinute;
+    var time = this.txtTimeRequest.split(':');
 
-    if (decMinute < 10) {
+    var decHour = +time[0] - 17;
+    var decMinute = +time[1].split(' ')[0];
+
+    if (decMinute < 45) {
       decHour = decHour - 1;
-      decMinute = 60 - decMinute;
+      decMinute = 15 + decMinute;
     } else {
       decMinute = decMinute - 10;
     }
-    console.log(decMinute);
-    console.log(decHour + "." + decMinute);
-    console.log(decMinute);
     
-    return decHour + "." + decMinute;
+    return decHour + "." + (decMinute.toString().length < 2 ? "0" + decMinute : decMinute);
   }
 }
