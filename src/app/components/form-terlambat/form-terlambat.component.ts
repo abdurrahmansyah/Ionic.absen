@@ -45,7 +45,7 @@ export class FormTerlambatComponent implements OnInit {
     var requestData = new RequestData();
     requestData.szUserId = this.globalService.userData.szUserId;
     requestData.dateRequest = this.globalService.dateRequest;
-    requestData.szactivityid = ActivityId.AC002;
+    requestData.szActivityId = ActivityId.AC002;
     requestData.szDesc = this.txtDesc;
     requestData.szLocation = "";
     requestData.szStatusId = StatusId.ST003;

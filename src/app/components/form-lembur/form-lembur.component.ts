@@ -46,7 +46,7 @@ export class FormLemburComponent implements OnInit {
     var requestData = new RequestData();
     requestData.szUserId = this.globalService.userData.szUserId;
     requestData.dateRequest = this.globalService.dateRequest;
-    requestData.szactivityid = ActivityId.AC006;
+    requestData.szActivityId = ActivityId.AC006;
     requestData.szDesc = this.txtDesc;
     requestData.szLocation = "";
     requestData.szStatusId = StatusId.ST003;
@@ -61,13 +61,6 @@ export class FormLemburComponent implements OnInit {
 
     var decHour = +time[0] - 17;
     var decMinute = +time[1].split(' ')[0];
-
-    if (decMinute < 45) {
-      decHour = decHour - 1;
-      decMinute = 15 + decMinute;
-    } else {
-      decMinute = decMinute - 10;
-    }
     
     return decHour + "." + (decMinute.toString().length < 2 ? "0" + decMinute : decMinute);
   }

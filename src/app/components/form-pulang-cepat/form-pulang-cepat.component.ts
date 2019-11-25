@@ -45,7 +45,7 @@ export class FormPulangCepatComponent implements OnInit {
     var requestData = new RequestData();
     requestData.szUserId = this.globalService.userData.szUserId;
     requestData.dateRequest = this.globalService.dateRequest;
-    requestData.szactivityid = ActivityId.AC005;
+    requestData.szActivityId = ActivityId.AC005;
     requestData.szDesc = this.txtDesc;
     requestData.szLocation = "";
     requestData.szStatusId = StatusId.ST003;

@@ -17,34 +17,45 @@
     mode="ios">
   </ion-searchbar>
 
-  <ion-card *ngIf="requestDataStatus == 'atasan'" style="margin-top: 0px;">
+  <ion-card style="margin-top: 0px;" *ngFor="let requestData of requestDatas">
     <ion-item lines="none" color="transparent">
       <ion-avatar slot="start">
         <img src="../../../assets/images/user-1.png">
       </ion-avatar>
       <ion-label style="font-size: 16px; color: dimgrey;">
-        <p>Wahyudi - Bagian TI</p>
-        <p>Divisi Sistem dan Risiko</p>
+        <p>{{ requestData.szUserName }} - {{ requestData.szSectionId }}</p>
+        <p>{{ requestData.szDivisionId }}</p>
       </ion-label>
     </ion-item>
     <div class="ion-text-start" padding style="padding-top: 0px; padding-bottom: 0px; line-height: 150%;">
-      <ion-text>Jumat, 18 Juli 2019</ion-text> <br>
-      <ion-text color="dark">Absen Diluar Kantor</ion-text>
+      <ion-text>{{ requestData.dateRequest }}</ion-text> <br>
+      <ion-text color="dark">{{ requestData.szActivityName }}</ion-text>
       <ion-text> - </ion-text>
-      <ion-text>Keterangan : Rapat</ion-text> <br>
-      <ion-text>Lokasi : Jalan Menteng Raya No 11b</ion-text>
+      <ion-text *ngIf="requestData.szActivityId == 'AC002'">Datang : {{ requestData.decTotal }}</ion-text>
+      <ion-text *ngIf="requestData.szActivityId == 'AC005' || requestData.szActivityId == 'AC006'">Pulang :
+        {{ requestData.decTotal }}</ion-text>
+      <ion-text *ngIf="requestData.szActivityId == 'AC003' || requestData.szActivityId == 'AC004'">Keterangan :
+        {{ requestData.szDesc }}</ion-text>
+      <br>
+      <ion-text
+        *ngIf="requestData.szActivityId == 'AC002' || requestData.szActivityId == 'AC005' || requestData.szActivityId == 'AC006'">
+        Alasan : {{ requestData.szDesc }}</ion-text>
+      <ion-text *ngIf="requestData.szActivityId == 'AC003' || requestData.szActivityId == 'AC004'">Lokasi :
+        {{ requestData.szLocation }}<br /> <img src="{{ requestData.szReasonImage }}" class="center" /></ion-text>
     </div>
     <ion-row>
       <ion-col>
-        <ion-button expand="full" color="hk-white-purple" shape="round">DECLINE</ion-button>
+        <ion-button expand="full" color="hk-white-purple" shape="round" (click)="UpdateRequest(requestData.szRequestId, 0)">DECLINE</ion-button>
       </ion-col>
       <ion-col>
-        <ion-button expand="full" color="hk-purple" shape="round">APPROVE</ion-button>
+        <ion-button expand="full" color="hk-purple" shape="round" (click)="UpdateRequest(requestData.szRequestId, 1)">APPROVE</ion-button>
       </ion-col>
     </ion-row>
   </ion-card>
 
-  <ion-card  style="margin-top: 0px;">
+  <!-- ---------------------------------------------------------------------------------------------------- -->
+
+  <!-- <ion-card style="margin-top: 0px;">
     <div padding style="padding-bottom: 2px;">
       <ion-text color="hk-red" style="font-size: 10px;">Jumat, 18 November 2019 - Absen Diluar Kantor</ion-text>
     </div>
@@ -61,13 +72,11 @@
     <div class="ion-text-start" padding style="padding-top: 0px; line-height: 150%;">
       <ion-text>Your request has been approved by {{ requestData.szSuperiorUserName }}</ion-text> <br>
     </div>
-  </ion-card>
-
+  </ion-card> -->
 
   <!-- ---------------------------------------------------------------------------------------------------- -->
 
-
-  <ion-card style="margin-top: 0px;">
+  <!-- <ion-card style="margin-top: 0px;">
     <ion-grid no-padding>
       <ion-row align-items-center no-padding>
         <ion-col no-padding size="10" style="text-align: left;">
@@ -88,7 +97,6 @@
     </div>
   </ion-card>
 
-
   <ion-card style="margin-top: 0px;">
     <ion-item-sliding>
       <ion-item Lines="none" style="--background: #f0f0f0;" no-padding>
@@ -108,8 +116,7 @@
         </ion-item-option>
       </ion-item-options>
     </ion-item-sliding>
-  </ion-card>
-
+  </ion-card> -->
 
   <!-- <ion-card *ngFor="let requestData of requestDatas">
       <ion-item lines="none" color="transparent">
@@ -128,58 +135,4 @@
       </div>
     </ion-card> -->
 
-  <ion-item color="transparent">
-    <ion-text>Ehe</ion-text>
-  </ion-item>
-  <ion-item color="transparent">
-    <ion-text>Ehe</ion-text>
-  </ion-item>
-  <ion-item color="transparent">
-    <ion-text>Ehe</ion-text>
-  </ion-item>
-  <ion-item color="transparent">
-    <ion-text>Ehe</ion-text>
-  </ion-item>
-  <ion-item color="transparent">
-    <ion-text>Ehe</ion-text>
-  </ion-item>
-  <ion-item color="transparent">
-    <ion-text>Ehe</ion-text>
-  </ion-item>
-  <ion-item color="transparent">
-    <ion-text>Ehe</ion-text>
-  </ion-item>
-  <ion-item color="transparent">
-    <ion-text>Ehe</ion-text>
-  </ion-item>
-  <ion-item color="transparent">
-    <ion-text>Ehe</ion-text>
-  </ion-item>
-  <ion-item color="transparent">
-    <ion-text>Ehe</ion-text>
-  </ion-item>
-  <ion-item color="transparent">
-    <ion-text>Ehe</ion-text>
-  </ion-item>
-  <ion-item color="transparent">
-    <ion-text>Ehe</ion-text>
-  </ion-item>
-  <ion-item color="transparent">
-    <ion-text>Ehe</ion-text>
-  </ion-item>
-  <ion-item color="transparent">
-    <ion-text>Ehe</ion-text>
-  </ion-item>
-  <ion-item color="transparent">
-    <ion-text>Ehe</ion-text>
-  </ion-item>
-  <ion-item color="transparent">
-    <ion-text>Ehe</ion-text>
-  </ion-item>
-  <ion-item color="transparent">
-    <ion-text>Ehe</ion-text>
-  </ion-item>
-
-
- 
 </ion-content>

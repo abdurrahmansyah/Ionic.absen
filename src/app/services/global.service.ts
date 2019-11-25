@@ -14,6 +14,7 @@ import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 export class GlobalService {
   public requestDatas = [];
   public summaryReportDatas = [];
+  public errorDatas = [];
   public timeArrived: string = "";
   public timeReturn: string = "";
   public timeRequest: string = "";
@@ -25,7 +26,6 @@ export class GlobalService {
 
   httpClient = InjectorInstance.get<HttpClient>(HttpClient);
   dataimage: any;
-  requestDataStatus: string = "";
 
   constructor(private router: Router,
     private toastController: ToastController,
@@ -38,6 +38,28 @@ export class GlobalService {
     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     var days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
     var date = new Date();
+
+    dateData.date = date;
+    dateData.decYear = date.getFullYear();
+    dateData.szMonth = months[date.getMonth()];
+    dateData.decMonth = date.getMonth() + 1;
+    dateData.decDate = date.getDate();
+    dateData.szDay = days[date.getDay()];
+    dateData.decMinute = date.getMinutes();
+    dateData.szMinute = dateData.decMinute < 10 ? "0" + dateData.decMinute : dateData.decMinute.toString();
+    dateData.decHour = date.getHours();
+    dateData.szHour = dateData.decHour < 10 ? "0" + dateData.decHour : dateData.decHour.toString();
+    dateData.decSec = date.getSeconds();
+    dateData.szAMPM = dateData.decHour > 12 ? "PM" : "AM";
+
+    return dateData;
+  }
+
+  public GetDateWithDateParam(dateParam): DateData {
+    var dateData = new DateData();
+    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    var days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+    var date = new Date(dateParam);
 
     dateData.date = date;
     dateData.decYear = date.getFullYear();
@@ -174,6 +196,7 @@ export class GlobalService {
   }
 
   public GetSummaryReportData(currentYear: string) {
+    this.summaryReportDatas = [];
     var url = 'http://sihk.hutamakarya.com/apiabsen/GetReportDatas.php';
     var months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
@@ -221,7 +244,7 @@ export class GlobalService {
     });
   }
 
-  public GetRequestDatasForNotifications(szUserId: string) {
+  public GetRequestDatasForNotifications() {
     this.requestDatas = [];
     var url = 'http://sihk.hutamakarya.com/apiabsen/GetRequestDatasForNotifications.php';
 
@@ -230,12 +253,103 @@ export class GlobalService {
 
     var data: any = this.httpClient.post(url, postdata);
     data.subscribe(data => {
-      this.requestDataStatus = data.status;
       if (data.error == false) {
-        this.requestDatas = data.result;
+        this.MappingRequestDataForNotifications(data.result);
       }
       else {
         this.requestDatas = [];
+        this.PresentAlert(data.error_msg);
+        throw new Error(data.error_msg);
+      }
+    });
+  }
+
+  private MappingRequestDataForNotifications(data: any) {
+    data.forEach(reqData => {
+      var requestData = new RequestData();
+      requestData.szRequestId = reqData.szrequestid;
+      requestData.szUserId = reqData.szuserid;
+      requestData.szUserName = reqData.szfullname;
+      requestData.szDivisionId = reqData.szdivisionid;
+      requestData.szSectionId = reqData.szsectionid;
+      requestData.dateRequest = this.ReturnDate(reqData.daterequest);
+      requestData.szActivityId = reqData.szactivityid;
+      requestData.szActivityName = reqData.szactivityname;
+      requestData.szDesc = reqData.szdesc;
+      requestData.szLocation = reqData.szlocation;
+      requestData.szStatusId = reqData.szstatusid;
+      requestData.szStatusName = reqData.szstatusname;
+      requestData.decTotal = this.ReturnTimeByTotal(reqData);
+      requestData.szReasonImage = 'data:image/jpeg;base64,' + reqData.szreasonimage;
+      requestData.bActiveRequest = true;
+      this.requestDatas.push(requestData);
+    });
+  }
+
+  private ReturnDate(daterequest: string): string {
+    var dateData = this.GetDateWithDateParam(daterequest);
+
+    return dateData.szDay + ", " + dateData.decDate + " " + dateData.szMonth + " " + dateData.decYear;
+  }
+
+  private ReturnTimeByTotal(reqData: any): string {
+    if (reqData.szactivityid == ActivityId.AC002) {
+      var decTotal = reqData.dectotal.split('.');
+      var decHour = +decTotal[0] + 8;
+      var decMinute = +decTotal[1] + 10;
+
+      if (decMinute >= 60) {
+        decMinute = decMinute - 60;
+        decHour += 1;
+      }
+
+      return (decHour.toString().length < 2 ? "0" + decHour : decHour) + ":" + (decMinute.toString().length < 2 ? "0" + decMinute : decMinute);
+    }
+    else if (reqData.szactivityid == ActivityId.AC005) {
+      var decTotal = reqData.dectotal.split('.');
+      var decHour = 16 - +decTotal[0];
+      var decMinute = 60 - +decTotal[1];
+
+      return (decHour.toString().length < 2 ? "0" + decHour : decHour) + ":" + (decMinute.toString().length < 2 ? "0" + decMinute : decMinute);
+    }
+    else if (reqData.szactivityid == ActivityId.AC006) {
+      var decTotal = reqData.dectotal.split('.');
+      var decHour = +decTotal[0] + 17;
+      var decMinute = +decTotal[1];
+
+      return (decHour.toString().length < 2 ? "0" + decHour : decHour) + ":" + (decMinute.toString().length < 2 ? "0" + decMinute : decMinute);
+    }
+  }
+
+  public SaveRequestData(requestData: RequestData) {
+    var url = 'http://sihk.hutamakarya.com/apiabsen/SaveRequestData.php';
+
+    let postdata = new FormData();
+    postdata.append('szUserId', requestData.szUserId);
+    postdata.append('dateRequest', requestData.dateRequest);
+    postdata.append('szActivityId', requestData.szActivityId);
+    postdata.append('szDesc', requestData.szDesc);
+    postdata.append('szLocation', requestData.szLocation);
+    postdata.append('szStatusId', requestData.szStatusId);
+    postdata.append('decTotal', requestData.decTotal);
+    postdata.append('szReasonImage', requestData.szReasonImage);
+    postdata.append('bActiveRequest', String(requestData.bActiveRequest));
+    postdata.append('dtmCreated', requestData.dateRequest);
+    postdata.append('dtmLastUpdated', requestData.dateRequest);
+
+    var data: Observable<any> = this.httpClient.post(url, postdata);
+    data.subscribe(data => {
+      if (data.error == false) {
+        this.PresentToast(requestData.szActivityId == ActivityId.AC002 ? "Berhasil mengajukan izin terlambat" :
+          requestData.szActivityId == ActivityId.AC003 ? "Berhasil mengajukan izin datang diluar kantor" :
+            requestData.szActivityId == ActivityId.AC004 ? "Berhasil mengajukan izin pulang diluar kantor" : "");
+        this.router.navigate(['home']);
+        this.dateRequest = "";
+        this.timeRequest = "";
+      }
+      else {
+        this.PresentAlert(data.error_msg);
+        throw new Error(data.error_msg);
       }
     });
   }
@@ -256,37 +370,27 @@ export class GlobalService {
     });
   }
 
-  public SaveRequestData(requestData: RequestData) {
-    var url = 'http://sihk.hutamakarya.com/apiabsen/SaveRequestData.php';
+  public UpdateRequestData(szRequestId: string, szStatusId: string) {
+    var url = 'http://sihk.hutamakarya.com/apiabsen/UpdateRequestData.php';
 
     let postdata = new FormData();
-    postdata.append('szUserId', requestData.szUserId);
-    postdata.append('dateRequest', requestData.dateRequest);
-    postdata.append('szActivityId', requestData.szactivityid);
-    postdata.append('szDesc', requestData.szDesc);
-    postdata.append('szLocation', requestData.szLocation);
-    postdata.append('szStatusId', requestData.szStatusId);
-    postdata.append('decTotal', requestData.decTotal);
-    postdata.append('szReasonImage', requestData.szReasonImage);
-    postdata.append('bActiveRequest', String(requestData.bActiveRequest));
-    postdata.append('dtmCreated', requestData.dateRequest);
-    postdata.append('dtmLastUpdated', requestData.dateRequest);
+    postdata.append('szRequestId', szRequestId);
+    postdata.append('szStatusId', szStatusId);
+    postdata.append('dtmLastUpdated', new Date().toLocaleString());
 
-    var data: Observable<any> = this.httpClient.post(url, postdata);
+    var data: any = this.httpClient.post(url, postdata);
     data.subscribe(data => {
       if (data.error == false) {
-        this.PresentToast(requestData.szactivityid == ActivityId.AC002 ? "Berhasil mengajukan izin terlambat" :
-          requestData.szactivityid == ActivityId.AC003 ? "Berhasil mengajukan izin datang diluar kantor" :
-            requestData.szactivityid == ActivityId.AC004 ? "Berhasil mengajukan izin pulang diluar kantor" : "");
-        this.router.navigate(['home']);
-        this.dateRequest = "";
-        this.timeRequest = "";
+        var szMessage = szStatusId == StatusId.ST001 ? "Berhasil menerima request" : "Berhasil menolak request";
+        this.PresentToast(szMessage);
       }
       else {
-        if (data.error == true) {
-          this.PresentAlert(data.error_msg);
-          throw new Error(data.error_msg);
-        }
+        var errorData = new ErrorData();
+        errorData.szMessage = data.error_msg;
+        this.errorDatas.push(errorData);
+
+        // this.PresentAlert(data.error_msg);
+        // throw new Error(data.error_msg);
       }
     });
   }
@@ -344,8 +448,7 @@ export class DateData {
   public szMinute: string;
   public szAMPM: string;
   public decSec: number;
-  decMonth: number;
-  day2: number;
+  public decMonth: number;
 
   constructor() { }
 }
@@ -373,8 +476,10 @@ export class RequestData {
   public szRequestId: string;
   public szUserId: string;
   public szUserName: string;
+  public szDivisionId: string;
+  public szSectionId: string;
   public dateRequest: string;
-  public szactivityid: string;
+  public szActivityId: string;
   public szActivityName: string;
   public szDesc: string;
   public szLocation: string;
@@ -383,10 +488,14 @@ export class RequestData {
   public decTotal: string;
   public szReasonImage: string;
   public bActiveRequest: boolean;
-  public szSuperiorUserId: string; // cek dipakek bener ga
-  public szSuperiorUserName: string; // cek dipakek bener ga
-  public timeArrived: string; // cek dipakek bener ga
-  public timeBack: string; // cek dipakek bener ga
+  // public szSuperiorUserId: string; // cek dipakek bener ga
+  // public szSuperiorUserName: string; // cek dipakek bener ga
+  // public timeArrived: string; // cek dipakek bener ga
+  // public timeBack: string; // cek dipakek bener ga
+}
+
+export class ErrorData {
+  public szMessage: string;
 }
 
 export class ActivityId {

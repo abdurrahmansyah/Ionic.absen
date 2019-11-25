@@ -68,7 +68,7 @@ export class FormAbsenDiluarComponent implements OnInit {
     var requestData = new RequestData();
     requestData.szUserId = this.globalService.userData.szUserId;
     requestData.dateRequest = this.globalService.dateRequest;
-    requestData.szactivityid = szActivityId;
+    requestData.szActivityId = szActivityId;
     requestData.szDesc = this.txtDesc;
     requestData.szLocation = this.globalService.geoLatitude + ", " + this.globalService.geoLongitude;
     requestData.szStatusId = StatusId.ST003;

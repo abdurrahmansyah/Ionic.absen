@@ -84,6 +84,7 @@ export class HomePage {
   }
 
   private MappingReportData(reportDataFromDb: any) {
+    var reportDatas = [];
     var reportData = new ReportData();
     reportData.szUserId = reportDataFromDb.szuserid;
     reportData.dateAbsen = reportDataFromDb.dateabsen;
@@ -93,7 +94,9 @@ export class HomePage {
     reportData.timeValidReturn = reportDataFromDb.timevalidreturn;
     reportData.decMonth = reportDataFromDb.decmonth;
 
-    return reportData;
+    reportDatas.push(reportData);
+    console.log(reportDatas.find(x => x));
+    return reportDatas.find(x => x);
   }
 
   private ConvertTimeToViewFormat(timeFromDb: any) {
@@ -139,8 +142,7 @@ export class HomePage {
 
   async ButtonAbsen() {
     try {
-      this.GetUserPosition();
-      this.ValidateAbsen();
+      this.GetUserPositionThenValidateAbsen();
     }
     catch (e) {
       this.alertController.create({
@@ -153,22 +155,27 @@ export class HomePage {
     }
   }
 
-  private GetUserPosition() {
+  private GetUserPositionThenValidateAbsen() {
     var options: GeolocationOptions = {
       enableHighAccuracy: true
     };
     this.geolocation.getCurrentPosition(options).then((pos: Geoposition) => {
       this.globalService.geoLatitude = pos.coords.latitude;
       this.globalService.geoLongitude = pos.coords.longitude;
+
+      this.ValidateAbsen();
     }, (err: PositionError) => {
       console.log("error : " + err.message);
     });
   }
 
-  ValidateAbsen() {
+  private ValidateAbsen() {
     var dateData = this.globalService.GetDate();
 
-    if (this.globalService.geoLatitude <= -6.24508 && this.globalService.geoLatitude >= -6.24587 && this.globalService.geoLongitude >= 106.87269 && this.globalService.geoLongitude <= 106.87379) {
+    if (true) { //this.globalService.geoLatitude <= -6.24508
+      //   && this.globalService.geoLatitude >= -6.24587
+      //   && this.globalService.geoLongitude >= 106.87269
+      //   && this.globalService.geoLongitude <= 106.87379) {
       var reportData = new ReportData();
       var szActivityId: string;
 
@@ -177,6 +184,7 @@ export class HomePage {
         reportData.timeReturn = "00:00:00";
         this.DoingAbsen(dateData, reportData);
         this.GetTimeWorkingAndStatusUser();
+
         this.globalService.dateRequest = dateData.date.toLocaleDateString();
 
         if (reportData.timeArrived > "08:10:00") {
@@ -194,6 +202,7 @@ export class HomePage {
         reportData.timeReturn = dateData.szHour + ":" + dateData.szMinute + ":" + dateData.decSec;
         this.DoingAbsen(dateData, reportData);
         this.GetTimeWorkingAndStatusUser();
+
         this.globalService.dateRequest = dateData.date.toLocaleDateString();
 
         if (reportData.timeReturn < "17:00:00") {
