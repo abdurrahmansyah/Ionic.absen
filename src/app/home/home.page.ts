@@ -7,6 +7,7 @@ import { PopoverController, AlertController, NavController, Platform, IonRouterO
 import { Observable } from 'rxjs/Observable';
 import { GlobalService, ActivityId, DateData, ReportData } from '../services/global.service';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 
 @Component({
   selector: 'app-home',
@@ -29,11 +30,64 @@ export class HomePage {
     public popoverController: PopoverController,
     private globalService: GlobalService,
     private platform: Platform,
-    private statusBar: StatusBar
+    private statusBar: StatusBar,
+    private localNotifications: LocalNotifications
   ) {
     this.InitializeApp();
     this.InitializeData();
     this.Timer();
+  }
+
+  public SingleNotif() {
+    this.localNotifications.schedule({
+      id: 1,
+      text: 'Single ILocalNotification'
+    });
+
+    this.localNotifications.schedule({
+      title: 'My first notification',
+      text: 'Thats pretty easy...',
+      foreground: true
+    });
+  }
+
+  public MultipleNotif() {
+    this.localNotifications.schedule([{
+      id: 1,
+      text: 'Multi ILocalNotification 1'
+    }, {
+      id: 2,
+      title: 'Local ILocalNotification Example',
+      text: 'Multi ILocalNotification 2',
+      icon: 'http://example.com/icon.png'
+    }]);
+  }
+
+  public ScheduleNotif() {
+    this.localNotifications.schedule([{
+      id: 1,
+      text: 'Delay Fore',
+      trigger: { at: new Date(new Date().getTime() + 30000) },
+      foreground: true
+    }, {
+      id: 2,
+      text: 'Delay No Fore',
+      trigger: { at: new Date(new Date().getTime() + 31000) }
+    }, {
+      id: 3,
+      text: 'Delay Fore 2',
+      trigger: { at: new Date(new Date().getTime() + 33000) },
+      foreground: true
+    }]);
+  }
+
+  public ForLog() {
+    var now = new Date();
+    var aaa = new Date(new Date().getTime() + 4000);
+    var aaa1 = new Date(new Date().getTime() + 60000);
+    console.log(now);
+    console.log(aaa);
+    console.log(aaa1);
   }
 
   InitializeApp() {

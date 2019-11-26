@@ -16,6 +16,7 @@ import { HttpClientModule } from '@angular/common/http';
 
 import { Camera } from '@ionic-native/camera/ngx';
 import { File } from '@ionic-native/file/ngx';
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 
 export let InjectorInstance: Injector;
 
@@ -38,7 +39,8 @@ export let InjectorInstance: Injector;
     Geolocation,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     Camera,
-    File
+    File,
+    LocalNotifications
   ],
   bootstrap: [AppComponent]
 })
