@@ -37,11 +37,11 @@ export class ReportsPage implements OnInit {
       }
     });
 
-    await this.slider.slideTo(this.segment);
+    // await this.slider.slideTo(this.segment);
   }
 
   async SegmentChanged() {
-    await this.slider.slideTo(this.segment);
+    // await this.slider.slideTo(this.segment);
   }
 
   async SlideChanged() {

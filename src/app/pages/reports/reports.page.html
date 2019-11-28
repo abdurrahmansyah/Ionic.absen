@@ -22,16 +22,19 @@
   <div [ngSwitch]="segment">
     <div *ngSwitchCase="'0'">
       <app-report-daily></app-report-daily>
-
-      <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-        <ion-fab-button mode="ios" color="hk-red" (click)="AddNewRequest()">
-          <ion-icon name="add"></ion-icon>
-        </ion-fab-button>
-      </ion-fab>
+      <app-report-daily2></app-report-daily2>
     </div>
   </div>
 
-  <ion-slides #slides (ionSlideDidChange)="SlideChanged()" style="min-height: 100%">
+  <ion-fab *ngIf="segment == 0" vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button mode="ios" color="hk-red" (click)="AddNewRequest()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
+  <app-report-monthly *ngIf="segment == 1"></app-report-monthly>
+
+  <!-- <ion-slides #slides (ionSlideDidChange)="SlideChanged()" style="min-height: 100%">
     <ion-slide align-self-start justify-content-start align-items-start style="display: block;">
       <app-report-daily2></app-report-daily2>
     </ion-slide>
@@ -39,5 +42,5 @@
     <ion-slide style="display: block;">
       <app-report-monthly></app-report-monthly>
     </ion-slide>
-  </ion-slides>
+  </ion-slides> -->
 </ion-content>
