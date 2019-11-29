@@ -212,9 +212,9 @@ export class GlobalService {
           summaryReportData.szMonthAttendance = months[x - 1];
           summaryReportData.decTotalAttendance = [...new Set(reportDatasPerMonth.map(y => y.dateabsen))].length;
           summaryReportData.decTotalAbsen = 22 - summaryReportData.decTotalAttendance; // call fungsi bulan ini ada berapa hari
-          summaryReportData.decTotalLate = reportDatasPerMonth.filter(y => y.szstatusid == "ST001" && y.szactivityid == "AC002").reduce((sum, current) => sum + +current.dectotal, 0);
-          summaryReportData.decTotalBackEarly = reportDatasPerMonth.filter(y => y.szstatusid == "ST001" && y.szactivityid == "AC005").reduce((sum, current) => sum + +current.dectotal, 0);
-          summaryReportData.decTotalOvertime = reportDatasPerMonth.filter(y => y.szstatusid == "ST001" && y.szactivityid == "AC006").reduce((sum, current) => sum + +current.dectotal, 0);
+          summaryReportData.decTotalLate = +parseFloat(reportDatasPerMonth.filter(y => y.szstatusid == "ST001" && y.szactivityid == "AC002").reduce((sum, current) => sum + +current.dectotal, 0)).toFixed(2);
+          summaryReportData.decTotalBackEarly = +parseFloat(reportDatasPerMonth.filter(y => y.szstatusid == "ST001" && y.szactivityid == "AC005").reduce((sum, current) => sum + +current.dectotal, 0)).toFixed(2);
+          summaryReportData.decTotalOvertime = +parseFloat(reportDatasPerMonth.filter(y => y.szstatusid == "ST001" && y.szactivityid == "AC006").reduce((sum, current) => sum + +current.dectotal, 0)).toFixed(2);
           this.summaryReportDatas.push(summaryReportData)
         });
       }

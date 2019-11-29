@@ -3,11 +3,11 @@
     <ion-buttons slot="start">
       <ion-back-button color="hk-white-red"></ion-back-button>
     </ion-buttons>
-    <ion-title>reports</ion-title>
+    <ion-title>Reports</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content style="height: 100%">
+<ion-header>
   <ion-row justify-content-center style="padding: 5px">
     <ion-segment (ionChange)="SegmentChanged()" [(ngModel)]="segment" color="hk-purple" mode="ios" shape="round">
       <ion-segment-button value="0">
@@ -18,7 +18,9 @@
       </ion-segment-button>
     </ion-segment>
   </ion-row>
+</ion-header>
 
+<ion-content style="height: 100%">
   <div [ngSwitch]="segment">
     <div *ngSwitchCase="'0'">
       <app-report-daily></app-report-daily>
