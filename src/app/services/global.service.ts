@@ -127,7 +127,7 @@ export class GlobalService {
     return userData;
   }
 
-  public SaveReportData(reportData: ReportData) {
+  public SaveReportData(reportData: ReportData): Observable<any> {
     var url = 'http://sihk.hutamakarya.com/apiabsen/SaveReportData.php';
     let postdata = new FormData();
     postdata.append('szUserId', reportData.szUserId);
@@ -137,13 +137,7 @@ export class GlobalService {
     postdata.append('timeReturn', reportData.timeReturn);
     postdata.append('timeValidReturn', reportData.timeReturn);
 
-    var data: Observable<any> = this.httpClient.post(url, postdata);
-    data.subscribe(data => {
-      if (data.error == true) {
-        this.PresentAlert(data.error_msg);
-        throw new Error(data.error_msg);
-      }
-    });
+    return this.httpClient.post(url, postdata);
   }
 
   public GetReportData(szUserId: string, dateAbsen: string) {

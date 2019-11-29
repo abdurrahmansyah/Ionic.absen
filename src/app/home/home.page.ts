@@ -110,6 +110,10 @@ export class HomePage {
     postdata.append('dateEnd', date.toLocaleString());
 
     var data: Observable<any> = this.http.post(url, postdata);
+    this.SubscribeGetReportDatas(data);
+  }
+
+  private SubscribeGetReportDatas(data: Observable<any>) {
     data.subscribe(data => {
       if (data.error == false) {
         var reportDataFromDb = data.result.find(x => x);
@@ -146,10 +150,8 @@ export class HomePage {
     reportData.timeValidArrived = reportDataFromDb.timevalidarrived;
     reportData.timeReturn = reportDataFromDb.timereturn;
     reportData.timeValidReturn = reportDataFromDb.timevalidreturn;
-    reportData.decMonth = reportDataFromDb.decmonth;
 
     reportDatas.push(reportData);
-    console.log(reportDatas.find(x => x));
     return reportDatas.find(x => x);
   }
 
@@ -163,7 +165,6 @@ export class HomePage {
   private Timer() {
     setInterval(function () {
       this.ShowRepeatData();
-      // this.GetTimeWorkingAndStatusUser();
     }.bind(this), 500);
   }
 
@@ -226,7 +227,7 @@ export class HomePage {
   private ValidateAbsen() {
     var dateData = this.globalService.GetDate();
 
-    if (true) { //this.globalService.geoLatitude <= -6.24508
+    if (false) { //this.globalService.geoLatitude <= -6.24508
       //   && this.globalService.geoLatitude >= -6.24587
       //   && this.globalService.geoLongitude >= 106.87269
       //   && this.globalService.geoLongitude <= 106.87379) {
@@ -237,7 +238,6 @@ export class HomePage {
         reportData.timeArrived = dateData.szHour + ":" + dateData.szMinute + ":" + dateData.decSec;
         reportData.timeReturn = "00:00:00";
         this.DoingAbsen(dateData, reportData);
-        this.GetTimeWorkingAndStatusUser();
 
         this.globalService.dateRequest = dateData.date.toLocaleDateString();
 
@@ -255,12 +255,10 @@ export class HomePage {
         reportData.timeArrived = "00:00:00";
         reportData.timeReturn = dateData.szHour + ":" + dateData.szMinute + ":" + dateData.decSec;
         this.DoingAbsen(dateData, reportData);
-        this.GetTimeWorkingAndStatusUser();
 
         this.globalService.dateRequest = dateData.date.toLocaleDateString();
 
         if (reportData.timeReturn < "17:00:00") {
-          //mengarahkan ke component form-pulang-cepat
           szActivityId = ActivityId.AC005
           let navigationExtras: NavigationExtras = {
             state: {
@@ -270,7 +268,6 @@ export class HomePage {
           this.GetDecisionFromUser(szActivityId, navigationExtras);
         }
         else if (reportData.timeReturn > "17:45:00") {
-          //mengarahkan ke component form-lembur
           szActivityId = ActivityId.AC006
           let navigationExtras: NavigationExtras = {
             state: {
@@ -364,7 +361,8 @@ export class HomePage {
   private DoingAbsen(dateData: DateData, reportData: ReportData) {
     reportData.szUserId = this.globalService.userData.szUserId;
     reportData.dateAbsen = dateData.date.toDateString();
-    this.globalService.SaveReportData(reportData);
+    var data = this.globalService.SaveReportData(reportData);
+    this.SubscribeGetReportDatas(data);
   }
 
   NavigateToReportPage(indexReport: string) {
