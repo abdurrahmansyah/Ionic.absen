@@ -78,4 +78,8 @@ export class MainPage implements OnInit {
       this.authService.logout();
     }
   }
+
+  public NavigateToSettings() {
+    this.router.navigate(['settings']);
+  }
 }

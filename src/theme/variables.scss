@@ -3,6 +3,14 @@
 
 /** Ionic CSS Variables **/
 :root {
+  /** hk-tweet **/
+  --ion-color-hk-tweet: #f5f8fa;
+  --ion-color-hk-tweet-rgb: 245, 248, 250;
+  --ion-color-hk-tweet-contrast: #000000;
+  --ion-color-hk-tweet-contrast-rgb: 0, 0, 0;
+  --ion-color-hk-tweet-shade: #d8dadc;
+  --ion-color-hk-tweet-tint: #f6f9fb;
+
   /** hk-darkgrey **/
   --ion-color-hk-darkgrey: #4d4d4d;
   --ion-color-hk-darkgrey-rgb: 77, 77, 77;
@@ -28,7 +36,7 @@
   --ion-color-hk-white-red-tint: #ffffff;
 
   /** hk-white-purple **/
-   --ion-color-hk-white-purple: #ffffff;
+  --ion-color-hk-white-purple: #ffffff;
   --ion-color-hk-white-purple-rgb: 255, 255, 255;
   --ion-color-hk-white-purple-contrast: #652e7d;
   --ion-color-hk-white-purple-contrast-rgb: 101, 46, 125;
@@ -367,4 +375,13 @@ ion-alert {
   --ion-color-contrast-rgb: var(--ion-color-hk-darkgrey-contrast-rgb);
   --ion-color-shade: var(--ion-color-hk-darkgrey-shade);
   --ion-color-tint: var(--ion-color-hk-darkgrey-tint);
+}
+
+.ion-color-hk-tweet {
+  --ion-color-base: var(--ion-color-hk-tweet);
+  --ion-color-base-rgb: var(--ion-color-hk-tweet-rgb);
+  --ion-color-contrast: var(--ion-color-hk-tweet-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-hk-tweet-contrast-rgb);
+  --ion-color-shade: var(--ion-color-hk-tweet-shade);
+  --ion-color-tint: var(--ion-color-hk-tweet-tint);
 }

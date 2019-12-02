@@ -30,6 +30,12 @@ const routes: Routes = [
                 loadChildren: () => import('../pages/form-request/form-request.module').then(
                     m => m.FormRequestPageModule
                 )
+            },
+            {
+                path: 'settings',
+                loadChildren: () => import('../pages/settings/settings.module').then(
+                    m => m.SettingsPageModule
+                )
             }
         ]
     }
