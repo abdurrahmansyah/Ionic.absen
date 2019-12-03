@@ -12,11 +12,11 @@
     <h5 style="font-weight: bold;">Login and security</h5>
   </ion-item>
 
-  <ion-item detail (click)="NavigateToSettingsPage()" Lines="inset">
+  <ion-item detail button Lines="inset">
     <ion-label>Username</ion-label>
     <ion-label class="ion-text-right" style="color: grey;">{{txtUserId}}</ion-label>
   </ion-item>
-  <ion-item detail>Password</ion-item>
+  <ion-item detail button (click)="UpdatePassword()">Password</ion-item>
 
   <ion-item Lines="full">
     <ion-label class="ion-text-wrap">
@@ -48,7 +48,8 @@
     <ion-input placeholder={{txtUserId}} readonly class="ion-text-right"></ion-input>
   </ion-item>
 
-  <hr style="height: 12px; background-color: var(--ion-color-hk-tweet); margin-top: 0px; margin-bottom: 0px;" no-padding>
+  <hr style="height: 12px; background-color: var(--ion-color-hk-tweet); margin-top: 0px; margin-bottom: 0px;"
+    no-padding>
   <hr style="height: 0.5px; background-color: #cecece; margin-top: 0px; margin-bottom: 0px;" no-padding>
 
   <ion-item Lines="full">
