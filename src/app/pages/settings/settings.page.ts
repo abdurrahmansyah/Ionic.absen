@@ -11,12 +11,24 @@ import { PasswordComponent } from 'src/app/components/password/password.componen
 export class SettingsPage implements OnInit {
 
   public txtUserId: string;
+  public txtUserName: string;
+  public txtDivisionName: string;
+  public txtSectionName: string;
+  public supervisorList = [];
   constructor(private globalService: GlobalService,
     private modalController: ModalController) {
     this.txtUserId = this.globalService.userData.szUserId;
+    this.txtUserName = this.globalService.userData.szFullName;
+    this.txtDivisionName = this.globalService.userData.szDivisionName;
+    this.txtSectionName = this.globalService.userData.szSectionName;
   }
 
   ngOnInit() {
+    var supervisorName = "M Rozi Rinjayadi";
+    this.supervisorList.push(supervisorName);
+    supervisorName = "Nauval";
+    this.supervisorList.push(supervisorName);
+
   }
 
   public async UpdatePassword() {

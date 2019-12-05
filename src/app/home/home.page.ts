@@ -1,5 +1,5 @@
 import { Router, NavigationExtras } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Geolocation, GeolocationOptions, Geoposition, PositionError } from '@ionic-native/geolocation/ngx';
 import { Component } from '@angular/core';
@@ -22,6 +22,8 @@ export class HomePage {
   public txtTimeReturn: string = "";
   public txtWorkStatus: string = "";
   public colorStatus: string;
+  private token = [];
+  public txtResponse: string = "";
 
   constructor(public navCtrl: NavController, public alertController: AlertController,
     public router: Router,
@@ -88,6 +90,52 @@ export class HomePage {
     console.log(now);
     console.log(aaa);
     console.log(aaa1);
+  }
+
+  public APILogin() {
+    var baseUrl = 'http://hutamakarya.sugihart.com/';
+    var url = baseUrl + 'api/login';
+    let postdata = new FormData();
+
+    postdata.append('username', 'ridho');
+    postdata.append('password', 'ridho');
+
+    console.log(postdata);
+
+    var data: Observable<any> = this.http.post(url, postdata);
+    data.subscribe(data => {
+      if (data.response == "success") {
+        this.token.push(data.data.token);
+        // this.APIGetEmployee();
+      }
+    });
+  }
+
+  public TampilToken() {
+    console.log(this.token);
+    console.log(this.token.find(x => x));
+  }
+
+  public APIGetEmployee() {
+    var validToken: string = this.token.find(x => x)
+    console.log(validToken);
+
+    var baseUrl = 'http://hutamakarya.sugihart.com/';
+    var url = baseUrl + 'api/get_employee';
+    ////////////////////////////////////////////////////
+    // let header = new HttpHeaders({ 'Authorization': '20191203$2y$10$fNHbu1dNFXuKaghf.3q5t.qaC0ar8lE8V.TBjOZ0ssgoC.AhvSr8C014854' });
+    let headers = new HttpHeaders().set("Authorization", "20191203$2y$10$fNHbu1dNFXuKaghf.3q5t.qaC0ar8lE8V.TBjOZ0ssgoC.AhvSr8C014854");
+
+    // header = header.append('Authorization', validToken);
+    console.log(headers);
+
+    var data: Observable<any> = this.http.get(url, { headers });
+    data.subscribe(data => {
+      this.txtResponse = data.response;
+      // if (data.response == "success") {
+      //   this.token.push(data.data.token);
+      // }
+    });
   }
 
   InitializeApp() {

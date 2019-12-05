@@ -30,22 +30,26 @@
 
   <ion-item detail (click)="Test()" Lines="inset">
     <ion-label>Name</ion-label>
-    <ion-label class="ion-text-right" style="color: grey;">{{txtUserId}}</ion-label>
+    <ion-label class="ion-text-right" style="color: grey;">{{txtUserName}}</ion-label>
   </ion-item>
 
   <ion-item detail (click)="Test()" Lines="inset">
     <ion-label>Division</ion-label>
-    <ion-label class="ion-text-right" style="color: grey;">{{txtUserId}}</ion-label>
+    <ion-label class="ion-text-right" style="color: grey;">{{txtDivisionName}}</ion-label>
   </ion-item>
 
   <ion-item detail (click)="Test()" Lines="inset">
     <ion-label>Section</ion-label>
-    <ion-input placeholder={{txtUserId}} readonly class="ion-text-right"></ion-input>
+    <ion-label class="ion-text-right" style="color: grey;">{{txtSectionName}}</ion-label>
   </ion-item>
 
-  <ion-item detail (click)="Test()" Lines="full">
-    <ion-label>Title</ion-label>
-    <ion-input placeholder={{txtUserId}} readonly class="ion-text-right"></ion-input>
+  <ion-item Lines="full">
+    <ion-label>Supervisor</ion-label>
+    <ion-select mode="ios">
+      <span *ngFor="let supervisorName of supervisorList">
+        <ion-select-option value="{{supervisorName}}">{{supervisorName}}</ion-select-option>
+      </span>
+    </ion-select>
   </ion-item>
 
   <hr style="height: 12px; background-color: var(--ion-color-hk-tweet); margin-top: 0px; margin-bottom: 0px;"
