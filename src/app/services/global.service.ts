@@ -83,18 +83,63 @@ export class GlobalService {
     });
   }
 
+  // public GetUserData(szUserId: string, szPassword: string) {
+  //   var url = 'http://sihk.hutamakarya.com/apiabsen/GetUserData.php';
+
+  //   let postdata = new FormData();
+  //   postdata.append('szUserId', szUserId);
+  //   postdata.append('szPassword', szPassword);
+
+  //   var data: any = this.httpClient.post(url, postdata);
+  //   data.subscribe(data => {
+  //     if (data.error == false) {
+  //       var userDataFromDb = data.result.find(x => x);
+  //       var userData = this.MappingUserData(userDataFromDb);
+
+  //       this.storage.set('userData', userData);
+  //       this.PresentToast("Login Berhasil");
+  //       this.authService.login();
+  //       this.router.navigate(['home']);
+  //     }
+  //     else {
+  //       this.PresentToast("Login Gagal");
+  //     }
+  //   });
+  // }
+
+  // private MappingUserData(userDataFromDb: any) {
+  //   var userData = new UserData();
+  //   userData.szUserId = userDataFromDb.szuserid;
+  //   userData.abc = userDataFromDb.szpassword;
+  //   userData.szUserName = userDataFromDb.szfullname;
+  //   userData.deleted = userDataFromDb.szshortname;
+  //   userData.szTitleId = userDataFromDb.sztitleid;
+  //   userData.szTitleName = userDataFromDb.sztitlename;
+  //   userData.szDivisionId = userDataFromDb.szdivisionid;
+  //   userData.szDivisionName = userDataFromDb.szdivisionname;
+  //   userData.szSectionId = userDataFromDb.szsectionid;
+  //   userData.szSectionName = userDataFromDb.szsectionname;
+  //   userData.deleted = userDataFromDb.bstatusadmin;
+  //   userData.szImage = userDataFromDb.szimage;
+  //   userData.szEmail = userDataFromDb.szemail;
+  //   userData.szSuperiorUserId = userDataFromDb.szsuperioruserid;
+  //   userData.szSuperiorUserName = userDataFromDb.szsuperiorusername;
+  //   return userData;
+  // }
+
   public GetUserData(szUserId: string, szPassword: string) {
-    var url = 'http://sihk.hutamakarya.com/apiabsen/GetUserData.php';
+    var url = 'http://192.168.12.23/api/login';
 
     let postdata = new FormData();
-    postdata.append('szUserId', szUserId);
-    postdata.append('szPassword', szPassword);
+    postdata.append('username', szUserId);
+    postdata.append('password', szPassword);
 
     var data: any = this.httpClient.post(url, postdata);
     data.subscribe(data => {
-      if (data.error == false) {
-        var userDataFromDb = data.result.find(x => x);
-        var userData = this.MappingUserData(userDataFromDb);
+      if (data.response == "success") {
+
+        var userDataFromDb = data.data;//.find(x => x);
+        var userData = this.MappingUserDataSugihart(userDataFromDb);
 
         this.storage.set('userData', userData);
         this.PresentToast("Login Berhasil");
@@ -107,23 +152,23 @@ export class GlobalService {
     });
   }
 
-  private MappingUserData(userDataFromDb: any) {
+  private MappingUserDataSugihart(userDataFromDb: any) {
     var userData = new UserData();
-    userData.szUserId = userDataFromDb.szuserid;
-    userData.szPassword = userDataFromDb.szpassword;
-    userData.szFullName = userDataFromDb.szfullname;
-    userData.szShortName = userDataFromDb.szshortname;
-    userData.szTitleId = userDataFromDb.sztitleid;
-    userData.szTitleName = userDataFromDb.sztitlename;
-    userData.szDivisionId = userDataFromDb.szdivisionid;
-    userData.szDivisionName = userDataFromDb.szdivisionname;
-    userData.szSectionId = userDataFromDb.szsectionid;
-    userData.szSectionName = userDataFromDb.szsectionname;
-    userData.bStatusAdmin = userDataFromDb.bstatusadmin;
-    userData.szImage = userDataFromDb.szimage;
-    userData.szEmail = userDataFromDb.szemail;
-    userData.szSuperiorUserId = userDataFromDb.szsuperioruserid;
-    userData.szSuperiorUserName = userDataFromDb.szsuperiorusername;
+    userData.szToken = userDataFromDb.token;
+    userData.szTokenFcm = userDataFromDb.token_fcm;
+    userData.szUserId = userDataFromDb.nik;
+    userData.szUserName = userDataFromDb.name;
+    userData.szTitleId = userDataFromDb.title_id;
+    userData.szTitleName = userDataFromDb.title_name;
+    userData.szDivisionId = userDataFromDb.divisi_id;
+    userData.szDivisionName = userDataFromDb.divisi_name;
+    userData.szSectionId = userDataFromDb.section_id;
+    userData.szSectionName = userDataFromDb.section_name;
+    userData.szImage = userDataFromDb.image;
+    userData.szEmail = userDataFromDb.email_hk;
+    userData.szSuperiorUserId = userDataFromDb.superior_id;
+    userData.szSuperiorUserName = userDataFromDb.superior_name;
+
     return userData;
   }
 
@@ -140,18 +185,17 @@ export class GlobalService {
     return this.httpClient.post(url, postdata);
   }
 
-  public GetReportData(szUserId: string, dateAbsen: string) {
-    var url = 'http://sihk.hutamakarya.com/apiabsen/GetReportDatas.php';
+  public GetReportData(szToken: string, dateAbsen: string) {
+    var url = 'http://192.168.12.23/api/attendance/perdate';
 
     let postdata = new FormData();
-    postdata.append('szUserId', szUserId);
-    postdata.append('dateStart', dateAbsen);
-    postdata.append('dateEnd', dateAbsen);
+    postdata.append('authorization', szToken);
+    postdata.append('date', '2019-12-17');//dateAbsen);
 
     var data: any = this.httpClient.post(url, postdata);
     data.subscribe(data => {
-      if (data.error == false) {
-        var reportDataFromDb = data.result.find(x => x);
+      if (data.response == "success") {
+        var reportDataFromDb = data.data;
         var reportData = this.MappingReportData(reportDataFromDb);
 
         var timeValidArrived = reportData.timeValidArrived.split(':');
@@ -172,12 +216,11 @@ export class GlobalService {
   private MappingReportData(reportDataFromDb: any) {
     var reportData = new ReportData();
     reportData.szUserId = reportDataFromDb.szuserid;
-    reportData.dateAbsen = reportDataFromDb.dateabsen;
-    reportData.timeArrived = reportDataFromDb.timearrived;
-    reportData.timeValidArrived = reportDataFromDb.timevalidarrived;
-    reportData.timeReturn = reportDataFromDb.timereturn;
-    reportData.timeValidReturn = reportDataFromDb.timevalidreturn;
-    reportData.decMonth = reportDataFromDb.decmonth;
+    reportData.dateAbsen = reportDataFromDb.check_in.split(' ')[0];
+    reportData.timeArrived = reportDataFromDb.check_in.split(' ')[1];
+    reportData.timeValidArrived = reportDataFromDb.check_in.split(' ')[1];
+    reportData.timeReturn = reportDataFromDb.check_out ? reportDataFromDb.check_out.split(' ')[1] : "00:00:00";
+    reportData.timeValidReturn = reportDataFromDb.check_out ? reportDataFromDb.check_out.split(' ')[1] : "00:00:00";
 
     return reportData;
   }
@@ -411,17 +454,16 @@ export class GlobalService {
 }
 
 export class UserData {
+  public szToken: string;
+  public szTokenFcm: string;
   public szUserId: string;
-  public szPassword: string;
-  public szFullName: string;
-  public szShortName: string;
+  public szUserName: string;
   public szTitleId: string;
   public szTitleName: string;
   public szDivisionId: string;
   public szDivisionName: string;
   public szSectionId: string;
   public szSectionName: string;
-  public bStatusAdmin: boolean;
   public szImage: string;
   public szEmail: string;
   public szSuperiorUserId: string;

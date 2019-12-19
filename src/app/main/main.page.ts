@@ -38,6 +38,7 @@ export class MainPage implements OnInit {
   public txtUserName: string;
   public txtDivisionName: string;
   public txtSectionName: string;
+  public photo: string;
 
   constructor(private router: Router,
     private authService: AuthenticationService,
@@ -52,8 +53,9 @@ export class MainPage implements OnInit {
   }
 
   private ShowFirstLoadData() {
+    this.photo = 'data:image/jpeg;base64,' + this.globalService.userData.szImage;
     this.txtUserId = this.globalService.userData.szUserId;
-    this.txtUserName = this.globalService.userData.szFullName;
+    this.txtUserName = this.globalService.userData.szUserName;
     this.txtDivisionName = this.globalService.userData.szDivisionName;
     this.txtSectionName = this.globalService.userData.szSectionName;
   }

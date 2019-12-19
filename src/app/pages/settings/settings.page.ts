@@ -18,7 +18,7 @@ export class SettingsPage implements OnInit {
   constructor(private globalService: GlobalService,
     private modalController: ModalController) {
     this.txtUserId = this.globalService.userData.szUserId;
-    this.txtUserName = this.globalService.userData.szFullName;
+    this.txtUserName = this.globalService.userData.szUserName;
     this.txtDivisionName = this.globalService.userData.szDivisionName;
     this.txtSectionName = this.globalService.userData.szSectionName;
   }

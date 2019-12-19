@@ -22,8 +22,6 @@ export class HomePage {
   public txtTimeReturn: string = "";
   public txtWorkStatus: string = "";
   public colorStatus: string;
-  private token = [];
-  public txtResponse: string = "";
 
   constructor(public navCtrl: NavController, public alertController: AlertController,
     public router: Router,
@@ -92,52 +90,6 @@ export class HomePage {
     console.log(aaa1);
   }
 
-  public APILogin() {
-    var baseUrl = 'http://hutamakarya.sugihart.com/';
-    var url = baseUrl + 'api/login';
-    let postdata = new FormData();
-
-    postdata.append('username', 'ridho');
-    postdata.append('password', 'ridho');
-
-    console.log(postdata);
-
-    var data: Observable<any> = this.http.post(url, postdata);
-    data.subscribe(data => {
-      if (data.response == "success") {
-        this.token.push(data.data.token);
-        // this.APIGetEmployee();
-      }
-    });
-  }
-
-  public TampilToken() {
-    console.log(this.token);
-    console.log(this.token.find(x => x));
-  }
-
-  public APIGetEmployee() {
-    var validToken: string = this.token.find(x => x)
-    console.log(validToken);
-
-    var baseUrl = 'http://hutamakarya.sugihart.com/';
-    var url = baseUrl + 'api/get_employee';
-    ////////////////////////////////////////////////////
-    // let header = new HttpHeaders({ 'Authorization': '20191203$2y$10$fNHbu1dNFXuKaghf.3q5t.qaC0ar8lE8V.TBjOZ0ssgoC.AhvSr8C014854' });
-    let headers = new HttpHeaders().set("Authorization", "20191203$2y$10$fNHbu1dNFXuKaghf.3q5t.qaC0ar8lE8V.TBjOZ0ssgoC.AhvSr8C014854");
-
-    // header = header.append('Authorization', validToken);
-    console.log(headers);
-
-    var data: Observable<any> = this.http.get(url, { headers });
-    data.subscribe(data => {
-      this.txtResponse = data.response;
-      // if (data.response == "success") {
-      //   this.token.push(data.data.token);
-      // }
-    });
-  }
-
   InitializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleBlackTranslucent();
@@ -150,12 +102,11 @@ export class HomePage {
 
   private GetTimeWorkingAndStatusUser() {
     var date = new Date();
-    var url = 'http://sihk.hutamakarya.com/apiabsen/GetReportDatas.php';
+    var url = 'http://192.168.12.23/api/attendance/perdate';
     let postdata = new FormData();
 
-    postdata.append('szUserId', this.globalService.userData.szUserId);
-    postdata.append('dateStart', date.toLocaleString());
-    postdata.append('dateEnd', date.toLocaleString());
+    postdata.append('authorization', this.globalService.userData.szToken);
+    postdata.append('date', '2019-12-17');// date.toLocaleString());
 
     var data: Observable<any> = this.http.post(url, postdata);
     this.SubscribeGetReportDatas(data);
@@ -163,8 +114,8 @@ export class HomePage {
 
   private SubscribeGetReportDatas(data: Observable<any>) {
     data.subscribe(data => {
-      if (data.error == false) {
-        var reportDataFromDb = data.result.find(x => x);
+      if (data.response == "success") {
+        var reportDataFromDb = data.data;
         var reportData = this.MappingReportData(reportDataFromDb);
 
         var timeValidArrived = reportData.timeValidArrived.split(':');
@@ -193,11 +144,11 @@ export class HomePage {
     var reportDatas = [];
     var reportData = new ReportData();
     reportData.szUserId = reportDataFromDb.szuserid;
-    reportData.dateAbsen = reportDataFromDb.dateabsen;
-    reportData.timeArrived = reportDataFromDb.timearrived;
-    reportData.timeValidArrived = reportDataFromDb.timevalidarrived;
-    reportData.timeReturn = reportDataFromDb.timereturn;
-    reportData.timeValidReturn = reportDataFromDb.timevalidreturn;
+    reportData.dateAbsen = reportDataFromDb.check_in.split(' ')[0];
+    reportData.timeArrived = reportDataFromDb.check_in.split(' ')[1];
+    reportData.timeValidArrived = reportDataFromDb.check_in.split(' ')[1];
+    reportData.timeReturn = reportDataFromDb.check_out ? reportDataFromDb.check_out.split(' ')[1] : "00:00:00";
+    reportData.timeValidReturn = reportDataFromDb.check_out ? reportDataFromDb.check_out.split(' ')[1] : "00:00:00";
 
     reportDatas.push(reportData);
     return reportDatas.find(x => x);
@@ -275,10 +226,10 @@ export class HomePage {
   private ValidateAbsen() {
     var dateData = this.globalService.GetDate();
 
-    if (false) { //this.globalService.geoLatitude <= -6.24508
-      //   && this.globalService.geoLatitude >= -6.24587
-      //   && this.globalService.geoLongitude >= 106.87269
-      //   && this.globalService.geoLongitude <= 106.87379) {
+    if (this.globalService.geoLatitude <= -6.24508
+      && this.globalService.geoLatitude >= -6.24587
+      && this.globalService.geoLongitude >= 106.87269
+      && this.globalService.geoLongitude <= 106.87379) {
       var reportData = new ReportData();
       var szActivityId: string;
 
