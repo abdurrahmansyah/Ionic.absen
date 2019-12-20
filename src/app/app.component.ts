@@ -13,6 +13,9 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Router } from '@angular/router';
 import { AuthenticationService } from './services/authentication.service';
 
+import { FCM } from '@ionic-native/fcm/ngx';
+
+
 
 @Component({
   selector: 'app-root',
@@ -23,11 +26,13 @@ export class AppComponent {
    rootPage: any;
   public UserLogin: string;
   nav: any;
+  cobadeh: string;
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private storage: Storage,
+    private fcm: FCM,
      private authenticationService: AuthenticationService,
     private router: Router
   ) {
@@ -48,6 +53,27 @@ export class AppComponent {
   }
 
   initializeApp() {
+    this.fcm.getToken().then(token => {
+      console.log(token);
+    });
+
+    // this.fcm.onTokenRefresh().subscribe(token => {
+    //   console.log(token);
+    // });
+
+    this.fcm.onNotification().subscribe(data => {
+      console.log(data);
+      if (data.wasTapped) {
+        console.log('Received in background');
+        this.router.navigate([data.landing_page, data.price]);
+      } else {
+        console.log('Received in foreground');
+        this.router.navigate([data.landing_page, data.price]);
+      }
+    });
+    this.cobadeh="bisaga";
+    this.fcm.subscribeToTopic(this.cobadeh);
+    
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();

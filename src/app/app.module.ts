@@ -18,6 +18,8 @@ import { Camera } from '@ionic-native/camera/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 
+import { FCM } from '@ionic-native/fcm/ngx';
+
 export let InjectorInstance: Injector;
 
 @NgModule({
@@ -37,6 +39,7 @@ export let InjectorInstance: Injector;
     StatusBar,
     SplashScreen,
     Geolocation,
+    FCM,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     Camera,
     File,
