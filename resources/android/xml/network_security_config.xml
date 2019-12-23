@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="true">localhost</domain>
+        <domain includeSubdomains="true">http://www.omdbapi.com</domain>
+        <domain includeSubdomains="true">http://192.168.12.23</domain>
     </domain-config>
 </network-security-config>
