@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, NavigationExtras } from '@angular/router';
 import { AuthenticationService } from '../services/authentication.service';
 import { GlobalService } from '../services/global.service';
+import { FCM } from '@ionic-native/fcm/ngx';
 
 @Component({
   selector: 'app-main',
@@ -39,10 +40,12 @@ export class MainPage implements OnInit {
   public txtDivisionName: string;
   public txtSectionName: string;
   public photo: string;
+  public cobadeh: string;
 
   constructor(private router: Router,
     private authService: AuthenticationService,
-    private globalService: GlobalService) {
+    private globalService: GlobalService,
+    private fcm: FCM) {
     this.Timer();
   }
 
@@ -78,6 +81,8 @@ export class MainPage implements OnInit {
     }
     else if (index == 4) {
       this.authService.logout();
+      this.cobadeh=this.globalService.userData.szUserId;
+      this.fcm.unsubscribeFromTopic(this.cobadeh);
     }
   }
 

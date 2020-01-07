@@ -19,8 +19,6 @@ import { File } from '@ionic-native/file/ngx';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { FCM } from '@ionic-native/fcm/ngx';
 
-import { FCM } from '@ionic-native/fcm/ngx';
-
 export let InjectorInstance: Injector;
 
 @NgModule({

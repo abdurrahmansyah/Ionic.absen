@@ -8,6 +8,7 @@ import { Observable } from 'rxjs/Observable';
 import { GlobalService, ActivityId, DateData, ReportData } from '../services/global.service';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
+import { FCM } from '@ionic-native/fcm/ngx';
 
 @Component({
   selector: 'app-home',
@@ -22,6 +23,7 @@ export class HomePage {
   public txtTimeReturn: string = "";
   public txtWorkStatus: string = "";
   public colorStatus: string;
+  public cobadeh: string;
 
   constructor(public navCtrl: NavController, public alertController: AlertController,
     public router: Router,
@@ -31,7 +33,8 @@ export class HomePage {
     private globalService: GlobalService,
     private platform: Platform,
     private statusBar: StatusBar,
-    private localNotifications: LocalNotifications
+    private localNotifications: LocalNotifications,
+    private fcm: FCM
   ) {
     this.InitializeApp();
     this.InitializeData();
@@ -94,10 +97,24 @@ export class HomePage {
     this.platform.ready().then(() => {
       this.statusBar.styleBlackTranslucent();
     });
+
+    
   }
 
   async InitializeData() {
     await this.globalService.GetUserDataFromStorage();
+    this.fcm.onNotification().subscribe(data => {
+      console.log(data);
+      if (data.wasTapped) {
+        console.log('Received in background');
+        this.router.navigate([data.landing_page, data.price]);
+      } else {
+        console.log('Received in foreground');
+        this.router.navigate([data.landing_page, data.price]);
+      }
+    });
+    this.cobadeh=this.globalService.userData.szUserId;
+    this.fcm.subscribeToTopic(this.cobadeh);
   }
 
   private GetTimeWorkingAndStatusUser() {
