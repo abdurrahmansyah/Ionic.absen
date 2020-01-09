@@ -12,6 +12,8 @@ import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
   providedIn: 'root'
 })
 export class GlobalService {
+  public officeHourData = new OfficeHourData();
+  public activityDataList = new ActivityData();
   public requestDatas = [];
   public summaryReportDatas = [];
   public errorDatas = [];
@@ -26,6 +28,7 @@ export class GlobalService {
 
   httpClient = InjectorInstance.get<HttpClient>(HttpClient);
   dataimage: any;
+  readonly mobile = "mobile";
 
   constructor(private router: Router,
     private toastController: ToastController,
@@ -83,49 +86,51 @@ export class GlobalService {
     });
   }
 
-  // public GetUserData(szUserId: string, szPassword: string) {
-  //   var url = 'http://sihk.hutamakarya.com/apiabsen/GetUserData.php';
+  public GetOfficeHour() {
+    var url = 'http://192.168.12.23/api/office_hour';
 
-  //   let postdata = new FormData();
-  //   postdata.append('szUserId', szUserId);
-  //   postdata.append('szPassword', szPassword);
+    var data: any = this.httpClient.get(url);
+    data.subscribe(data => {
+      this.officeHourData = this.MappingOfficeHourData(data);
+    });
+  }
 
-  //   var data: any = this.httpClient.post(url, postdata);
-  //   data.subscribe(data => {
-  //     if (data.error == false) {
-  //       var userDataFromDb = data.result.find(x => x);
-  //       var userData = this.MappingUserData(userDataFromDb);
+  private MappingOfficeHourData(officeHourDataFromDb: any) {
+    var officeHourData = new OfficeHourData();
 
-  //       this.storage.set('userData', userData);
-  //       this.PresentToast("Login Berhasil");
-  //       this.authService.login();
-  //       this.router.navigate(['home']);
-  //     }
-  //     else {
-  //       this.PresentToast("Login Gagal");
-  //     }
-  //   });
-  // }
+    officeHourData.startOfficeHourFrom = officeHourDataFromDb.start_office_hour_from;
+    officeHourData.startOfficeHourUntil = officeHourDataFromDb.start_office_hour_until;
+    officeHourData.endtOfficeHourFrom = officeHourDataFromDb.end_office_hour_from;
+    officeHourData.endOfficeHourUntil = officeHourDataFromDb.end_office_hour_until;
 
-  // private MappingUserData(userDataFromDb: any) {
-  //   var userData = new UserData();
-  //   userData.szUserId = userDataFromDb.szuserid;
-  //   userData.abc = userDataFromDb.szpassword;
-  //   userData.szUserName = userDataFromDb.szfullname;
-  //   userData.deleted = userDataFromDb.szshortname;
-  //   userData.szTitleId = userDataFromDb.sztitleid;
-  //   userData.szTitleName = userDataFromDb.sztitlename;
-  //   userData.szDivisionId = userDataFromDb.szdivisionid;
-  //   userData.szDivisionName = userDataFromDb.szdivisionname;
-  //   userData.szSectionId = userDataFromDb.szsectionid;
-  //   userData.szSectionName = userDataFromDb.szsectionname;
-  //   userData.deleted = userDataFromDb.bstatusadmin;
-  //   userData.szImage = userDataFromDb.szimage;
-  //   userData.szEmail = userDataFromDb.szemail;
-  //   userData.szSuperiorUserId = userDataFromDb.szsuperioruserid;
-  //   userData.szSuperiorUserName = userDataFromDb.szsuperiorusername;
-  //   return userData;
-  // }
+    return officeHourData;
+  }
+
+  public GetActivityData() {
+    var url = 'http://192.168.12.23/api/list/activity';
+
+    var data: any = this.httpClient.get(url);
+    data.subscribe(data => {
+      this.activityDataList = this.MappingActivityData(data);
+    });
+  }
+
+  private MappingActivityData(activityDataFromDb: any) {
+    var activityData = new ActivityData();
+
+    activityData.onTime = activityDataFromDb[0];
+    activityData.terlambat = activityDataFromDb[1];
+    activityData.datangDiluarKantor = activityDataFromDb[2];
+    activityData.pulangDiluarKantor = activityDataFromDb[3];
+    activityData.pulangCepat = activityDataFromDb[4];
+    activityData.lembur = activityDataFromDb[5];
+    activityData.absen = activityDataFromDb[6];
+    activityData.sakit = activityDataFromDb[7];
+    activityData.izin = activityDataFromDb[8];
+    activityData.cuti = activityDataFromDb[9];
+
+    return activityData;
+  }
 
   public GetUserData(szUserId: string, szPassword: string) {
     var url = 'http://192.168.12.23/api/login';
@@ -173,14 +178,14 @@ export class GlobalService {
   }
 
   public SaveReportData(reportData: ReportData): Observable<any> {
-    var url = 'http://sihk.hutamakarya.com/apiabsen/SaveReportData.php';
+    var url = 'http://192.168.12.23/api/attendance/set';
     let postdata = new FormData();
-    postdata.append('szUserId', reportData.szUserId);
-    postdata.append('dateAbsen', reportData.dateAbsen);
-    postdata.append('timeArrived', reportData.timeArrived);
-    postdata.append('timeValidArrived', reportData.timeArrived);
-    postdata.append('timeReturn', reportData.timeReturn);
-    postdata.append('timeValidReturn', reportData.timeReturn);
+    postdata.append('attendance_type', this.mobile);
+    postdata.append('authorization', reportData.szUserId);
+    postdata.append('absen_date', reportData.dateAbsen);
+    postdata.append('time', reportData.timeAbsen);
+    postdata.append('capture_image', "");
+    postdata.append('capture_ext', "png");
 
     return this.httpClient.post(url, postdata);
   }
@@ -190,14 +195,14 @@ export class GlobalService {
 
     let postdata = new FormData();
     postdata.append('authorization', szToken);
-    postdata.append('date', '2019-12-17');//dateAbsen);
+    postdata.append('date', dateAbsen);
 
     var data: any = this.httpClient.post(url, postdata);
     data.subscribe(data => {
       if (data.response == "success") {
         var reportDataFromDb = data.data;
         var reportData = this.MappingReportData(reportDataFromDb);
-
+        
         var timeValidArrived = reportData.timeValidArrived.split(':');
         var { hour, minute, ampm } = this.ConvertTimeToViewFormat(timeValidArrived);
         this.timeArrived = hour + ":" + minute + " " + ampm;
@@ -216,11 +221,11 @@ export class GlobalService {
   private MappingReportData(reportDataFromDb: any) {
     var reportData = new ReportData();
     reportData.szUserId = reportDataFromDb.szuserid;
-    reportData.dateAbsen = reportDataFromDb.check_in.split(' ')[0];
-    reportData.timeArrived = reportDataFromDb.check_in.split(' ')[1];
-    reportData.timeValidArrived = reportDataFromDb.check_in.split(' ')[1];
-    reportData.timeReturn = reportDataFromDb.check_out ? reportDataFromDb.check_out.split(' ')[1] : "00:00:00";
-    reportData.timeValidReturn = reportDataFromDb.check_out ? reportDataFromDb.check_out.split(' ')[1] : "00:00:00";
+    reportData.dateAbsen = reportDataFromDb.check_in_display.split(' ')[0];
+    // reportData.timeArrived = reportDataFromDb.check_in_display.split(' ')[1];
+    reportData.timeValidArrived = reportDataFromDb.check_in_display.split(' ')[1];
+    // reportData.timeReturn = reportDataFromDb.check_out_display ? reportDataFromDb.check_out_display.split(' ')[1] : "00:00";
+    reportData.timeValidReturn = reportDataFromDb.check_out_display ? reportDataFromDb.check_out_display.split(' ')[1] : "00:00";
 
     return reportData;
   }
@@ -359,34 +364,35 @@ export class GlobalService {
   }
 
   public SaveRequestData(requestData: RequestData) {
-    var url = 'http://sihk.hutamakarya.com/apiabsen/SaveRequestData.php';
+    var url = 'http://192.168.12.23/api/attendance/request';
 
     let postdata = new FormData();
-    postdata.append('szUserId', requestData.szUserId);
-    postdata.append('dateRequest', requestData.dateRequest);
-    postdata.append('szActivityId', requestData.szActivityId);
-    postdata.append('szDesc', requestData.szDesc);
-    postdata.append('szLocation', requestData.szLocation);
-    postdata.append('szStatusId', requestData.szStatusId);
-    postdata.append('decTotal', requestData.decTotal);
-    postdata.append('szReasonImage', requestData.szReasonImage);
-    postdata.append('bActiveRequest', String(requestData.bActiveRequest));
-    postdata.append('dtmCreated', requestData.dateRequest);
-    postdata.append('dtmLastUpdated', requestData.dateRequest);
+    postdata.append('attendance_type', this.mobile);
+    postdata.append('authorization', requestData.szUserId);
+    postdata.append('absen_date', requestData.dateRequest);
+    postdata.append('time', requestData.timeRequest);
+    postdata.append('capture_image', "");
+    postdata.append('capture_ext', "png");
+    postdata.append('activity_id', requestData.szActivityId);
+    postdata.append('reason', requestData.szDesc);
+    postdata.append('dectotal', requestData.decTotal);
+    postdata.append('location', requestData.szLocation);
 
     var data: Observable<any> = this.httpClient.post(url, postdata);
     data.subscribe(data => {
-      if (data.error == false) {
-        this.PresentToast(requestData.szActivityId == ActivityId.AC002 ? "Berhasil mengajukan izin terlambat" :
-          requestData.szActivityId == ActivityId.AC003 ? "Berhasil mengajukan izin datang diluar kantor" :
-            requestData.szActivityId == ActivityId.AC004 ? "Berhasil mengajukan izin pulang diluar kantor" : "");
+      if (data.response == "success") {
+        this.PresentToast(requestData.szActivityId == this.activityDataList.terlambat.id ? "Berhasil mengajukan izin terlambat" :
+          requestData.szActivityId == this.activityDataList.pulangCepat.id ? "Berhasil mengajukan izin pulang cepat" :
+            requestData.szActivityId == this.activityDataList.lembur.id ? "Berhasil mengajukan izin lembur" :
+              requestData.szActivityId == this.activityDataList.datangDiluarKantor.id ? "Berhasil mengajukan izin datang diluar kantor" :
+                requestData.szActivityId == this.activityDataList.pulangDiluarKantor.id ? "Berhasil mengajukan izin pulang diluar kantor" : "");
         this.router.navigate(['home']);
         this.dateRequest = "";
         this.timeRequest = "";
       }
       else {
-        this.PresentAlert(data.error_msg);
-        throw new Error(data.error_msg);
+        this.PresentAlert("Gagal melakukan request");
+        throw new Error("Gagal melakukan request");
       }
     });
   }
@@ -453,6 +459,26 @@ export class GlobalService {
   }
 }
 
+export class OfficeHourData {
+  public startOfficeHourFrom: string;
+  public startOfficeHourUntil: string;
+  public endtOfficeHourFrom: string;
+  public endOfficeHourUntil: string;
+}
+
+export class ActivityData {
+  public onTime: any;
+  public terlambat: any;
+  public datangDiluarKantor: any;
+  public pulangDiluarKantor: any;
+  public pulangCepat: any;
+  public lembur: any;
+  public absen: any;
+  public sakit: any;
+  public izin: any;
+  public cuti: any;
+}
+
 export class UserData {
   public szToken: string;
   public szTokenFcm: string;
@@ -492,11 +518,19 @@ export class DateData {
 export class ReportData {
   public szUserId: string;
   public dateAbsen: string;
+  public timeAbsen: string;
   public timeArrived: string;
   public timeValidArrived: string;
   public timeReturn: string = "00:00:00";
   public timeValidReturn: string;
   public decMonth: number;
+  public szActivityId: string;
+  public szDesc: string;
+  public szLocation: string;
+  public decTotal: string;
+  public szImage: string;
+  public szImageArrived: string;
+  public szImageReturn: string;
 }
 
 export class SummaryReportData {
@@ -515,6 +549,7 @@ export class RequestData {
   public szDivisionId: string;
   public szSectionId: string;
   public dateRequest: string;
+  public timeRequest: string;
   public szActivityId: string;
   public szActivityName: string;
   public szDesc: string;

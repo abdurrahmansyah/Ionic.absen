@@ -13,6 +13,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Router } from '@angular/router';
 import { AuthenticationService } from './services/authentication.service';
 import { FCM } from '@ionic-native/fcm/ngx';
+import { GlobalService } from './services/global.service';
 
 
 
@@ -34,7 +35,8 @@ export class AppComponent {
     private storage: Storage,
     private authenticationService: AuthenticationService,
     private router: Router,
-    private fcm: FCM
+    private fcm: FCM,
+    private globalService: GlobalService
   ) {
     this.storage.get('username').then(data => {
       if (data) {
@@ -47,34 +49,14 @@ export class AppComponent {
         this.rootPage = LoginPage;
       }
     });
-    this.initializeApp();
-
+    this.InitializeApp();
+    this.InitializeData();
   }
 
-  initializeApp() {
-    this.fcm.getToken().then(token => {
-      console.log(token);
-    });
-
-    // this.fcm.onTokenRefresh().subscribe(token => {
-    //   console.log(token);
-    // });
-
-    this.fcm.onNotification().subscribe(data => {
-      console.log(data);
-      if (data.wasTapped) {
-        console.log('Received in background');
-        this.router.navigate([data.landing_page, data.price]);
-      } else {
-        console.log('Received in foreground');
-        this.router.navigate([data.landing_page, data.price]);
-      }
-    });
-    this.cobadeh="bisaga";
-    this.fcm.subscribeToTopic(this.cobadeh);
-    
+  InitializeApp() {
     this.platform.ready().then(() => {
-      this.statusBar.styleDefault();
+      this.statusBar.styleBlackTranslucent();
+      // this.statusBar.styleDefault();
       this.splashScreen.hide();
     });
 
@@ -103,6 +85,13 @@ export class AppComponent {
     this.cobadeh = "bisaga";
     this.fcm.subscribeToTopic(this.cobadeh);
   }
+
+  async InitializeData() {
+    await this.globalService.GetUserDataFromStorage();
+    this.globalService.GetOfficeHour();
+    this.globalService.GetActivityData();
+  }
+
   openPage(page) {
     // Reset the content nav to have just this page
     // we wouldn't want the back button to show in this scenario

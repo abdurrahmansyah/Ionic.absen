@@ -43,12 +43,13 @@ export class FormTerlambatComponent implements OnInit {
 
   private SaveRequestData() {
     var requestData = new RequestData();
-    requestData.szUserId = this.globalService.userData.szUserId;
+    requestData.szUserId = this.globalService.userData.szToken;
     requestData.dateRequest = this.globalService.dateRequest;
-    requestData.szActivityId = ActivityId.AC002;
+    requestData.timeRequest = this.globalService.timeRequest;
+    requestData.szActivityId = this.globalService.activityDataList.terlambat.id;
     requestData.szDesc = this.txtDesc;
     requestData.szLocation = "";
-    requestData.szStatusId = StatusId.ST003;
+    // requestData.szStatusId = StatusId.ST003;
     requestData.decTotal = this.ReturnDecTotal();
     requestData.szReasonImage = "";
     requestData.bActiveRequest = true;

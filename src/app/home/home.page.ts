@@ -8,6 +8,7 @@ import { Observable } from 'rxjs/Observable';
 import { GlobalService, ActivityId, DateData, ReportData } from '../services/global.service';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-home',
@@ -31,82 +32,20 @@ export class HomePage {
     private globalService: GlobalService,
     private platform: Platform,
     private statusBar: StatusBar,
-    private localNotifications: LocalNotifications
+    private localNotifications: LocalNotifications,
+    private datePipe: DatePipe
   ) {
-    this.InitializeApp();
-    this.InitializeData();
     this.Timer();
   }
 
-  public SingleNotif() {
-    this.localNotifications.schedule({
-      id: 1,
-      text: 'Single ILocalNotification'
-    });
-
-    this.localNotifications.schedule({
-      title: 'My first notification',
-      text: 'Thats pretty easy...',
-      foreground: true
-    });
-  }
-
-  public MultipleNotif() {
-    this.localNotifications.schedule([{
-      id: 1,
-      text: 'Multi ILocalNotification 1'
-    }, {
-      id: 2,
-      title: 'Local ILocalNotification Example',
-      text: 'Multi ILocalNotification 2',
-      icon: 'http://example.com/icon.png'
-    }]);
-  }
-
-  public ScheduleNotif() {
-    this.localNotifications.schedule([{
-      id: 1,
-      text: 'Delay Fore',
-      trigger: { at: new Date(new Date().getTime() + 30000) },
-      foreground: true
-    }, {
-      id: 2,
-      text: 'Delay No Fore',
-      trigger: { at: new Date(new Date().getTime() + 31000) }
-    }, {
-      id: 3,
-      text: 'Delay Fore 2',
-      trigger: { at: new Date(new Date().getTime() + 33000) },
-      foreground: true
-    }]);
-  }
-
-  public ForLog() {
-    var now = new Date();
-    var aaa = new Date(new Date().getTime() + 4000);
-    var aaa1 = new Date(new Date().getTime() + 60000);
-    console.log(now);
-    console.log(aaa);
-    console.log(aaa1);
-  }
-
-  InitializeApp() {
-    this.platform.ready().then(() => {
-      this.statusBar.styleBlackTranslucent();
-    });
-  }
-
-  async InitializeData() {
-    await this.globalService.GetUserDataFromStorage();
-  }
-
   private GetTimeWorkingAndStatusUser() {
-    var date = new Date();
+    var dateData = this.globalService.GetDate();
+
     var url = 'http://192.168.12.23/api/attendance/perdate';
     let postdata = new FormData();
 
     postdata.append('authorization', this.globalService.userData.szToken);
-    postdata.append('date', '2019-12-17');// date.toLocaleString());
+    postdata.append('date', this.datePipe.transform(dateData.date, 'yyyy-MM-dd'));
 
     var data: Observable<any> = this.http.post(url, postdata);
     this.SubscribeGetReportDatas(data);
@@ -144,11 +83,11 @@ export class HomePage {
     var reportDatas = [];
     var reportData = new ReportData();
     reportData.szUserId = reportDataFromDb.szuserid;
-    reportData.dateAbsen = reportDataFromDb.check_in.split(' ')[0];
-    reportData.timeArrived = reportDataFromDb.check_in.split(' ')[1];
-    reportData.timeValidArrived = reportDataFromDb.check_in.split(' ')[1];
-    reportData.timeReturn = reportDataFromDb.check_out ? reportDataFromDb.check_out.split(' ')[1] : "00:00:00";
-    reportData.timeValidReturn = reportDataFromDb.check_out ? reportDataFromDb.check_out.split(' ')[1] : "00:00:00";
+    reportData.dateAbsen = reportDataFromDb.check_in_display.split(' ')[0];
+    // reportData.timeArrived = reportDataFromDb.check_in_display.split(' ')[1];
+    reportData.timeValidArrived = reportDataFromDb.check_in_display.split(' ')[1];
+    // reportData.timeReturn = reportDataFromDb.check_out_display ? reportDataFromDb.check_out_display.split(' ')[1] : "00:00";
+    reportData.timeValidReturn = reportDataFromDb.check_out_display ? reportDataFromDb.check_out_display.split(' ')[1] : "00:00";
 
     reportDatas.push(reportData);
     return reportDatas.find(x => x);
@@ -186,7 +125,6 @@ export class HomePage {
   }
 
   DoRefresh(event: any) {
-    this.InitializeData();
     this.GetTimeWorkingAndStatusUser();
 
     setTimeout(() => {
@@ -225,111 +163,114 @@ export class HomePage {
 
   private ValidateAbsen() {
     var dateData = this.globalService.GetDate();
+    var reportData = new ReportData();
 
-    if (this.globalService.geoLatitude <= -6.24508
-      && this.globalService.geoLatitude >= -6.24587
-      && this.globalService.geoLongitude >= 106.87269
-      && this.globalService.geoLongitude <= 106.87379) {
-      var reportData = new ReportData();
-      var szActivityId: string;
+    if (false) {//this.globalService.geoLatitude <= -6.24508
+      // && this.globalService.geoLatitude >= -6.24587
+      // && this.globalService.geoLongitude >= 106.87269
+      // && this.globalService.geoLongitude <= 106.87379) {
+      reportData.szUserId = this.globalService.userData.szToken;
+      reportData.dateAbsen = this.datePipe.transform(dateData.date, 'yyyy-MM-dd');
+      reportData.timeAbsen = dateData.szHour + ":" + dateData.szMinute;
 
       if (!this.txtTimeArrived) {
-        reportData.timeArrived = dateData.szHour + ":" + dateData.szMinute + ":" + dateData.decSec;
-        reportData.timeReturn = "00:00:00";
-        this.DoingAbsen(dateData, reportData);
-
-        this.globalService.dateRequest = dateData.date.toLocaleDateString();
-
-        if (reportData.timeArrived > "08:10:00") {
-          szActivityId = ActivityId.AC002;
+        if (reportData.timeAbsen > this.globalService.officeHourData.startOfficeHourUntil) {
+          reportData.szActivityId = this.globalService.activityDataList.terlambat.id;
           let navigationExtras: NavigationExtras = {
             state: {
-              indexForm: szActivityId
+              indexForm: reportData.szActivityId
             }
           }
-          this.GetDecisionFromUser(szActivityId, navigationExtras);
+          this.GetDecisionFromUser(reportData, navigationExtras);
+        }
+        else {
+          this.DoingAbsen(reportData);
         }
       }
       else {
-        reportData.timeArrived = "00:00:00";
-        reportData.timeReturn = dateData.szHour + ":" + dateData.szMinute + ":" + dateData.decSec;
-        this.DoingAbsen(dateData, reportData);
-
-        this.globalService.dateRequest = dateData.date.toLocaleDateString();
-
-        if (reportData.timeReturn < "17:00:00") {
-          szActivityId = ActivityId.AC005
+        if (reportData.timeAbsen < this.globalService.officeHourData.endtOfficeHourFrom) {
+          reportData.szActivityId = this.globalService.activityDataList.pulangCepat.id;
           let navigationExtras: NavigationExtras = {
             state: {
-              indexForm: szActivityId
+              indexForm: reportData.szActivityId
             }
           }
-          this.GetDecisionFromUser(szActivityId, navigationExtras);
+          this.GetDecisionFromUser(reportData, navigationExtras);
         }
-        else if (reportData.timeReturn > "17:45:00") {
-          szActivityId = ActivityId.AC006
+        else if (reportData.timeAbsen > "17:45") {
+          reportData.szActivityId = this.globalService.activityDataList.lembur.id;
           let navigationExtras: NavigationExtras = {
             state: {
-              indexForm: szActivityId
+              indexForm: reportData.szActivityId
             }
           }
-          this.GetDecisionFromUser(szActivityId, navigationExtras);
+          this.GetDecisionFromUser(reportData, navigationExtras);
+        }
+        else {
+          this.DoingAbsen(reportData);
         }
       }
     }
     else {
-      this.globalService.dateRequest = dateData.date.toLocaleDateString();
-      this.globalService.timeRequest = dateData.szHour + ":" + dateData.szMinute + " " + dateData.szAMPM;
+      reportData.dateAbsen = this.datePipe.transform(dateData.date, 'yyyy-MM-dd');
+      reportData.timeAbsen = dateData.szHour + ":" + dateData.szMinute;
 
       if (!this.txtTimeArrived) {
         this.globalService.isArrived = true;
-        szActivityId = ActivityId.AC003;
+        reportData.szActivityId = this.globalService.activityDataList.datangDiluarKantor.id;
       }
       else {
         this.globalService.isArrived = false;
-        szActivityId = ActivityId.AC004;
+        reportData.szActivityId = this.globalService.activityDataList.pulangDiluarKantor.id;
       }
 
       let navigationExtras: NavigationExtras = {
         state: {
-          indexForm: szActivityId
+          indexForm: reportData.szActivityId
         }
       }
-      this.GetDecisionFromUser(szActivityId, navigationExtras);
+      this.GetDecisionFromUser(reportData, navigationExtras);
     }
   }
 
-  private async GetDecisionFromUser(szActivityId: string, navigationExtras: NavigationExtras) {
+  private async GetDecisionFromUser(reportData: ReportData, navigationExtras: NavigationExtras) {
     await this.alertController.create({
       mode: 'ios',
       message: 'This is an alert message.',
-      cssClass: szActivityId == ActivityId.AC001 ? 'alert-ontime' :
-        szActivityId == ActivityId.AC003 || szActivityId == ActivityId.AC004 ? 'alert-diluarkantor' :
-          szActivityId == "DILUAR-WIFIAKSES" ? 'alert-wifiakses' :
-            szActivityId == ActivityId.AC006 ? 'alert-lembur' :
-              szActivityId == ActivityId.AC002 ? 'alert-terlambat' :
-                szActivityId == ActivityId.AC005 ? 'alert-pulangcepat' :
+      backdropDismiss: reportData.szActivityId == this.globalService.activityDataList.datangDiluarKantor.id || reportData.szActivityId == this.globalService.activityDataList.pulangDiluarKantor.id ? true : false,
+      cssClass: reportData.szActivityId == ActivityId.AC001 ? 'alert-ontime' :
+        reportData.szActivityId == this.globalService.activityDataList.datangDiluarKantor.id || reportData.szActivityId == this.globalService.activityDataList.pulangDiluarKantor.id ? 'alert-diluarkantor' :
+          reportData.szActivityId == "DILUAR-WIFIAKSES" ? 'alert-wifiakses' :
+            reportData.szActivityId == this.globalService.activityDataList.lembur.id ? 'alert-lembur' :
+              reportData.szActivityId == this.globalService.activityDataList.terlambat.id ? 'alert-terlambat' :
+                reportData.szActivityId == this.globalService.activityDataList.pulangCepat.id ? 'alert-pulangcepat' :
                   'alert-pulang',
-      buttons: szActivityId == ActivityId.AC003 || szActivityId == ActivityId.AC004 ? [{
+      buttons: reportData.szActivityId == this.globalService.activityDataList.datangDiluarKantor.id || reportData.szActivityId == this.globalService.activityDataList.pulangDiluarKantor.id ? [{
         text: 'BACK',
         role: 'Cancel'
       }, {
         text: 'NEXT',
         handler: () => {
+          this.globalService.dateRequest = reportData.dateAbsen;
+          this.globalService.timeRequest = reportData.timeAbsen;
           this.router.navigate(['form-request'], navigationExtras);
         }
       }] :
-        szActivityId == "DILUAR-WIFIAKSES" ? [{
+        reportData.szActivityId == "DILUAR-WIFIAKSES" ? [{
           text: 'BACK',
           role: 'Cancel'
-        }] : szActivityId == ActivityId.AC002 ||
-          szActivityId == ActivityId.AC005 ||
-          szActivityId == ActivityId.AC006 ? [{
+        }] : reportData.szActivityId == this.globalService.activityDataList.terlambat.id ||
+          reportData.szActivityId == this.globalService.activityDataList.pulangCepat.id ||
+          reportData.szActivityId == this.globalService.activityDataList.lembur.id ? [{
             text: 'NO',
-            role: 'Cancel'
+            handler: () => {
+              this.DoingAbsen(reportData);
+            }
           }, {
             text: 'YES',
             handler: () => {
+              this.globalService.dateRequest = reportData.dateAbsen;
+              this.globalService.timeRequest = reportData.timeAbsen;
               this.router.navigate(['form-request'], navigationExtras);
             }
           }] : [{
@@ -357,9 +298,7 @@ export class HomePage {
     }
   }
 
-  private DoingAbsen(dateData: DateData, reportData: ReportData) {
-    reportData.szUserId = this.globalService.userData.szUserId;
-    reportData.dateAbsen = dateData.date.toDateString();
+  private DoingAbsen(reportData: ReportData) {
     var data = this.globalService.SaveReportData(reportData);
     this.SubscribeGetReportDatas(data);
   }

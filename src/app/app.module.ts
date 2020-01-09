@@ -18,8 +18,7 @@ import { Camera } from '@ionic-native/camera/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { FCM } from '@ionic-native/fcm/ngx';
-
-import { FCM } from '@ionic-native/fcm/ngx';
+import { DatePipe } from '@angular/common';
 
 export let InjectorInstance: Injector;
 
@@ -45,7 +44,8 @@ export let InjectorInstance: Injector;
     Camera,
     File,
     LocalNotifications,
-    FCM
+    FCM,
+    DatePipe
   ],
   bootstrap: [AppComponent]
 })
