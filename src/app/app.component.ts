@@ -53,7 +53,11 @@ export class AppComponent {
     this.InitializeData();
   }
 
-  InitializeApp() {
+  initializeApp() {
+    this.fcm.getToken().then(token => {
+      console.log(token);
+    });
+    
     this.platform.ready().then(() => {
       this.statusBar.styleBlackTranslucent();
       // this.statusBar.styleDefault();
@@ -68,22 +72,18 @@ export class AppComponent {
       }
     });
 
-    this.fcm.getToken().then(token => {
-      console.log(token);
-    });
-
-    this.fcm.onNotification().subscribe(data => {
-      console.log(data);
-      if (data.wasTapped) {
-        console.log('Received in background');
-        this.router.navigate([data.landing_page, data.price]);
-      } else {
-        console.log('Received in foreground');
-        this.router.navigate([data.landing_page, data.price]);
-      }
-    });
-    this.cobadeh = "bisaga";
-    this.fcm.subscribeToTopic(this.cobadeh);
+    // this.fcm.onNotification().subscribe(data => {
+    //   console.log(data);
+    //   if (data.wasTapped) {
+    //     console.log('Received in background');
+    //     this.router.navigate([data.landing_page, data.price]);
+    //   } else {
+    //     console.log('Received in foreground');
+    //     this.router.navigate([data.landing_page, data.price]);
+    //   }
+    // });
+    // this.cobadeh = "bisaga";
+    // this.fcm.subscribeToTopic(this.cobadeh);
   }
 
   async InitializeData() {

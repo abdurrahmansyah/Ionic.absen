@@ -9,6 +9,7 @@ import { GlobalService, ActivityId, DateData, ReportData } from '../services/glo
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { DatePipe } from '@angular/common';
+import { FCM } from '@ionic-native/fcm/ngx';
 
 @Component({
   selector: 'app-home',
@@ -23,6 +24,7 @@ export class HomePage {
   public txtTimeReturn: string = "";
   public txtWorkStatus: string = "";
   public colorStatus: string;
+  public cobadeh: string;
 
   constructor(public navCtrl: NavController, public alertController: AlertController,
     public router: Router,
@@ -34,6 +36,7 @@ export class HomePage {
     private statusBar: StatusBar,
     private localNotifications: LocalNotifications,
     private datePipe: DatePipe
+    private fcm: FCM
   ) {
     this.Timer();
   }
