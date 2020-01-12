@@ -35,10 +35,34 @@ export class HomePage {
     private platform: Platform,
     private statusBar: StatusBar,
     private localNotifications: LocalNotifications,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
     private fcm: FCM
   ) {
+    this.InitializeApp();
+    this.InitializeData();
     this.Timer();
+  }
+ 
+  InitializeApp() {
+    this.platform.ready().then(() => {
+      this.statusBar.styleBlackTranslucent();
+    });
+  }
+ 
+  async InitializeData() {
+    await this.globalService.GetUserDataFromStorage();
+    this.fcm.onNotification().subscribe(data => {
+      console.log(data);
+      if (data.wasTapped) {
+        console.log('Received in background');
+        this.router.navigate([data.landing_page, data.price]);
+      } else {
+        console.log('Received in foreground');
+        this.router.navigate([data.landing_page, data.price]);
+      }
+    });
+    this.cobadeh=this.globalService.userData.szUserId;
+    this.fcm.subscribeToTopic(this.cobadeh);
   }
 
   private GetTimeWorkingAndStatusUser() {
@@ -168,10 +192,12 @@ export class HomePage {
     var dateData = this.globalService.GetDate();
     var reportData = new ReportData();
 
-    if (false) {//this.globalService.geoLatitude <= -6.24508
-      // && this.globalService.geoLatitude >= -6.24587
-      // && this.globalService.geoLongitude >= 106.87269
-      // && this.globalService.geoLongitude <= 106.87379) {
+    // if (false) {
+      if (
+      this.globalService.geoLatitude <= -6.24508
+      && this.globalService.geoLatitude >= -6.24587
+      && this.globalService.geoLongitude >= 106.87269
+      && this.globalService.geoLongitude <= 106.87379) {
       reportData.szUserId = this.globalService.userData.szToken;
       reportData.dateAbsen = this.datePipe.transform(dateData.date, 'yyyy-MM-dd');
       reportData.timeAbsen = dateData.szHour + ":" + dateData.szMinute;

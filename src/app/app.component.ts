@@ -49,7 +49,7 @@ export class AppComponent {
         this.rootPage = LoginPage;
       }
     });
-    this.InitializeApp();
+    this.initializeApp();
     this.InitializeData();
   }
 
