@@ -14,6 +14,7 @@ export class SettingsPage implements OnInit {
   public txtUserName: string;
   public txtDivisionName: string;
   public txtSectionName: string;
+  public txtSuperiorName: string;
   public supervisorList = [];
   constructor(private globalService: GlobalService,
     private modalController: ModalController) {
@@ -21,6 +22,7 @@ export class SettingsPage implements OnInit {
     this.txtUserName = this.globalService.userData.szUserName;
     this.txtDivisionName = this.globalService.userData.szDivisionName;
     this.txtSectionName = this.globalService.userData.szSectionName;
+    this.txtSuperiorName = this.globalService.userData.szSuperiorUserName;
   }
 
   ngOnInit() {

@@ -257,7 +257,7 @@ export class GlobalService {
   private ConvertTimeToViewFormat(timeFromDb: any) {
     var hour = timeFromDb[0]; // < 10 && timeFromDb[0] != 0 ? "0" + timeFromDb[0] : timeFromDb[0];
     var minute = timeFromDb[1]; // < 10 && timeFromDb[1] != 0 ? "0" + timeFromDb[1] : timeFromDb[1];
-    var ampm = timeFromDb[2] > 12 ? "PM" : "AM";
+    var ampm = timeFromDb[0] > 12 ? "PM" : "AM";
     return { hour, minute, ampm };
   }
 
@@ -325,8 +325,8 @@ export class GlobalService {
       }
       else {
         this.requestDatas = [];
-        this.PresentAlert(data.error_msg);
-        throw new Error(data.error_msg);
+        this.PresentAlert("Tidak ada data yang dapat ditampilkan");
+        throw new Error("Tidak ada data yang dapat ditampilkan");
       }
     });
   }

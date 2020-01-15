@@ -56,14 +56,14 @@ export class MainPage implements OnInit {
   }
 
   private ShowFirstLoadData() {
-    this.photo = 'data:image/jpeg;base64,' + this.globalService.userData.szImage;
+    this.photo = this.globalService.userData.szImage;
     this.txtUserId = this.globalService.userData.szUserId;
     this.txtUserName = this.globalService.userData.szUserName;
     this.txtDivisionName = this.globalService.userData.szDivisionName;
     this.txtSectionName = this.globalService.userData.szSectionName;
   }
 
-  ngOnInit() { 
+  ngOnInit() {
   }
 
   NavRouterMenu(index: number) {
@@ -72,16 +72,20 @@ export class MainPage implements OnInit {
       this.router.navigate(['notifications']);
     }
     else if (index == 2) {
-      let navigationExtras: NavigationExtras = {
-        state: {
-          indexReport: 1
-        }
-      };
-      this.router.navigate(['reports'], navigationExtras);
+      // let navigationExtras: NavigationExtras = {
+      //   state: {
+      //     indexReport: 1
+      //   }
+      // };
+      // this.router.navigate(['reports'], navigationExtras);
+      this.router.navigate(['attendance']);
+    }
+    else if (index == 3) {
+      this.router.navigate(['work-permit']);
     }
     else if (index == 4) {
       this.authService.logout();
-      this.cobadeh=this.globalService.userData.szUserId;
+      this.cobadeh = this.globalService.userData.szUserId;
       this.fcm.unsubscribeFromTopic(this.cobadeh);
     }
   }

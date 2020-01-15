@@ -1,0 +1,19 @@
+<ion-header #header>
+  <ion-toolbar color="hk-red">
+    <ion-buttons slot="start">
+      <ion-back-button color="hk-white-red"></ion-back-button>
+    </ion-buttons>
+    <ion-title #label>Leaves</ion-title>
+    <!-- style="visibility: hidden;" -->
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content scrollEvents="true" class="content">
+  <!-- appCustomHeader [header]="header" [label]="label" -->
+  <!-- <ion-label padding color="hk-white-red" style="font-size: 34px; font-weight: bold;">Notifications</ion-label> -->
+
+  <ion-searchbar showCancelButton="focus" placeholder="Search" color="light" style="width: 90%; margin: 0 auto;"
+    mode="ios">
+  </ion-searchbar>
+</ion-content>

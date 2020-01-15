@@ -28,28 +28,29 @@
     <h5 style="font-weight: bold;">Account</h5>
   </ion-item>
 
-  <ion-item detail (click)="Test()" Lines="inset">
+  <ion-item detail button Lines="inset">
     <ion-label>Name</ion-label>
     <ion-label class="ion-text-right" style="color: grey;">{{txtUserName}}</ion-label>
   </ion-item>
 
-  <ion-item detail (click)="Test()" Lines="inset">
+  <ion-item detail button Lines="inset">
     <ion-label>Division</ion-label>
     <ion-label class="ion-text-right" style="color: grey;">{{txtDivisionName}}</ion-label>
   </ion-item>
 
-  <ion-item detail (click)="Test()" Lines="inset">
+  <ion-item detail button Lines="inset">
     <ion-label>Section</ion-label>
     <ion-label class="ion-text-right" style="color: grey;">{{txtSectionName}}</ion-label>
   </ion-item>
 
-  <ion-item Lines="full">
-    <ion-label>Supervisor</ion-label>
-    <ion-select mode="ios">
+  <ion-item detail button Lines="full">
+    <ion-label>Superior</ion-label>
+    <ion-label class="ion-text-right" style="color: grey;">{{txtSuperiorName}}</ion-label>
+    <!-- <ion-select mode="ios">
       <span *ngFor="let supervisorName of supervisorList">
         <ion-select-option value="{{supervisorName}}">{{supervisorName}}</ion-select-option>
       </span>
-    </ion-select>
+    </ion-select> -->
   </ion-item>
 
   <hr style="height: 12px; background-color: var(--ion-color-hk-tweet); margin-top: 0px; margin-bottom: 0px;"

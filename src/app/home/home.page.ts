@@ -123,7 +123,7 @@ export class HomePage {
   private ConvertTimeToViewFormat(timeFromDb: any) {
     var hour = timeFromDb[0]; // < 10 && timeFromDb[0] != 0 ? "0" + timeFromDb[0] : timeFromDb[0];
     var minute = timeFromDb[1]; // < 10 && timeFromDb[1] != 0 ? "0" + timeFromDb[1] : timeFromDb[1];
-    var ampm = timeFromDb[2] > 12 ? "PM" : "AM";
+    var ampm = timeFromDb[0] > 12 ? "PM" : "AM";
     return { hour, minute, ampm };
   }
 
@@ -315,15 +315,15 @@ export class HomePage {
 
   private SetStatusWork() {
     if (!this.txtTimeArrived) {
-      this.txtWorkStatus = "Not Working";
+      this.txtWorkStatus = " Not Working";
       this.colorStatus = "danger";
     }
     else {
       if (this.txtTimeReturn == "") {
-        this.txtWorkStatus = "Working";
+        this.txtWorkStatus = " Working";
         this.colorStatus = "primary";
       } else {
-        this.txtWorkStatus = "Not Working";
+        this.txtWorkStatus = " Not Working";
         this.colorStatus = "danger";
       }
     }
@@ -340,7 +340,8 @@ export class HomePage {
         indexReport: indexReport
       }
     };
-    this.router.navigate(['reports'], navigationExtras);
+    // this.router.navigate(['reports'], navigationExtras);
+    this.router.navigate(['attendance']);
   }
 }
 

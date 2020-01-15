@@ -36,6 +36,19 @@ const routes: Routes = [
                 loadChildren: () => import('../pages/settings/settings.module').then(
                     m => m.SettingsPageModule
                 )
+            },
+            {
+                path: 'work-permit',
+                loadChildren: () => import('../pages/work-permit/work-permit.module').then(
+                    m => m.WorkPermitPageModule
+                )
+            }
+            ,
+            {
+                path: 'attendance',
+                loadChildren: () => import('../pages/attendance/attendance.module').then(
+                    m => m.AttendancePageModule
+                )
             }
         ]
     }

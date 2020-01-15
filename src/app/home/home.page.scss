@@ -1,4 +1,12 @@
-ion-footer {
+// .content {
+//   --background: none;
+//   background-image: url("../../assets/images/bg-5.png");
+//   background-position: center top;
+//   background-repeat: no-repeat;
+//   background-size: 100%;
+// }
+
+.footer-content {
   color: #000000;
   background-color: #f0f0f0;
   padding-bottom: 5px;
@@ -59,6 +67,6 @@ ion-content {
     background-position: center;
 
     // grid-auto-rows: 330%;
-    height: 80%;
+    height: 100%;
   }
 }
