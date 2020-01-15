@@ -20,6 +20,50 @@
   <ion-card style="margin-top: 0px;" *ngFor="let requestData of requestDatas">
     <ion-item lines="none" color="transparent">
       <ion-avatar slot="start">
+        <img src="{{ requestData.szUserPhoto }}" class="center">
+      </ion-avatar>
+      <!-- <ion-avatar slot="start">
+        <img src="../../../assets/images/user-1.png">
+      </ion-avatar> -->
+      <ion-label style="font-size: 16px; color: dimgrey;">
+        <p>{{ requestData.szUserName }} - {{ requestData.szSectionId }}</p>
+        <p>{{ requestData.szDivisionId }}</p>
+      </ion-label>
+    </ion-item>
+    <div class="ion-text-start" padding style="padding-top: 0px; padding-bottom: 0px; line-height: 150%;">
+      <ion-text>{{ requestData.dateRequest }}</ion-text> <br>
+      <div *ngFor="let requestDetailData of requestData.requestDetailDataList">
+        <ion-text color="dark">{{ requestDetailData.szActivityName }}</ion-text>
+        <ion-text> - </ion-text>
+        <ion-text *ngIf="IsLate(requestDetailData.szActivityId)">Datang : {{ requestDetailData.decTotal }}</ion-text>
+        <ion-text *ngIf="IsPulangCepat(requestDetailData.szActivityId) || IsLembur(requestDetailData.szActivityId)">Pulang :
+          {{ requestDetailData.decTotal }}</ion-text>
+        <ion-text *ngIf="IsDatangDiluarKantor(requestDetailData.szActivityId) || IsPulangDiluarKantor(requestDetailData.szActivityId)">Keterangan :
+          {{ requestDetailData.szDesc }}</ion-text>
+        <br>
+        <ion-text
+          *ngIf="IsLate(requestDetailData.szActivityId) || IsPulangCepat(requestDetailData.szActivityId) || IsLembur(requestDetailData.szActivityId)">
+          Alasan : {{ requestDetailData.szDesc }}</ion-text>
+        <ion-text *ngIf="IsDatangDiluarKantor(requestDetailData.szActivityId) || IsPulangDiluarKantor(requestDetailData.szActivityId)">Lokasi :
+          {{ requestDetailData.szLocation }}<br /> <img src="{{ requestDetailData.szReasonImage }}" class="center" /></ion-text>
+        <hr *ngIf="!requestDetailData.isLastData" width="90%">
+        </div>
+    </div>
+    <ion-row>
+      <ion-col>
+        <ion-button expand="full" color="hk-white-purple" shape="round" (click)="UpdateRequest(requestData.szRequestId, 0)">DECLINE</ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button expand="full" color="hk-purple" shape="round" (click)="UpdateRequest(requestData.szRequestId, 1)">APPROVE</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-card>
+
+  <!-- ---------------------------------------------------------------------------------------------------- -->
+
+  <!-- <ion-card style="margin-top: 0px;" *ngFor="let requestData of requestDatas">
+    <ion-item lines="none" color="transparent">
+      <ion-avatar slot="start">
         <img src="../../../assets/images/user-1.png">
       </ion-avatar>
       <ion-label style="font-size: 16px; color: dimgrey;">
@@ -45,15 +89,15 @@
     </div>
     <ion-row>
       <ion-col>
-        <ion-button expand="full" color="hk-white-purple" shape="round" (click)="UpdateRequest(requestData.szRequestId, 0)">DECLINE</ion-button>
+        <ion-button expand="full" color="hk-white-purple" shape="round"
+          (click)="UpdateRequest(requestData.szRequestId, 0)">DECLINE</ion-button>
       </ion-col>
       <ion-col>
-        <ion-button expand="full" color="hk-purple" shape="round" (click)="UpdateRequest(requestData.szRequestId, 1)">APPROVE</ion-button>
+        <ion-button expand="full" color="hk-purple" shape="round" (click)="UpdateRequest(requestData.szRequestId, 1)">
+          APPROVE</ion-button>
       </ion-col>
     </ion-row>
-  </ion-card>
-
-  <!-- ---------------------------------------------------------------------------------------------------- -->
+  </ion-card> -->
 
   <!-- <ion-card style="margin-top: 0px;">
     <div padding style="padding-bottom: 2px;">
@@ -62,9 +106,9 @@
     <div class="ion-text-start" padding style="padding-top: 0px; line-height: 150%;">
       <ion-text>Your request has been approved by Mr. Joko Susilo Cus Aba Handayani Pangaribu</ion-text> <br>
     </div>
-  </ion-card>
+  </ion-card> -->
 
-  <ion-card style="margin-top: 0px;" *ngFor="let requestData of requestDatas">
+  <!-- <ion-card style="margin-top: 0px;" *ngFor="let requestData of requestDatas">
     <div padding style="padding-bottom: 2px;">
       <ion-text color="hk-red" style="font-size: 10px;">{{ requestData.dtmRequest }} - {{ requestData.szActivityName }}
       </ion-text>
@@ -95,9 +139,9 @@
     <div class="ion-text-start" padding style="padding-top: 0px; line-height: 150%;">
       <ion-text>Your request has been approved by Mr. Joko Susilo Cus Aba Handayani Pangaribu</ion-text> <br>
     </div>
-  </ion-card>
+  </ion-card> -->
 
-  <ion-card style="margin-top: 0px;">
+  <!-- <ion-card style="margin-top: 0px;">
     <ion-item-sliding>
       <ion-item Lines="none" style="--background: #f0f0f0;" no-padding>
         <ion-label class="ion-text-wrap" style="margin-right: 0px;">

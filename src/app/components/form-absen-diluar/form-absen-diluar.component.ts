@@ -65,7 +65,7 @@ export class FormAbsenDiluarComponent implements OnInit {
     // requestData.szStatusId = StatusId.ST003;
     requestData.decTotal = "";
     requestData.szReasonImage = this.dataimage;
-    requestData.bActiveRequest = true;
+    // requestData.bActiveRequest = true;
     this.globalService.SaveRequestData(requestData);
   }
 

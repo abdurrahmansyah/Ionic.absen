@@ -52,7 +52,7 @@ export class FormPulangCepatComponent implements OnInit {
     // requestData.szStatusId = StatusId.ST003;
     requestData.decTotal = this.ReturnDecTotal();
     requestData.szReasonImage = "";
-    requestData.bActiveRequest = true;
+    // requestData.bActiveRequest = true;
     this.globalService.SaveRequestData(requestData);
   }
 

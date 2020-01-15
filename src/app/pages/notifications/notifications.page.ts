@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Storage } from '@ionic/storage';
-import { GlobalService, RequestData, ActivityId, StatusId } from 'src/app/services/global.service';
+import { GlobalService, RequestData, ActivityId, StatusId, ActivityData } from 'src/app/services/global.service';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -11,6 +11,8 @@ import { HttpClient } from '@angular/common/http';
 export class NotificationsPage implements OnInit {
 
   public requestDatas = [];
+  readonly approved = "approved";
+  readonly reject = "reject";
 
   constructor(private storage: Storage,
     private globalService: GlobalService, private http: HttpClient) {
@@ -44,5 +46,30 @@ export class NotificationsPage implements OnInit {
 
     var idx = this.requestDatas.findIndex(x => x.szRequestId == szRequestId);
     this.requestDatas.splice(idx, 1);
+  }
+
+  public IsLate(szActivityId: string) {
+    if (szActivityId == this.globalService.activityDataList.terlambat.id)
+      return true;
+  }
+
+  public IsPulangCepat(szActivityId: string) {
+    if (szActivityId == this.globalService.activityDataList.pulangCepat.id)
+      return true;
+  }
+
+  public IsLembur(szActivityId: string) {
+    if (szActivityId == this.globalService.activityDataList.lembur.id)
+      return true;
+  }
+
+  public IsDatangDiluarKantor(szActivityId: string) {
+    if (szActivityId == this.globalService.activityDataList.datangDiluarKantor.id)
+      return true;
+  }
+
+  public IsPulangDiluarKantor(szActivityId: string) {
+    if (szActivityId == this.globalService.activityDataList.pulangDiluarKantor.id)
+      return true;
   }
 }

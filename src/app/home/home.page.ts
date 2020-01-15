@@ -42,13 +42,13 @@ export class HomePage {
     this.InitializeData();
     this.Timer();
   }
- 
+
   InitializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleBlackTranslucent();
     });
   }
- 
+
   async InitializeData() {
     await this.globalService.GetUserDataFromStorage();
     this.fcm.onNotification().subscribe(data => {
@@ -61,7 +61,7 @@ export class HomePage {
         this.router.navigate([data.landing_page, data.price]);
       }
     });
-    this.cobadeh=this.globalService.userData.szUserId;
+    this.cobadeh = this.globalService.userData.szUserId;
     this.fcm.subscribeToTopic(this.cobadeh);
   }
 
@@ -191,9 +191,11 @@ export class HomePage {
   private ValidateAbsen() {
     var dateData = this.globalService.GetDate();
     var reportData = new ReportData();
+    console.log(this.globalService.geoLongitude);
+    console.log(this.globalService.geoLatitude);
 
     // if (false) {
-      if (
+    if (
       this.globalService.geoLatitude <= -6.24508
       && this.globalService.geoLatitude >= -6.24587
       && this.globalService.geoLongitude >= 106.87269

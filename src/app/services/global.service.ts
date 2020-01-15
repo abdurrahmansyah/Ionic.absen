@@ -144,7 +144,7 @@ export class GlobalService {
       if (data.response == "success") {
 
         var userDataFromDb = data.data;//.find(x => x);
-        var userData = this.MappingUserDataSugihart(userDataFromDb);
+        var userData = this.MappingUserData(userDataFromDb);
 
         this.storage.set('userData', userData);
         this.PresentToast("Login Berhasil");
@@ -157,7 +157,31 @@ export class GlobalService {
     });
   }
 
-  private MappingUserDataSugihart(userDataFromDb: any) {
+  public GetUserData2(requestData: RequestData, szUserId: string, szPassword: string) {
+    var url = 'http://192.168.12.23/api/login';
+
+    let postdata = new FormData();
+    postdata.append('username', szUserId);
+    postdata.append('password', szPassword);
+
+    var data: any = this.httpClient.post(url, postdata);
+    data.subscribe(data => {
+      if (data.response == "success") {
+
+        var userDataFromDb = data.data;
+        var userData = this.MappingUserData(userDataFromDb);
+        requestData.szUserPhoto = userData.szImage;
+        requestData.szDivisionId = userData.szDivisionName;
+        requestData.szSectionId = userData.szSectionName;
+        console.log(userData);
+      }
+      else {
+        this.PresentToast("Login Gagal");
+      }
+    });
+  }
+
+  private MappingUserData(userDataFromDb: any) {
     var userData = new UserData();
     userData.szToken = userDataFromDb.token;
     userData.szTokenFcm = userDataFromDb.token_fcm;
@@ -169,7 +193,7 @@ export class GlobalService {
     userData.szDivisionName = userDataFromDb.divisi_name;
     userData.szSectionId = userDataFromDb.section_id;
     userData.szSectionName = userDataFromDb.section_name;
-    userData.szImage = userDataFromDb.image;
+    userData.szImage = 'data:image/jpeg;base64,' + userDataFromDb.image;
     userData.szEmail = userDataFromDb.email_hk;
     userData.szSuperiorUserId = userDataFromDb.superior_id;
     userData.szSuperiorUserName = userDataFromDb.superior_name;
@@ -202,7 +226,7 @@ export class GlobalService {
       if (data.response == "success") {
         var reportDataFromDb = data.data;
         var reportData = this.MappingReportData(reportDataFromDb);
-        
+
         var timeValidArrived = reportData.timeValidArrived.split(':');
         var { hour, minute, ampm } = this.ConvertTimeToViewFormat(timeValidArrived);
         this.timeArrived = hour + ":" + minute + " " + ampm;
@@ -288,15 +312,16 @@ export class GlobalService {
 
   public GetRequestDatasForNotifications() {
     this.requestDatas = [];
-    var url = 'http://sihk.hutamakarya.com/apiabsen/GetRequestDatasForNotifications.php';
+    // var url = 'http://sihk.hutamakarya.com/apiabsen/GetRequestDatasForNotifications.php';
+    var url = 'http://192.168.12.23/api/attendance/list_need_approval';
 
     let postdata = new FormData();
-    postdata.append('szUserId', this.userData.szUserId);
+    postdata.append('authorization', this.userData.szToken);
 
     var data: any = this.httpClient.post(url, postdata);
     data.subscribe(data => {
-      if (data.error == false) {
-        this.MappingRequestDataForNotifications(data.result);
+      if (data.data.length > 0) {
+        this.MappingRequestDataForNotifications(data.data);
       }
       else {
         this.requestDatas = [];
@@ -308,22 +333,30 @@ export class GlobalService {
 
   private MappingRequestDataForNotifications(data: any) {
     data.forEach(reqData => {
+      var length = reqData.data_activity.length;
       var requestData = new RequestData();
-      requestData.szRequestId = reqData.szrequestid;
-      requestData.szUserId = reqData.szuserid;
-      requestData.szUserName = reqData.szfullname;
-      requestData.szDivisionId = reqData.szdivisionid;
-      requestData.szSectionId = reqData.szsectionid;
-      requestData.dateRequest = this.ReturnDate(reqData.daterequest);
-      requestData.szActivityId = reqData.szactivityid;
-      requestData.szActivityName = reqData.szactivityname;
-      requestData.szDesc = reqData.szdesc;
-      requestData.szLocation = reqData.szlocation;
-      requestData.szStatusId = reqData.szstatusid;
-      requestData.szStatusName = reqData.szstatusname;
-      requestData.decTotal = this.ReturnTimeByTotal(reqData);
-      requestData.szReasonImage = 'data:image/jpeg;base64,' + reqData.szreasonimage;
-      requestData.bActiveRequest = true;
+      requestData.szRequestId = reqData.id;
+      requestData.szUserId = reqData.employee_id[0];
+
+      this.GetUserData2(requestData, "KD19.9797", "Hutama123!");
+
+      requestData.szUserName = reqData.employee_id[1];
+      requestData.szDivisionId = "reqData.szdivisionid";
+      requestData.szSectionId = "reqData.szsectionid";
+      requestData.dateRequest = this.ReturnDate(reqData.check_in);
+      
+      reqData.data_activity.forEach(reqDetailData => {
+        var requestDetailData = new RequestDetailData();
+        requestDetailData.szActivityId = reqDetailData.activity_id;
+        requestDetailData.szActivityName = reqDetailData.activity_name;
+        requestDetailData.szDesc = reqDetailData.reason;
+        requestDetailData.szLocation = reqDetailData.location;
+        requestDetailData.decTotal = reqDetailData.dectotal;
+        requestDetailData.szReasonImage = 'data:image/jpeg;base64,' + reqData.szreasonimage;
+        requestDetailData.isLastData = length == 1 ? true : false;
+        length -= 1;
+        requestData.requestDetailDataList.push(requestDetailData);
+      });
       this.requestDatas.push(requestData);
     });
   }
@@ -546,10 +579,35 @@ export class RequestData {
   public szRequestId: string;
   public szUserId: string;
   public szUserName: string;
+  public szUserPhoto: string;
   public szDivisionId: string;
   public szSectionId: string;
   public dateRequest: string;
   public timeRequest: string;
+  public requestDetailDataList: any = [];
+  public szActivityId: string;
+  public szActivityName: string;
+  public szDesc: string;
+  public szLocation: string;
+  public szStatusId: string;
+  public szStatusName: string;
+  public decTotal: string;
+  public szReasonImage: string;
+  // public bActiveRequest: boolean;
+  // public szSuperiorUserId: string; // cek dipakek bener ga
+  // public szSuperiorUserName: string; // cek dipakek bener ga
+  // public timeArrived: string; // cek dipakek bener ga
+  // public timeBack: string; // cek dipakek bener ga
+}
+
+export class RequestDetailData {
+  // public szRequestId: string;
+  // public szUserId: string;
+  // public szUserName: string;
+  // public szDivisionId: string;
+  // public szSectionId: string;
+  // public dateRequest: string;
+  // public timeRequest: string;
   public szActivityId: string;
   public szActivityName: string;
   public szDesc: string;
@@ -559,11 +617,13 @@ export class RequestData {
   public decTotal: string;
   public szReasonImage: string;
   public bActiveRequest: boolean;
+  public isLastData: boolean;
   // public szSuperiorUserId: string; // cek dipakek bener ga
   // public szSuperiorUserName: string; // cek dipakek bener ga
   // public timeArrived: string; // cek dipakek bener ga
   // public timeBack: string; // cek dipakek bener ga
 }
+
 
 export class ErrorData {
   public szMessage: string;
