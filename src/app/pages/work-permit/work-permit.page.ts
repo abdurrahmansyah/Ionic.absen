@@ -19,6 +19,8 @@ export class WorkPermitPage implements OnInit {
   }
 
   PresentAlert(msg: string) {
+    console.log("deletable");
+    
     this.alertController.create({
       mode: 'ios',
       message: msg,
