@@ -87,7 +87,7 @@ export class GlobalService {
   }
 
   public GetOfficeHour() {
-    var url = 'http://192.168.12.23/api/office_hour';
+    var url = 'https://absensi.hutamakarya.com/api/office_hour';
 
     var data: any = this.httpClient.get(url);
     data.subscribe(data => {
@@ -107,7 +107,7 @@ export class GlobalService {
   }
 
   public GetActivityData() {
-    var url = 'http://192.168.12.23/api/list/activity';
+    var url = 'https://absensi.hutamakarya.com/api/list/activity';
 
     var data: any = this.httpClient.get(url);
     data.subscribe(data => {
@@ -133,7 +133,7 @@ export class GlobalService {
   }
 
   public GetUserData(szUserId: string, szPassword: string) {
-    var url = 'http://192.168.12.23/api/login';
+    var url = 'https://absensi.hutamakarya.com/api/login';
 
     let postdata = new FormData();
     postdata.append('username', szUserId);
@@ -158,7 +158,7 @@ export class GlobalService {
   }
 
   public GetUserData2(requestData: RequestData, szUserId: string, szPassword: string) {
-    var url = 'http://192.168.12.23/api/login';
+    var url = 'https://absensi.hutamakarya.com/api/login';
 
     let postdata = new FormData();
     postdata.append('username', szUserId);
@@ -202,7 +202,7 @@ export class GlobalService {
   }
 
   public SaveReportData(reportData: ReportData): Observable<any> {
-    var url = 'http://192.168.12.23/api/attendance/set';
+    var url = 'https://absensi.hutamakarya.com/api/attendance/set';
     let postdata = new FormData();
     postdata.append('attendance_type', this.mobile);
     postdata.append('authorization', reportData.szUserId);
@@ -215,7 +215,7 @@ export class GlobalService {
   }
 
   public GetReportData(szToken: string, dateAbsen: string) {
-    var url = 'http://192.168.12.23/api/attendance/perdate';
+    var url = 'https://absensi.hutamakarya.com/api/attendance/perdate';
 
     let postdata = new FormData();
     postdata.append('authorization', szToken);
@@ -313,7 +313,7 @@ export class GlobalService {
   public GetRequestDatasForNotifications() {
     this.requestDatas = [];
     // var url = 'http://sihk.hutamakarya.com/apiabsen/GetRequestDatasForNotifications.php';
-    var url = 'http://192.168.12.23/api/attendance/list_need_approval';
+    var url = 'https://absensi.hutamakarya.com/api/attendance/list_need_approval';
 
     let postdata = new FormData();
     postdata.append('authorization', this.userData.szToken);
@@ -397,7 +397,7 @@ export class GlobalService {
   }
 
   public SaveRequestData(requestData: RequestData) {
-    var url = 'http://192.168.12.23/api/attendance/request';
+    var url = 'https://absensi.hutamakarya.com/api/attendance/request';
 
     let postdata = new FormData();
     postdata.append('attendance_type', this.mobile);

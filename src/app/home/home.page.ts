@@ -68,7 +68,7 @@ export class HomePage {
   private GetTimeWorkingAndStatusUser() {
     var dateData = this.globalService.GetDate();
 
-    var url = 'http://192.168.12.23/api/attendance/perdate';
+    var url = 'https://absensi.hutamakarya.com/api/attendance/perdate';
     let postdata = new FormData();
 
     postdata.append('authorization', this.globalService.userData.szToken);
