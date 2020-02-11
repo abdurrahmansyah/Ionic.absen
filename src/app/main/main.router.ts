@@ -42,12 +42,17 @@ const routes: Routes = [
                 loadChildren: () => import('../pages/work-permit/work-permit.module').then(
                     m => m.WorkPermitPageModule
                 )
-            }
-            ,
+            },
             {
                 path: 'attendance',
                 loadChildren: () => import('../pages/attendance/attendance.module').then(
                     m => m.AttendancePageModule
+                )
+            },
+            {
+                path: 'leaderboards',
+                loadChildren: () => import('../pages/leaderboards/leaderboards.module').then(
+                    m => m.LeaderboardsPageModule
                 )
             }
         ]

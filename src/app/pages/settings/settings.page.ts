@@ -39,4 +39,8 @@ export class SettingsPage implements OnInit {
     });
     return await modal.present();
   }
+
+  public Logout() {
+    this.globalService.Logout();
+  }
 }

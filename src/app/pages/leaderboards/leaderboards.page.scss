@@ -1,0 +1,39 @@
+.buttonBack {
+  position: absolute;
+  top: 0%;
+  width: 100%;
+  font-weight: bold;
+}
+
+// ion-avatar {
+//   margin: auto; margin-top: 10px;
+//   --border-radius: 100%; object-fit: cover;
+//   width: 70% !important;
+//   height: 70% !important;
+//   // max-width: 100px !important; //any size
+//   // max-height: 100px !important; //any size
+// }
+
+// hr {
+//   height: 0.75px;
+//   background-color: #cecece;
+// }
+
+ion-card {
+  --background: #ffffff;
+  box-shadow: none;
+  border-radius: 20px;
+}
+
+// .ios ion-card {
+//   margin-top: 5px;
+//   margin-bottom: 5px;
+// }
+
+.content {
+  --background: none;
+  background-image: url("../../../assets/images/bg-5.png");
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: 100%;
+}

@@ -8,6 +8,10 @@ import { ModalController } from '@ionic/angular';
 })
 export class PasswordComponent implements OnInit {
 
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+
   constructor(private modalController: ModalController) { }
 
   ngOnInit() { }
@@ -18,5 +22,10 @@ export class PasswordComponent implements OnInit {
     this.modalController.dismiss({
       'dismissed': true
     });
+  }
+
+  public OnChangeCurrentPassword(){
+    console.log(this.currentPassword);
+    
   }
 }

@@ -5,7 +5,7 @@ import { Geolocation, GeolocationOptions, Geoposition, PositionError } from '@io
 import { Component } from '@angular/core';
 import { PopoverController, AlertController, NavController, Platform, IonRouterOutlet } from '@ionic/angular';
 import { Observable } from 'rxjs/Observable';
-import { GlobalService, ActivityId, DateData, ReportData } from '../services/global.service';
+import { GlobalService, ActivityId, ReportData, LeaderboardData } from '../services/global.service';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { DatePipe } from '@angular/common';
@@ -25,6 +25,12 @@ export class HomePage {
   public txtWorkStatus: string = "";
   public colorStatus: string;
   public cobadeh: string;
+  public buttonPropertyDatas = [];
+  public userImage: any;
+  public userName: string;
+  public leadName: string;
+  public leadDivisionName: string;
+  public leadImage: any;
 
   constructor(public navCtrl: NavController, public alertController: AlertController,
     public router: Router,
@@ -62,6 +68,8 @@ export class HomePage {
       }
     });
     this.cobadeh = this.globalService.userData.szUserId;
+    this.userImage = this.globalService.userData.szImage;
+    this.userName = this.globalService.userData.szUserName;
     this.fcm.subscribeToTopic(this.cobadeh);
   }
 
@@ -127,6 +135,67 @@ export class HomePage {
     return { hour, minute, ampm };
   }
 
+  private GetLeaderboardDataList() {
+    var dateData = this.globalService.GetDate();
+
+    var url = 'https://absensi.hutamakarya.com/api/get_ontime_employee';
+    let postdata = new FormData();
+
+    postdata.append('date', this.datePipe.transform(dateData.date, 'yyyy-MM-dd'));
+
+    var data: Observable<any> = this.http.post(url, postdata);
+    this.SubscribeGetLeaderboardDataList(data);
+  }
+
+  private SubscribeGetLeaderboardDataList(data: Observable<any>) {
+    data.subscribe(data => {
+      if (data.response == "success") {
+        var leaderboardDataFromDb = data.data;
+        var leaderboardData = this.MappingLeaderboardData(leaderboardDataFromDb);
+
+        // console.log(leaderboardData);
+
+        this.leadName = leaderboardData.szUserName;
+        this.leadDivisionName = leaderboardData.szDivisionName;
+        this.leadImage = 'data:image/jpeg;base64,' + leaderboardData.szImage;
+        //   var timeValidArrived = leaderboardDataList.timeValidArrived.split(':');
+        //   var { hour, minute, ampm } = this.ConvertTimeToViewFormat(timeValidArrived);
+        //   this.txtTimeArrived = hour + ":" + minute + " " + ampm;
+
+        //   var timeValidBack = leaderboardDataList.timeValidReturn.split(':');
+        //   var { hour, minute, ampm } = this.ConvertTimeToViewFormat(timeValidBack);
+        //   this.txtTimeReturn = hour == 0 && minute == 0 ? "" : hour + ":" + minute + " " + ampm;
+
+        //   if (this.txtTimeReturn != "")
+        //     this.globalService.timeRequest = this.txtTimeReturn;
+        //   else
+        //     this.globalService.timeRequest = this.txtTimeArrived;
+        // }
+        // else {
+        //   this.txtTimeArrived = "";
+        //   this.txtTimeReturn = "";
+      }
+    });
+  }
+
+  private MappingLeaderboardData(leaderboardDataFromDb: any) {
+    var leaderboardDataList = [];
+
+    leaderboardDataFromDb.forEach(ldrbrdData => {
+      var leaderboardData = new LeaderboardData();
+      leaderboardData.szUserId = ldrbrdData.nik;
+      leaderboardData.szUserName = ldrbrdData.name;
+      leaderboardData.szDivisionName = ldrbrdData.divisi;
+      leaderboardData.szSectionName = ldrbrdData.department;
+      leaderboardData.szSuperiorUserName = ldrbrdData.manager;
+      leaderboardData.szImage = ldrbrdData.face_attach;
+      leaderboardDataList.push(leaderboardData);
+    });
+
+    // return leaderboardDataList;
+    return leaderboardDataList.find(x => x);
+  }
+
   private Timer() {
     setInterval(function () {
       this.ShowRepeatData();
@@ -149,10 +218,12 @@ export class HomePage {
 
   ionViewWillEnter() {
     this.GetTimeWorkingAndStatusUser();
+    this.GetLeaderboardDataList();
   }
 
   DoRefresh(event: any) {
     this.GetTimeWorkingAndStatusUser();
+    this.GetLeaderboardDataList();
 
     setTimeout(() => {
       event.target.complete();
@@ -342,6 +413,24 @@ export class HomePage {
     };
     // this.router.navigate(['reports'], navigationExtras);
     this.router.navigate(['attendance']);
+  }
+
+  NavRouterMenu(index: number) {
+    if (index == 0) {
+      this.router.navigate(['leaderboards']);
+    }
+    else if (index == 1) {
+      this.router.navigate(['attendance']);
+    }
+    else if (index == 2) {
+      this.router.navigate(['work-permit']);
+    }
+    else if (index == 3) {
+      this.router.navigate(['notifications']);
+    }
+    else if (index == 4) {
+      this.router.navigate(['settings']);
+    }
   }
 }
 

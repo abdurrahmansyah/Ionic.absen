@@ -7,6 +7,8 @@ import { Router } from '@angular/router';
 import { AuthenticationService } from './authentication.service';
 import { Storage } from '@ionic/storage';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+import { DatePipe } from '@angular/common';
+import { FCM } from '@ionic-native/fcm/ngx';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +36,10 @@ export class GlobalService {
     private toastController: ToastController,
     private authService: AuthenticationService,
     private alertController: AlertController,
-    private storage: Storage) { }
+    private storage: Storage,
+    private datePipe: DatePipe,
+    private fcm: FCM
+    ) { }
 
   public GetDate(): DateData {
     var dateData = new DateData();
@@ -344,7 +349,7 @@ export class GlobalService {
       requestData.szDivisionId = "reqData.szdivisionid";
       requestData.szSectionId = "reqData.szsectionid";
       requestData.dateRequest = this.ReturnDate(reqData.check_in);
-      
+
       reqData.data_activity.forEach(reqDetailData => {
         var requestDetailData = new RequestDetailData();
         requestDetailData.szActivityId = reqDetailData.activity_id;
@@ -470,6 +475,23 @@ export class GlobalService {
       }
     });
   }
+
+  public GetLeaderboardDataList(): Observable<any>{
+    var dateData = this.GetDate();
+
+    var url = 'https://absensi.hutamakarya.com/api/get_ontime_employee';
+    let postdata = new FormData();
+
+    postdata.append('date', this.datePipe.transform(dateData.date, 'yyyy-MM-dd'));
+
+    return this.httpClient.post(url, postdata);
+    // this.SubscribeGetLeaderboardDataList(data);
+  }
+
+  public Logout() {
+    this.authService.logout();
+    this.fcm.unsubscribeFromTopic(this.userData.szUserId);
+}
 
   async PresentToast(msg: string) {
     const toast = await this.toastController.create({
@@ -624,6 +646,16 @@ export class RequestDetailData {
   // public timeBack: string; // cek dipakek bener ga
 }
 
+export class LeaderboardData {
+  public number: number;
+  public szUserId: string;
+  public szUserName: string;
+  public szDivisionName: string;
+  public szSectionName: string;
+  public checkIn: string;
+  public szImage: string;
+  public szSuperiorUserName: string;
+}
 
 export class ErrorData {
   public szMessage: string;
