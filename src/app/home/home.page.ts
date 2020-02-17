@@ -3,7 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Geolocation, GeolocationOptions, Geoposition, PositionError } from '@ionic-native/geolocation/ngx';
 import { Component } from '@angular/core';
-import { PopoverController, AlertController, NavController, Platform, IonRouterOutlet } from '@ionic/angular';
+import { PopoverController, AlertController, NavController, Platform, IonRouterOutlet, LoadingController } from '@ionic/angular';
 import { Observable } from 'rxjs/Observable';
 import { GlobalService, ActivityId, ReportData, LeaderboardData } from '../services/global.service';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -42,7 +42,8 @@ export class HomePage {
     private statusBar: StatusBar,
     private localNotifications: LocalNotifications,
     private datePipe: DatePipe,
-    private fcm: FCM
+    private fcm: FCM,
+    private loadingController: LoadingController
   ) {
     this.InitializeApp();
     this.InitializeData();
@@ -83,13 +84,13 @@ export class HomePage {
     postdata.append('date', this.datePipe.transform(dateData.date, 'yyyy-MM-dd'));
 
     var data: Observable<any> = this.http.post(url, postdata);
-    this.SubscribeGetReportDatas(data);
+    this.SubscribeGetReportDatas(data, false);
   }
 
-  private SubscribeGetReportDatas(data: Observable<any>) {
+  private SubscribeGetReportDatas(data: Observable<any>, isDoingAbsen: boolean) {
     data.subscribe(data => {
       if (data.response == "success") {
-        var reportDataFromDb = data.data;
+        var reportDataFromDb = data.data ? data.data : data.data_db;
         var reportData = this.MappingReportData(reportDataFromDb);
 
         var timeValidArrived = reportData.timeValidArrived.split(':');
@@ -104,10 +105,20 @@ export class HomePage {
           this.globalService.timeRequest = this.txtTimeReturn;
         else
           this.globalService.timeRequest = this.txtTimeArrived;
+
+        if (isDoingAbsen) {
+          this.loadingController.dismiss();
+          this.globalService.PresentToast("Berhasil melakukan absensi");
+        }
       }
       else {
         this.txtTimeArrived = "";
         this.txtTimeReturn = "";
+
+        if (isDoingAbsen) {
+          this.loadingController.dismiss();
+          this.globalService.PresentToast("Gagal melakukan absensi");
+        }
       }
 
       this.SetStatusWork();
@@ -117,11 +128,9 @@ export class HomePage {
   private MappingReportData(reportDataFromDb: any) {
     var reportDatas = [];
     var reportData = new ReportData();
-    reportData.szUserId = reportDataFromDb.szuserid;
-    reportData.dateAbsen = reportDataFromDb.check_in_display.split(' ')[0];
-    // reportData.timeArrived = reportDataFromDb.check_in_display.split(' ')[1];
-    reportData.timeValidArrived = reportDataFromDb.check_in_display.split(' ')[1];
-    // reportData.timeReturn = reportDataFromDb.check_out_display ? reportDataFromDb.check_out_display.split(' ')[1] : "00:00";
+    reportData.szUserId = reportDataFromDb.employee_id;
+    reportData.dateAbsen = reportDataFromDb.check_in_display ? reportDataFromDb.check_in_display.split(' ')[0] : reportDataFromDb.check_out_display.split(' ')[0];
+    reportData.timeValidArrived = reportDataFromDb.check_in_display ? reportDataFromDb.check_in_display.split(' ')[1] : this.txtTimeArrived.split(' ')[0];
     reportData.timeValidReturn = reportDataFromDb.check_out_display ? reportDataFromDb.check_out_display.split(' ')[1] : "00:00";
 
     reportDatas.push(reportData);
@@ -138,12 +147,13 @@ export class HomePage {
   private GetLeaderboardDataList() {
     var dateData = this.globalService.GetDate();
 
-    var url = 'https://absensi.hutamakarya.com/api/get_ontime_employee';
-    let postdata = new FormData();
+    var url = 'https://absensi.hutamakarya.com/api/get_ontime_employee?date=' + this.datePipe.transform(dateData.date, 'yyyy-MM-dd');
+    // let postdata = new FormData();
 
-    postdata.append('date', this.datePipe.transform(dateData.date, 'yyyy-MM-dd'));
+    // postdata.append('date', this.datePipe.transform(dateData.date, 'yyyy-MM-dd'));
 
-    var data: Observable<any> = this.http.post(url, postdata);
+    // var data: Observable<any> = this.http.post(url, postdata);
+    var data: Observable<any> = this.http.get(url);
     this.SubscribeGetLeaderboardDataList(data);
   }
 
@@ -153,27 +163,9 @@ export class HomePage {
         var leaderboardDataFromDb = data.data;
         var leaderboardData = this.MappingLeaderboardData(leaderboardDataFromDb);
 
-        // console.log(leaderboardData);
-
         this.leadName = leaderboardData.szUserName;
         this.leadDivisionName = leaderboardData.szDivisionName;
         this.leadImage = 'data:image/jpeg;base64,' + leaderboardData.szImage;
-        //   var timeValidArrived = leaderboardDataList.timeValidArrived.split(':');
-        //   var { hour, minute, ampm } = this.ConvertTimeToViewFormat(timeValidArrived);
-        //   this.txtTimeArrived = hour + ":" + minute + " " + ampm;
-
-        //   var timeValidBack = leaderboardDataList.timeValidReturn.split(':');
-        //   var { hour, minute, ampm } = this.ConvertTimeToViewFormat(timeValidBack);
-        //   this.txtTimeReturn = hour == 0 && minute == 0 ? "" : hour + ":" + minute + " " + ampm;
-
-        //   if (this.txtTimeReturn != "")
-        //     this.globalService.timeRequest = this.txtTimeReturn;
-        //   else
-        //     this.globalService.timeRequest = this.txtTimeArrived;
-        // }
-        // else {
-        //   this.txtTimeArrived = "";
-        //   this.txtTimeReturn = "";
       }
     });
   }
@@ -188,7 +180,7 @@ export class HomePage {
       leaderboardData.szDivisionName = ldrbrdData.divisi;
       leaderboardData.szSectionName = ldrbrdData.department;
       leaderboardData.szSuperiorUserName = ldrbrdData.manager;
-      leaderboardData.szImage = ldrbrdData.face_attach;
+      leaderboardData.szImage = ldrbrdData.image;
       leaderboardDataList.push(leaderboardData);
     });
 
@@ -232,9 +224,11 @@ export class HomePage {
 
   async ButtonAbsen() {
     try {
+      this.PresentLoading();
       this.GetUserPositionThenValidateAbsen();
     }
     catch (e) {
+      this.loadingController.dismiss();
       this.alertController.create({
         mode: 'ios',
         message: e.message,
@@ -255,7 +249,7 @@ export class HomePage {
 
       this.ValidateAbsen();
     }, (err: PositionError) => {
-      console.log("error : " + err.message);
+      throw new Error("error : " + err.message);
     });
   }
 
@@ -283,7 +277,8 @@ export class HomePage {
               indexForm: reportData.szActivityId
             }
           }
-          this.GetDecisionFromUser(reportData, navigationExtras);
+          this.DoingAbsenWithRequest(reportData);
+          // this.GetDecisionFromUser(reportData, navigationExtras);
         }
         else {
           this.DoingAbsen(reportData);
@@ -297,7 +292,8 @@ export class HomePage {
               indexForm: reportData.szActivityId
             }
           }
-          this.GetDecisionFromUser(reportData, navigationExtras);
+          this.DoingAbsenWithRequest(reportData);
+          // this.GetDecisionFromUser(reportData, navigationExtras);
         }
         else if (reportData.timeAbsen > "17:45") {
           reportData.szActivityId = this.globalService.activityDataList.lembur.id;
@@ -306,7 +302,8 @@ export class HomePage {
               indexForm: reportData.szActivityId
             }
           }
-          this.GetDecisionFromUser(reportData, navigationExtras);
+          this.DoingAbsenWithRequest(reportData);
+          // this.GetDecisionFromUser(reportData, navigationExtras);
         }
         else {
           this.DoingAbsen(reportData);
@@ -336,6 +333,7 @@ export class HomePage {
   }
 
   private async GetDecisionFromUser(reportData: ReportData, navigationExtras: NavigationExtras) {
+    this.loadingController.dismiss();
     await this.alertController.create({
       mode: 'ios',
       message: 'This is an alert message.',
@@ -355,7 +353,8 @@ export class HomePage {
         handler: () => {
           this.globalService.dateRequest = reportData.dateAbsen;
           this.globalService.timeRequest = reportData.timeAbsen;
-          this.router.navigate(['form-request'], navigationExtras);
+          window.open("https://performancemanager10.successfactors.com/login?company=pthutamaka&username=" + this.globalService.userData.szUserId, '_system', 'location=yes');
+          // this.router.navigate(['form-request'], navigationExtras);
         }
       }] :
         reportData.szActivityId == "DILUAR-WIFIAKSES" ? [{
@@ -366,14 +365,15 @@ export class HomePage {
           reportData.szActivityId == this.globalService.activityDataList.lembur.id ? [{
             text: 'NO',
             handler: () => {
-              this.DoingAbsen(reportData);
+              this.DoingAbsenWithRequest(reportData);
             }
           }, {
             text: 'YES',
             handler: () => {
               this.globalService.dateRequest = reportData.dateAbsen;
               this.globalService.timeRequest = reportData.timeAbsen;
-              this.router.navigate(['form-request'], navigationExtras);
+              this.DoingAbsenWithRequest(reportData);
+              // this.router.navigate(['form-request'], navigationExtras);
             }
           }] : [{
             text: 'OK',
@@ -402,7 +402,12 @@ export class HomePage {
 
   private DoingAbsen(reportData: ReportData) {
     var data = this.globalService.SaveReportData(reportData);
-    this.SubscribeGetReportDatas(data);
+    this.SubscribeGetReportDatas(data, true);
+  }
+
+  private DoingAbsenWithRequest(reportData: ReportData) {
+    var data = this.globalService.SaveReportDataWithRequest(reportData);
+    this.SubscribeGetReportDatas(data, true);
   }
 
   NavigateToReportPage(indexReport: string) {
@@ -413,6 +418,10 @@ export class HomePage {
     };
     // this.router.navigate(['reports'], navigationExtras);
     this.router.navigate(['attendance']);
+  }
+
+  NavigateToSettingsPage() {
+    this.router.navigate(['settings']);
   }
 
   NavRouterMenu(index: number) {
@@ -429,8 +438,14 @@ export class HomePage {
       this.router.navigate(['notifications']);
     }
     else if (index == 4) {
-      this.router.navigate(['settings']);
+      window.open("https://servicedesk.hutamakarya.com/", '_system', 'location=yes');
     }
+  }
+
+  async PresentLoading() {
+    await this.loadingController.create({
+      mode: 'ios'
+    }).then(loading => { loading.present() });
   }
 }
 

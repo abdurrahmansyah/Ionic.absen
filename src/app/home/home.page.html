@@ -97,7 +97,7 @@
       </ion-col>
       <ion-col button (click)="NavRouterMenu(4)" class="ion-text-center" size="3">
         <img src="../../assets/images/img-4.png">
-        <ion-text style="font-size: 12px;" color="hk-red">Settings</ion-text>
+        <ion-text style="font-size: 12px;" color="hk-red">Help Center</ion-text>
       </ion-col>
     </ion-row>
   </ion-grid>
@@ -225,7 +225,7 @@
         <ion-text style="font-size: 12px ;">Status: </ion-text>
         <ion-text style="font-size: 12px ;" color="{{colorStatus}}">{{ txtWorkStatus }}</ion-text>
       </ion-label>
-      <ion-button fill="outline" slot="end">View</ion-button>
+      <ion-button (click)="NavigateToSettingsPage()" fill="outline" slot="end">View</ion-button>
     </ion-item>
   </ion-card>
 

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { GlobalService, LeaderboardData } from 'src/app/services/global.service';
+import { LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-leaderboards',
@@ -20,14 +21,23 @@ export class LeaderboardsPage implements OnInit {
   public leaderboardDataList4To5 = [];
   public leaderboardDataListRest = [];
   public length: any;
+  private loading: any;
 
   constructor(public router: Router,
-    public globalService: GlobalService) { 
-      this.InitializeData();
-    }
+    public globalService: GlobalService,
+    private loadingController: LoadingController) {
+    this.InitializeData();
+    this.InitializeLoadingCtrl();
+  }
 
   ngOnInit() {
     this.photo = this.globalService.userData.szImage;
+  }
+
+  async InitializeLoadingCtrl() {
+    this.loading = await this.loadingController.create({
+      mode: 'ios'
+    });
   }
 
   public BackToHome() {
@@ -35,6 +45,7 @@ export class LeaderboardsPage implements OnInit {
   }
 
   ionViewWillEnter() {
+    this.PresentLoading();
     this.GetLeaderboardDataList();
   }
 
@@ -70,8 +81,11 @@ export class LeaderboardsPage implements OnInit {
         var leaderboardDataFromDb = data.data;
         var leaderboardData = this.MappingLeaderboardDataFromDb(leaderboardDataFromDb);
 
+        this.loadingController.dismiss();
         // console.log(leaderboardData);
       }
+      else
+        this.loadingController.dismiss();
     });
   }
 
@@ -114,10 +128,14 @@ export class LeaderboardsPage implements OnInit {
     leaderboardData.szDivisionName = ldrbrdData.divisi;
     leaderboardData.szSectionName = ldrbrdData.department;
     leaderboardData.szSuperiorUserName = ldrbrdData.manager;
-    leaderboardData.checkIn = ldrbrdData.check_in.split(' ')[1];
-    leaderboardData.szImage = 'data:image/jpeg;base64,' + ldrbrdData.face_attach;
+    leaderboardData.checkIn = ldrbrdData.check_in;
+    leaderboardData.szImage = 'data:image/jpeg;base64,' + ldrbrdData.image;
     leaderboardDataList.push(leaderboardData);
 
     return number;
+  }
+
+  async PresentLoading() {
+    await this.loading.present();
   }
 }

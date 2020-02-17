@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { InjectorInstance } from '../app.module';
 import { Observable } from 'rxjs';
-import { ToastController, AlertController } from '@ionic/angular';
+import { ToastController, AlertController, LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { AuthenticationService } from './authentication.service';
 import { Storage } from '@ionic/storage';
@@ -27,6 +27,7 @@ export class GlobalService {
   public userData: UserData = new UserData();
   public geoLatitude: number;
   public geoLongitude: number;
+  loading: any;
 
   httpClient = InjectorInstance.get<HttpClient>(HttpClient);
   dataimage: any;
@@ -38,8 +39,17 @@ export class GlobalService {
     private alertController: AlertController,
     private storage: Storage,
     private datePipe: DatePipe,
-    private fcm: FCM
-    ) { }
+    private fcm: FCM,
+    public loadingController: LoadingController,
+  ) {
+    this.InitializeLoadingCtrl();
+  }
+
+  async InitializeLoadingCtrl() {
+    this.loading = await this.loadingController.create({
+      mode: 'ios'
+    });
+  }
 
   public GetDate(): DateData {
     var dateData = new DateData();
@@ -138,6 +148,7 @@ export class GlobalService {
   }
 
   public GetUserData(szUserId: string, szPassword: string) {
+    this.PresentLoading();
     var url = 'https://absensi.hutamakarya.com/api/login';
 
     let postdata = new FormData();
@@ -152,11 +163,13 @@ export class GlobalService {
         var userData = this.MappingUserData(userDataFromDb);
 
         this.storage.set('userData', userData);
+        this.loadingController.dismiss();
         this.PresentToast("Login Berhasil");
         this.authService.login();
         this.router.navigate(['home']);
       }
       else {
+        this.loadingController.dismiss();
         this.PresentToast("Login Gagal");
       }
     });
@@ -215,6 +228,24 @@ export class GlobalService {
     postdata.append('time', reportData.timeAbsen);
     postdata.append('capture_image', "");
     postdata.append('capture_ext', "png");
+
+    return this.httpClient.post(url, postdata);
+  }
+
+  public SaveReportDataWithRequest(reportData: ReportData): Observable<any> {
+    var url = 'https://absensi.hutamakarya.com/api/attendance/request';
+    let postdata = new FormData();
+    postdata.append('attendance_type', this.mobile);
+    postdata.append('authorization', reportData.szUserId);
+    postdata.append('absen_date', reportData.dateAbsen);
+    postdata.append('time', reportData.timeAbsen);
+    postdata.append('capture_image', "");
+    postdata.append('capture_ext', "png");
+    postdata.append('activity_id', this.activityDataList.absen.id);
+    postdata.append('reason', "no data");
+    postdata.append('dectotal', "no data");
+    postdata.append('location', "no data");
+    postdata.append('status', "aktif");
 
     return this.httpClient.post(url, postdata);
   }
@@ -476,22 +507,45 @@ export class GlobalService {
     });
   }
 
-  public GetLeaderboardDataList(): Observable<any>{
+  public GetLeaderboardDataList(): Observable<any> {
     var dateData = this.GetDate();
 
-    var url = 'https://absensi.hutamakarya.com/api/get_ontime_employee';
-    let postdata = new FormData();
+    var url = 'https://absensi.hutamakarya.com/api/get_ontime_employee?date=' + this.datePipe.transform(dateData.date, 'yyyy-MM-dd');
 
-    postdata.append('date', this.datePipe.transform(dateData.date, 'yyyy-MM-dd'));
-
-    return this.httpClient.post(url, postdata);
+    return this.httpClient.get(url);
     // this.SubscribeGetLeaderboardDataList(data);
+  }
+
+  public SavePassword(currentPassword: string, newPassword: string) {
+    var url = 'https://absensi.hutamakarya.com/api/update_password';
+
+    let postdata = new FormData();
+    postdata.append('authorization', this.userData.szToken);
+    postdata.append('current_password', currentPassword);
+    postdata.append('password', newPassword);
+
+    var data: Observable<any> = this.httpClient.post(url, postdata);
+    data.subscribe(data => {
+      if (data.response == "success") {
+        this.loadingController.dismiss();
+        this.PresentToast("Success update password");
+      }
+      else {
+        this.loadingController.dismiss();
+        this.PresentAlert(data.message);
+        throw new Error(data.message);
+      }
+    });
   }
 
   public Logout() {
     this.authService.logout();
     this.fcm.unsubscribeFromTopic(this.userData.szUserId);
-}
+  }
+
+  async PresentLoading() {
+    await this.loading.present();
+  }
 
   async PresentToast(msg: string) {
     const toast = await this.toastController.create({
