@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "368121922669",
+    "firebase_url": "https://hkabsen-2e219.firebaseio.com",
+    "project_id": "hkabsen-2e219",
+    "storage_bucket": "hkabsen-2e219.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:368121922669:android:b4f71e1d82bf3f90692b64",
+        "android_client_info": {
+          "package_name": "com.hutamakarya.hkabsen"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "368121922669-2jr27aj4k1gd2a1p77k8g78mh57tnb03.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxZjs3Ld92-Lmt-K4jyVotWe7hrI7ijEo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "368121922669-2jr27aj4k1gd2a1p77k8g78mh57tnb03.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "368121922669-vs930vlkoq9g924u7ak0l3i8kc66aa6t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.hutamakarya.cobaabsen"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -302,6 +302,24 @@ ion-alert {
       color: var(--ion-color-hk-red);
     }
   }
+  &.alert-belumcheckin {
+    --min-width: 90vw; // calc(100% - 20px);
+
+    .alert-head {
+      min-height: 54.399vw;
+      background-image: url("../assets/images/popover-8.png");
+      background-size: 100% 100%;
+      color: #fff;
+    }
+    .alert-message {
+      height: 0px;
+      padding: 0px;
+    }
+    .alert-button {
+      min-height: 50px;
+      color: var(--ion-color-hk-red);
+    }
+  }
 }
 
 .ion-color-hk-red {

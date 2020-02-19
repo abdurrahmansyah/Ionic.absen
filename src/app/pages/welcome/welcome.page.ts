@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Platform } from '@ionic/angular';
 
 @Component({
   selector: 'app-welcome',
@@ -13,9 +14,21 @@ export class WelcomePage implements OnInit {
     speed: 400
   };
 
-  constructor(private router: Router) { }
+  private subscription: any;
+
+  constructor(private router: Router, private platform: Platform) { }
 
   ngOnInit() {
+  }
+
+  ionViewDidEnter() {
+    this.subscription = this.platform.backButton.subscribe(() => {
+      navigator['app'].exitApp();
+    });
+  }
+
+  ionViewWillLeave() {
+    this.subscription.unsubscribe();
   }
 
   navigateToLoginPage(){

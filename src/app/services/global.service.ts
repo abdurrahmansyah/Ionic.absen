@@ -228,6 +228,7 @@ export class GlobalService {
     postdata.append('time', reportData.timeAbsen);
     postdata.append('capture_image', "");
     postdata.append('capture_ext', "png");
+    postdata.append('is_request', reportData.isRequest);
 
     return this.httpClient.post(url, postdata);
   }
@@ -539,6 +540,8 @@ export class GlobalService {
   }
 
   public Logout() {
+    // this.PresentAlert("User tidak diperkenankan logout");
+
     this.authService.logout();
     this.fcm.unsubscribeFromTopic(this.userData.szUserId);
   }
@@ -630,7 +633,7 @@ export class ReportData {
   public timeAbsen: string;
   public timeArrived: string;
   public timeValidArrived: string;
-  public timeReturn: string = "00:00:00";
+  public timeReturn: string;
   public timeValidReturn: string;
   public decMonth: number;
   public szActivityId: string;
@@ -640,6 +643,7 @@ export class ReportData {
   public szImage: string;
   public szImageArrived: string;
   public szImageReturn: string;
+  public isRequest: string;
 }
 
 export class SummaryReportData {
