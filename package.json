@@ -36,6 +36,7 @@
     "@ionic/angular": "^4.11.7",
     "@ionic/storage": "^2.2.0",
     "cordova-android": "8.0.0",
+    "cordova-ios": "5.1.1",
     "cordova-plugin-advanced-http": "^2.2.0",
     "cordova-plugin-badge": "^0.8.8",
     "cordova-plugin-calendar": "^5.1.4",
@@ -106,7 +107,10 @@
       "cordova-plugin-advanced-http": {
         "OKHTTP_VERSION": "3.10.0"
       },
-      "cordova-plugin-calendar": {},
+      "cordova-plugin-calendar": {
+        "CALENDAR_USAGE_DESCRIPTION": " ",
+        "CONTACTS_USAGE_DESCRIPTION": " "
+      },
       "cordova-plugin-camera": {
         "ANDROID_SUPPORT_V4_VERSION": "27.+"
       },
@@ -123,7 +127,8 @@
       }
     },
     "platforms": [
-      "android"
+      "android",
+      "ios"
     ]
   }
 }
