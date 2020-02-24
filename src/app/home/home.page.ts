@@ -2,7 +2,7 @@ import { Router, NavigationExtras } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Geolocation, GeolocationOptions, Geoposition, PositionError } from '@ionic-native/geolocation/ngx';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { PopoverController, AlertController, NavController, Platform, IonRouterOutlet, LoadingController } from '@ionic/angular';
 import { Observable } from 'rxjs/Observable';
 import { GlobalService, ActivityId, ReportData, LeaderboardData } from '../services/global.service';
@@ -34,6 +34,7 @@ export class HomePage {
   public leadImage: any;
   private loading: any;
   private subscription: any;
+  @ViewChild(IonRouterOutlet, { static: false }) routerOutlet: IonRouterOutlet;
 
   constructor(public navCtrl: NavController, public alertController: AlertController,
     public router: Router,
@@ -231,6 +232,23 @@ export class HomePage {
     this.subscription = this.platform.backButton.subscribe(() => {
       navigator['app'].exitApp();
     });
+    this.swipebackEnabled = false;
+  }
+
+  get swipebackEnabled(): boolean {
+    if (this.routerOutlet) {
+      return this.routerOutlet.swipeGesture;
+    } else {
+      throw new Error('Call init() first!');
+    }
+  }
+
+  set swipebackEnabled(value: boolean) {
+    if (this.routerOutlet) {
+      this.routerOutlet.swipeGesture = value;
+    } else {
+      throw new Error('Call init() first!');
+    }
   }
 
   ionViewWillLeave() {
