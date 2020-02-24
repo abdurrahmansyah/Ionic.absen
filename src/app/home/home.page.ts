@@ -540,10 +540,10 @@ export class HomePage {
     // this.SubscribeGetReportDatas(data, true);
   }
 
-  NavigateToReportPage(indexReport: string) {
+  NavigateToReportPage() {
     let navigationExtras: NavigationExtras = {
       state: {
-        indexReport: indexReport
+        // indexReport: indexReport
       }
     };
     // this.router.navigate(['reports'], navigationExtras);
