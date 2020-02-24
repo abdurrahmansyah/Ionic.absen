@@ -11,6 +11,7 @@ import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { DatePipe } from '@angular/common';
 import { FCM } from '@ionic-native/fcm/ngx';
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 @Component({
   selector: 'app-home',
@@ -48,7 +49,8 @@ export class HomePage {
     private datePipe: DatePipe,
     private fcm: FCM,
     private loadingController: LoadingController,
-    private diagnostic: Diagnostic
+    private diagnostic: Diagnostic,
+    private inAppBrowser: InAppBrowser
   ) {
     this.InitializeApp();
     this.InitializeLoadingCtrl();
@@ -455,7 +457,8 @@ export class HomePage {
         handler: () => {
           this.globalService.dateRequest = reportData.dateAbsen;
           this.globalService.timeRequest = reportData.timeAbsen;
-          window.open("https://performancemanager10.successfactors.com/login?company=pthutamaka&username=" + this.globalService.userData.szUserId, '_system', 'location=yes');
+          this.inAppBrowser.create("https://performancemanager10.successfactors.com/login?company=pthutamaka&username=" + this.globalService.userData.szUserId);
+          // window.open("https://performancemanager10.successfactors.com/login?company=pthutamaka&username=" + this.globalService.userData.szUserId, '_system', 'location=yes');
           // this.router.navigate(['form-request'], navigationExtras);
         }
       }] :
@@ -484,8 +487,9 @@ export class HomePage {
               handler: () => {
                 this.globalService.dateRequest = reportData.dateAbsen;
                 this.globalService.timeRequest = reportData.timeAbsen;
-                window.open("https://performancemanager10.successfactors.com/login?company=pthutamaka&username=" + this.globalService.userData.szUserId, '_system', 'location=yes');
-              }
+                this.inAppBrowser.create("https://performancemanager10.successfactors.com/login?company=pthutamaka&username=" + this.globalService.userData.szUserId);
+                // window.open("https://performancemanager10.successfactors.com/login?company=pthutamaka&username=" + this.globalService.userData.szUserId, '_system', 'location=yes');
+                    }
             }] : [{
               text: 'OK',
               role: 'Cancel'
@@ -564,7 +568,8 @@ export class HomePage {
       this.router.navigate(['notifications']);
     }
     else if (index == 4) {
-      window.open("https://servicedesk.hutamakarya.com/", '_system', 'location=yes');
+      // window.open("https://servicedesk.hutamakarya.com/", '_system', 'location=yes');
+      this.inAppBrowser.create("https://servicedesk.hutamakarya.com/");
     }
   }
 

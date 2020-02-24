@@ -20,6 +20,7 @@ import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { FCM } from '@ionic-native/fcm/ngx';
 import { DatePipe } from '@angular/common';
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 export let InjectorInstance: Injector;
 
@@ -47,7 +48,8 @@ export let InjectorInstance: Injector;
     LocalNotifications,
     FCM,
     DatePipe,
-    Diagnostic
+    Diagnostic,
+    InAppBrowser
   ],
   bootstrap: [AppComponent]
 })

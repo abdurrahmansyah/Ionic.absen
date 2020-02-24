@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { GlobalService } from 'src/app/services/global.service';
 import { AlertController } from '@ionic/angular';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 @Component({
   selector: 'app-work-permit',
@@ -9,9 +10,9 @@ import { AlertController } from '@ionic/angular';
 })
 export class WorkPermitPage implements OnInit {
 
-  constructor(private globalService: GlobalService, private alertController: AlertController) {
+  constructor(private globalService: GlobalService, private alertController: AlertController, private inAppBrowser: InAppBrowser) {
 
-    this.PresentAlert("Fungsi ini dapat diakses menggunakan aplikasi Success Factor")
+    this.PresentAlert("Fungsi ini dapat diakses menggunakan aplikasi HITS")
     // this.globalService.PresentAlert("Fungsi ini dapat diakses menggunakan aplikasi Success Factor")
   }
 
@@ -29,7 +30,8 @@ export class WorkPermitPage implements OnInit {
       }, {
         text: "Open",
         handler: () => {
-          window.open("https://performancemanager10.successfactors.com/login?company=pthutamaka&username=" + this.globalService.userData.szUserId, '_system', 'location=yes');
+          this.inAppBrowser.create("https://performancemanager10.successfactors.com/login?company=pthutamaka&username=" + this.globalService.userData.szUserId);
+          // window.open("https://performancemanager10.successfactors.com/login?company=pthutamaka&username=" + this.globalService.userData.szUserId, '_system', 'location=yes');
         }
       }]
     }).then(alert => {
