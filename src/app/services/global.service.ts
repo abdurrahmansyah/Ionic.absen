@@ -540,10 +540,10 @@ export class GlobalService {
   }
 
   public Logout() {
-    // this.PresentAlert("User tidak diperkenankan logout");
+    this.PresentAlert("User tidak diperkenankan logout");
 
-    this.authService.logout();
-    this.fcm.unsubscribeFromTopic(this.userData.szUserId);
+    // this.authService.logout();
+    // this.fcm.unsubscribeFromTopic(this.userData.szUserId);
   }
 
   async PresentLoading() {
