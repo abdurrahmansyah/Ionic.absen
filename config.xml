@@ -53,7 +53,7 @@
             <string>We would like to access your calender</string>
         </edit-config>
         <edit-config file="*-Info.plist" mode="merge" target="NSLocationWhenInUseUsageDescription">
-            <string>We use your location for full functionality of certain app features.</string>
+            <string>It'll help us to validate that you're in hk tower area.</string>
         </edit-config>
         <icon height="57" src="resources/ios/icon/hk-icon.png" width="57" />
         <icon height="114" src="resources/ios/icon/hk-icon-57@2x.png" width="114" />

@@ -12,6 +12,7 @@ import { DatePipe } from '@angular/common';
 import { FCM } from '@ionic-native/fcm/ngx';
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+import { OpenNativeSettings } from '@ionic-native/open-native-settings/ngx';
 
 @Component({
   selector: 'app-home',
@@ -50,7 +51,8 @@ export class HomePage {
     private fcm: FCM,
     private loadingController: LoadingController,
     private diagnostic: Diagnostic,
-    private inAppBrowser: InAppBrowser
+    private inAppBrowser: InAppBrowser,
+    private openNativeSettings: OpenNativeSettings
   ) {
     this.InitializeApp();
     this.InitializeLoadingCtrl();
@@ -85,6 +87,17 @@ export class HomePage {
     this.userImage = this.globalService.userData.szImage;
     this.userName = this.globalService.userData.szUserName;
     this.fcm.subscribeToTopic(this.cobadeh);
+
+    this.GetCurrentPositionForFirst();
+  }
+  
+  private GetCurrentPositionForFirst() {
+    this.geolocation.getCurrentPosition({ enableHighAccuracy: true }).then((pos: Geoposition) => {
+      this.globalService.geoLatitude = pos.coords.latitude;
+      this.globalService.geoLongitude = pos.coords.longitude;
+    }).catch((error) => {
+      throw new Error(error.message);
+    });
   }
 
   private GetTimeWorkingAndStatusUser() {
@@ -286,26 +299,30 @@ export class HomePage {
   private GetUserPositionThenValidateAbsen() {
     let successCallback = (enabled) => {
       if (enabled) {
-        // var options: GeolocationOptions = {
-        //   enableHighAccuracy: true
-        // };
+        this.diagnostic.isLocationAvailable().then((allowed) => {
+          if (allowed) {
+            this.geolocation.getCurrentPosition({ enableHighAccuracy: true }).then((pos: Geoposition) => {
+              this.globalService.geoLatitude = pos.coords.latitude;
+              this.globalService.geoLongitude = pos.coords.longitude;
 
-        this.geolocation.getCurrentPosition({ enableHighAccuracy: true }).then((pos: Geoposition) => {
-          this.globalService.geoLatitude = pos.coords.latitude;
-          this.globalService.geoLongitude = pos.coords.longitude;
-
-          this.ValidateAbsen();
-        }).catch((error) => {
-          // this.loadingController.dismiss();
-          // this.alertController.create({
-          //   mode: 'ios',
-          //   message: "Tidak dapat mengakses lokasi: Aktifkan GPS anda",
-          //   buttons: ['OK']
-          // }).then(alert => {
-          //   return alert.present();
-          // });
-
-          throw new Error(error.message);
+              this.ValidateAbsen();
+            }).catch((error) => {
+              throw new Error(error.message);
+            });
+          }
+          else {
+            this.loadingController.dismiss();
+            this.router.navigate(['warning-locations']);
+          }
+        }).catch((e) => {
+          this.loadingController.dismiss();
+          this.alertController.create({
+            mode: 'ios',
+            message: e.message,
+            buttons: ['OK']
+          }).then(alert => {
+            return alert.present();
+          });
         });
       }
       else
@@ -489,7 +506,7 @@ export class HomePage {
                 this.globalService.timeRequest = reportData.timeAbsen;
                 this.inAppBrowser.create("https://performancemanager10.successfactors.com/login?company=pthutamaka&username=" + this.globalService.userData.szUserId);
                 // window.open("https://performancemanager10.successfactors.com/login?company=pthutamaka&username=" + this.globalService.userData.szUserId, '_system', 'location=yes');
-                    }
+              }
             }] : [{
               text: 'OK',
               role: 'Cancel'

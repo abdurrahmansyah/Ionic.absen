@@ -54,6 +54,12 @@ const routes: Routes = [
                 loadChildren: () => import('../pages/leaderboards/leaderboards.module').then(
                     m => m.LeaderboardsPageModule
                 )
+            },
+            {
+                path: 'warning-locations',
+                loadChildren: () => import('../pages/warning-locations/warning-locations.module').then(
+                    m => m.WarningLocationsPageModule
+                )
             }
         ]
     }

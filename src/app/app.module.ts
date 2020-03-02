@@ -21,6 +21,7 @@ import { FCM } from '@ionic-native/fcm/ngx';
 import { DatePipe } from '@angular/common';
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+import { OpenNativeSettings } from '@ionic-native/open-native-settings/ngx';
 
 export let InjectorInstance: Injector;
 
@@ -49,7 +50,8 @@ export let InjectorInstance: Injector;
     FCM,
     DatePipe,
     Diagnostic,
-    InAppBrowser
+    InAppBrowser,
+    OpenNativeSettings
   ],
   bootstrap: [AppComponent]
 })
