@@ -47,8 +47,6 @@ export class ReportDaily2Component implements OnInit {
     this.requestDatas = this.globalService.requestDatas;
     this.txtTimeArrived = this.globalService.timeArrived;
     this.txtTimeReturn = this.globalService.timeReturn;
-    this.photo = this.globalService.photoArrived;
-    this.photo = this.globalService.photoReturn;
     var i = 0;
     // console.log(this.requestDatas);
     if (!this.requestDatas.map(x => x.szreasonimage).find(x => x) || this.requestDatas.map(x => x.szreasonimage).find(x => x) == "undefined") {
