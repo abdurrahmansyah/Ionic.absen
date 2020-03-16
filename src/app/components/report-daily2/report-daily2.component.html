@@ -27,9 +27,29 @@
   </ion-row>
 </ion-grid>
 
-<!-- <hr width="90%">
+<hr width="90%">
 
-<ion-card *ngFor="let requestData of requestDatas">
+<!-- <ion-card>
+  <div class="ion-text-start" padding style="padding-top: 0px">
+    <ion-text> <br /> <img src="{{ photo }}" class="center" /></ion-text>
+  </div>
+</ion-card>
+
+<hr width="90%">
+
+<ion-card>
+  <div class="ion-text-start" padding style="padding-top: 0px">
+    <img src="{{ photo }}" class="center" />
+  </div>
+</ion-card>
+
+<hr width="90%"> -->
+
+<ion-card>
+  <img src="{{ photo }}" class="center" />
+</ion-card>
+
+<!--  <ion-card *ngFor="let requestData of requestDatas">
   <ion-item lines="none" color="transparent">
     <ion-label>{{ requestData.szactivityname }}</ion-label>
     <ion-button shape="round" slot="end" *ngIf="requestData.szstatusid == 'ST001'" color="hk-green">

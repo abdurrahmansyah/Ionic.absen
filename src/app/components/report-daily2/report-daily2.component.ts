@@ -22,6 +22,7 @@ export class ReportDaily2Component implements OnInit {
     public http: HttpClient,
     private storage: Storage) {
     this.GetLoopRequestDatas();
+    // this.GetRequestDatas();
   }
 
   ngOnInit() { }
@@ -32,13 +33,22 @@ export class ReportDaily2Component implements OnInit {
     }.bind(this), 500);
   }
 
+  ionViewDidEnter() {
+    console.log("ionViewDidEnter")
+  }
+
   async GetRequestDatas() {
     // var szUserId = await this.storage.get('szUserId').then((x) => { return x; });
     // this.globalService.GetRequestDatasByUserId(szUserId,new Date().toLocaleString())
 
+    console.log(this.globalService.timeReturn);
+    console.log(this.globalService.timeArrived);
+
     this.requestDatas = this.globalService.requestDatas;
     this.txtTimeArrived = this.globalService.timeArrived;
     this.txtTimeReturn = this.globalService.timeReturn;
+    this.photo = this.globalService.photoArrived;
+    this.photo = this.globalService.photoReturn;
     var i = 0;
     // console.log(this.requestDatas);
     if (!this.requestDatas.map(x => x.szreasonimage).find(x => x) || this.requestDatas.map(x => x.szreasonimage).find(x => x) == "undefined") {
@@ -48,7 +58,7 @@ export class ReportDaily2Component implements OnInit {
       console.log();
     }
   }
-  
+
   public DeleteRequest(szActivityId: string) {
     this.globalService.CloseRequestData(this.globalService.userData.szUserId, new Date().toLocaleString(), szActivityId);
   }

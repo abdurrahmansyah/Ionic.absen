@@ -71,7 +71,7 @@ export class LeaderboardsPage implements OnInit {
   }
 
   private GetLeaderboardDataList() {
-    var data = this.globalService.GetLeaderboardDataList();
+    var data = this.globalService.GetLeaderboardDataList(50);
     this.SubscribeGetLeaderboardDataList(data);
   }
 

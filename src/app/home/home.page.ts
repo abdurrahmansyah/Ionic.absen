@@ -90,7 +90,7 @@ export class HomePage {
 
     this.GetCurrentPositionForFirst();
   }
-  
+
   private GetCurrentPositionForFirst() {
     this.geolocation.getCurrentPosition({ enableHighAccuracy: true }).then((pos: Geoposition) => {
       this.globalService.geoLatitude = pos.coords.latitude;
@@ -117,7 +117,7 @@ export class HomePage {
     data.subscribe(data => {
       if (data.response == "success") {
         var reportDataFromDb = data.data ? data.data : data.data_db;
-        var reportData = this.MappingReportData(reportDataFromDb);
+        var reportData: ReportData = this.MappingReportData(reportDataFromDb);
 
         var timeValidArrived = reportData.timeValidArrived.split(':');
         var { hour, minute, ampm } = this.ConvertTimeToViewFormat(timeValidArrived);
@@ -177,7 +177,8 @@ export class HomePage {
   private GetLeaderboardDataList() {
     var dateData = this.globalService.GetDate();
 
-    var url = 'https://absensi.hutamakarya.com/api/get_ontime_employee?date=' + this.datePipe.transform(dateData.date, 'yyyy-MM-dd');
+    // var url = 'https://absensi.hutamakarya.com/api/get_ontime_employee?date=' + this.datePipe.transform(dateData.date, 'yyyy-MM-dd');
+    var url = 'https://absensi.hutamakarya.com/api/attendance/employee_limit/ASC/1?date=' + this.datePipe.transform(dateData.date, 'yyyy-MM-dd');
     // let postdata = new FormData();
 
     // postdata.append('date', this.datePipe.transform(dateData.date, 'yyyy-MM-dd'));
@@ -371,7 +372,7 @@ export class HomePage {
     console.log(this.globalService.geoLongitude);
     console.log(this.globalService.geoLatitude);
 
-    // if (true) {
+    // if (false) {
     if (
       this.globalService.geoLatitude <= -6.24508
       && this.globalService.geoLatitude >= -6.24587
@@ -474,9 +475,10 @@ export class HomePage {
         handler: () => {
           this.globalService.dateRequest = reportData.dateAbsen;
           this.globalService.timeRequest = reportData.timeAbsen;
-          this.inAppBrowser.create("https://performancemanager10.successfactors.com/login?company=pthutamaka&username=" + this.globalService.userData.szUserId);
+          this.globalService.diluarKantor = reportData.szActivityId;
+          // this.inAppBrowser.create("https://performancemanager10.successfactors.com/login?company=pthutamaka&username=" + this.globalService.userData.szUserId);
           // window.open("https://performancemanager10.successfactors.com/login?company=pthutamaka&username=" + this.globalService.userData.szUserId, '_system', 'location=yes');
-          // this.router.navigate(['form-request'], navigationExtras);
+          this.router.navigate(['form-request'], navigationExtras);
         }
       }] :
         reportData.szActivityId == "DILUAR-WIFIAKSES" ? [{

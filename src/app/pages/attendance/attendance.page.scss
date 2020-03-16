@@ -1,7 +1,38 @@
 .content {
-    // --background: none;
-    // background-image: url("../../../assets/images/bg-5.png");
-    background-position: center top;
-    background-repeat: no-repeat;
-    background-size: 100%;
+  // --background: none;
+  // background-image: url("../../../assets/images/bg-5.png");
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-size: 100%;
+}
+
+.container {
+  // display: inline;
+  // width: 80%;
+  padding-left: 5%;
+  padding-right: 5%;
+  // background-color: green;
+  overflow: hidden;
+  white-space: nowrap;
+  ::-webkit-scrollbar {
+    display: none;
   }
+  .scroll {
+    overflow: auto;
+  }
+}
+
+hr {
+  height: 0.75px;
+  background-color: #cecece;
+}
+
+// ion-card {
+//   --background: #f0f0f0;
+//   box-shadow: none;
+//   border-radius: 20px;
+// }
+
+// .ios ion-card {
+//   margin-bottom: -8px;
+// }

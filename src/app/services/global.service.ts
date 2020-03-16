@@ -27,6 +27,7 @@ export class GlobalService {
   public userData: UserData = new UserData();
   public geoLatitude: number;
   public geoLongitude: number;
+  public diluarKantor: string;
   loading: any;
 
   httpClient = InjectorInstance.get<HttpClient>(HttpClient);
@@ -226,7 +227,7 @@ export class GlobalService {
     postdata.append('authorization', reportData.szUserId);
     postdata.append('absen_date', reportData.dateAbsen);
     postdata.append('time', reportData.timeAbsen);
-    postdata.append('capture_image', "");
+    postdata.append('capture_image', reportData.szImage);
     postdata.append('capture_ext', "png");
     postdata.append('is_request', reportData.isRequest);
 
@@ -240,10 +241,10 @@ export class GlobalService {
     postdata.append('authorization', reportData.szUserId);
     postdata.append('absen_date', reportData.dateAbsen);
     postdata.append('time', reportData.timeAbsen);
-    postdata.append('capture_image', "");
+    postdata.append('capture_image', reportData.szImage);
     postdata.append('capture_ext', "png");
-    postdata.append('activity_id', this.activityDataList.absen.id);
-    postdata.append('reason', "no data");
+    postdata.append('activity_id', reportData.szActivityId);
+    postdata.append('reason', reportData.szDesc);
     postdata.append('dectotal', "no data");
     postdata.append('location', "no data");
     postdata.append('status', "aktif");
@@ -508,10 +509,10 @@ export class GlobalService {
     });
   }
 
-  public GetLeaderboardDataList(): Observable<any> {
+  public GetLeaderboardDataList(total: number): Observable<any> {
     var dateData = this.GetDate();
 
-    var url = 'https://absensi.hutamakarya.com/api/get_ontime_employee?date=' + this.datePipe.transform(dateData.date, 'yyyy-MM-dd');
+    var url = 'https://absensi.hutamakarya.com/api/attendance/employee_limit/ASC/' + total + '?date=' + this.datePipe.transform(dateData.date, 'yyyy-MM-dd');
 
     return this.httpClient.get(url);
     // this.SubscribeGetLeaderboardDataList(data);
@@ -540,10 +541,10 @@ export class GlobalService {
   }
 
   public Logout() {
-    // this.PresentAlert("User tidak diperkenankan logout");
+    this.PresentAlert("User tidak diperkenankan logout");
 
-    this.authService.logout();
-    this.fcm.unsubscribeFromTopic(this.userData.szUserId);
+    // this.authService.logout();
+    // this.fcm.unsubscribeFromTopic(this.userData.szUserId);
   }
 
   async PresentLoading() {
