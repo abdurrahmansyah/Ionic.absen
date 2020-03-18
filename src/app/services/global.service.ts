@@ -227,7 +227,7 @@ export class GlobalService {
     postdata.append('authorization', reportData.szUserId);
     postdata.append('absen_date', reportData.dateAbsen);
     postdata.append('time', reportData.timeAbsen);
-    postdata.append('capture_image', reportData.szImage);
+    postdata.append('capture_image', "");
     postdata.append('capture_ext', "png");
     postdata.append('is_request', reportData.isRequest);
 
