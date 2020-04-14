@@ -13,6 +13,7 @@ import { FCM } from '@ionic-native/fcm/ngx';
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { OpenNativeSettings } from '@ionic-native/open-native-settings/ngx';
+import { NativeGeocoder, NativeGeocoderResult, NativeGeocoderOptions } from '@ionic-native/native-geocoder/ngx';
 
 @Component({
   selector: 'app-home',
@@ -52,7 +53,8 @@ export class HomePage {
     private loadingController: LoadingController,
     private diagnostic: Diagnostic,
     private inAppBrowser: InAppBrowser,
-    private openNativeSettings: OpenNativeSettings
+    private openNativeSettings: OpenNativeSettings,
+    private nativeGeocoder: NativeGeocoder
   ) {
     this.InitializeApp();
     this.InitializeLoadingCtrl();
@@ -303,6 +305,9 @@ export class HomePage {
         this.diagnostic.isLocationAvailable().then((allowed) => {
           if (allowed) {
             this.geolocation.getCurrentPosition({ enableHighAccuracy: true }).then((pos: Geoposition) => {
+              this.ReadGeocode(pos.coords.latitude, pos.coords.longitude);
+
+              this.globalService.timestamp = pos.timestamp;
               this.globalService.geoLatitude = pos.coords.latitude;
               this.globalService.geoLongitude = pos.coords.longitude;
 
@@ -343,6 +348,27 @@ export class HomePage {
     this.diagnostic.isLocationEnabled().then(successCallback).catch(errorCallback);
   }
 
+  private ReadGeocode(latitude, longitude) {
+    let options: NativeGeocoderOptions = {
+      useLocale: true,
+      maxResults: 5
+    };
+    this.nativeGeocoder.reverseGeocode(latitude, longitude, options)
+      .then((result: NativeGeocoderResult[]) => {
+        var thoroughfare = result[1].thoroughfare;
+        var subThoroughfare = result[1].subThoroughfare;
+        var subLocality = result[1].subLocality ? ", " + result[1].subLocality : "";
+        var locality = result[1].locality ? ", " + result[1].locality : "";
+        var subAdministrativeArea = result[1].subAdministrativeArea ? ", " + result[1].subAdministrativeArea : "";
+        var administrativeArea = result[1].administrativeArea ? ", " + result[1].administrativeArea : "";
+        var postalCode = result[1].postalCode;
+        this.globalService.location = thoroughfare + subThoroughfare + subLocality + locality + subAdministrativeArea + administrativeArea + postalCode;
+        // this.globalService.PresentAlert(JSON.stringify(result[0]) + "------------" + JSON.stringify(result[1]) + "------------" + JSON.stringify(result[2]))
+        // this.globalService.PresentAlert(thoroughfare + subThoroughfare + subLocality + locality + subAdministrativeArea + administrativeArea + postalCode);
+      })
+      .catch((error: any) => console.log(error));
+  }
+
   // private GetUserPositionThenValidateAbsen() {
   //   var options: GeolocationOptions = {
   //     enableHighAccuracy: true
@@ -367,7 +393,7 @@ export class HomePage {
   // }
 
   private ValidateAbsen() {
-    var dateData = this.globalService.GetDate();
+    var dateData = this.globalService.GetDateByGMT(this.globalService.timestamp);
     var reportData = new ReportData();
     console.log(this.globalService.geoLongitude);
     console.log(this.globalService.geoLatitude);
@@ -445,11 +471,11 @@ export class HomePage {
           indexForm: reportData.szActivityId
         }
       }
-      if (this.globalService.userData.szUserId == "KD19.9797") {
-        this.DoingAbsen(reportData);
-      }
-      else
-        this.GetDecisionFromUser(reportData, navigationExtras);
+      // if (this.globalService.userData.szUserId == "KD19.9797") {
+      //   this.DoingAbsen(reportData);
+      // }
+      // else
+      this.GetDecisionFromUser(reportData, navigationExtras);
     }
   }
 

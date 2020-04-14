@@ -10,10 +10,24 @@
 
 
 <ion-content scrollEvents="true" class="content">
+  <img (click)="ShowImage('www/assets/images/workPermit-1.jpeg', 'Memperbarui Time Sheet')"
+    src="../../../assets/images/workPermit-1.jpeg">
+  <img (click)="ShowImage('www/assets/images/workPermit-2.jpeg', 'Memperbarui Time Sheet')"
+    src="../../../assets/images/workPermit-2.jpeg">
   <!-- appCustomHeader [header]="header" [label]="label" -->
   <!-- <ion-label padding color="hk-white-red" style="font-size: 34px; font-weight: bold;">Notifications</ion-label> -->
 
-  <ion-searchbar showCancelButton="focus" placeholder="Search" color="light" style="width: 90%; margin: 0 auto;"
+  <!-- <ion-searchbar showCancelButton="focus" placeholder="Search" color="light" style="width: 90%; margin: 0 auto;"
     mode="ios">
-  </ion-searchbar>
+  </ion-searchbar> -->
 </ion-content>
+
+<ion-footer no-border>
+  <!-- <ion-item detail button Lines="none" color="hk-red">
+    <ion-label>Go to Application HITS</ion-label>
+  </ion-item> -->
+
+  <ion-card color="hk-red" class="ion-text-center">
+    <ion-item button detail color="hk-red" (click)="OpenHits()">Go to Application HITS</ion-item>
+  </ion-card>
+</ion-footer>

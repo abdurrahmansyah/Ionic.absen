@@ -92,6 +92,7 @@ export class FormAbsenDiluarComponent implements OnInit {
     reportData.szImage = this.dataimage;
     reportData.szActivityId = this.globalService.diluarKantor;
     reportData.szDesc = this.txtDesc;
+    reportData.szLocation = this.globalService.location;
     reportData.isRequest = "1";
 
     var data = this.globalService.SaveReportDataWithRequest(reportData);

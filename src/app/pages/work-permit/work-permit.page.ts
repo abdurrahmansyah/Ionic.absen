@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { GlobalService } from 'src/app/services/global.service';
 import { AlertController } from '@ionic/angular';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
+import { File } from '@ionic-native/file/ngx';
 
 @Component({
   selector: 'app-work-permit',
@@ -10,9 +12,13 @@ import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 })
 export class WorkPermitPage implements OnInit {
 
-  constructor(private globalService: GlobalService, private alertController: AlertController, private inAppBrowser: InAppBrowser) {
+  constructor(private globalService: GlobalService,
+    private alertController: AlertController,
+    private inAppBrowser: InAppBrowser,
+    private photoViewer: PhotoViewer,
+    private file: File) {
 
-    this.PresentAlert("Fungsi ini dapat diakses menggunakan aplikasi HITS")
+    // this.PresentAlert("Fungsi ini dapat diakses menggunakan aplikasi HITS")
     // this.globalService.PresentAlert("Fungsi ini dapat diakses menggunakan aplikasi Success Factor")
   }
 
@@ -21,7 +27,7 @@ export class WorkPermitPage implements OnInit {
 
   PresentAlert(msg: string) {
     console.log("deletable");
-    
+
     this.alertController.create({
       mode: 'ios',
       message: msg,
@@ -39,4 +45,11 @@ export class WorkPermitPage implements OnInit {
     });
   }
 
+  public ShowImage(img: string, title: string) {
+    this.photoViewer.show(this.file.applicationDirectory + img, title, { share: true });
+  }
+
+  public OpenHits() {
+    this.inAppBrowser.create("https://performancemanager10.successfactors.com/login?company=pthutamaka&username=" + this.globalService.userData.szUserId);
+  }
 }

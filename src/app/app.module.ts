@@ -22,6 +22,8 @@ import { DatePipe } from '@angular/common';
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { OpenNativeSettings } from '@ionic-native/open-native-settings/ngx';
+import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
+import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 
 export let InjectorInstance: Injector;
 
@@ -51,7 +53,9 @@ export let InjectorInstance: Injector;
     DatePipe,
     Diagnostic,
     InAppBrowser,
-    OpenNativeSettings
+    OpenNativeSettings,
+    NativeGeocoder,
+    PhotoViewer
   ],
   bootstrap: [AppComponent]
 })
