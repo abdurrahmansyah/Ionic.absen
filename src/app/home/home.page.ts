@@ -395,7 +395,7 @@ export class HomePage {
   private ValidateAbsen() {
     var data = this.globalService.GetTimeNow();
     data.subscribe(data => {
-      if (data.response == "success123") {
+      if (data.response == "success") {
         var time = data.data.split(':');
 
         var dateData = this.globalService.GetDateWithHourAndMinute(time[0], time[1]);
