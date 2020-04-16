@@ -27,7 +27,7 @@ export class GlobalService {
   public userData: UserData = new UserData();
   public geoLatitude: number;
   public geoLongitude: number;
-  public diluarKantor: string; 
+  public diluarKantor: string;
   public location: string;
   public timestamp: number;
   loading: any;
@@ -98,6 +98,28 @@ export class GlobalService {
     return dateData;
   }
 
+  public GetDateWithHourAndMinute(hour: number, minute: number): DateData {
+    var dateData = new DateData();
+    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    var days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+    var date = new Date();
+    date.setHours(hour, minute);
+
+    dateData.date = date;
+    dateData.decYear = date.getFullYear();
+    dateData.szMonth = months[date.getMonth()];
+    dateData.decMonth = date.getMonth() + 1;
+    dateData.decDate = date.getDate();
+    dateData.szDay = days[date.getDay()];
+    dateData.decMinute = date.getMinutes();
+    dateData.szMinute = dateData.decMinute < 10 ? "0" + dateData.decMinute : dateData.decMinute.toString();
+    dateData.decHour = date.getHours();
+    dateData.szHour = dateData.decHour < 10 ? "0" + dateData.decHour : dateData.decHour.toString();
+    dateData.decSec = date.getSeconds();
+    dateData.szAMPM = dateData.decHour > 12 ? "PM" : "AM";
+
+    return dateData;
+  }
 
   public GetDateWithDateParam(dateParam): DateData {
     var dateData = new DateData();
@@ -541,6 +563,12 @@ export class GlobalService {
 
     return this.httpClient.get(url);
     // this.SubscribeGetLeaderboardDataList(data);
+  }
+
+  public GetTimeNow(): Observable<any>  {
+    var url = 'https://absensi.hutamakarya.com/api/timenow';
+
+    return this.httpClient.get(url);
   }
 
   public SavePassword(currentPassword: string, newPassword: string) {

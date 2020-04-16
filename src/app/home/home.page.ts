@@ -393,90 +393,107 @@ export class HomePage {
   // }
 
   private ValidateAbsen() {
-    var dateData = this.globalService.GetDateByGMT(this.globalService.timestamp);
-    var reportData = new ReportData();
-    console.log(this.globalService.geoLongitude);
-    console.log(this.globalService.geoLatitude);
+    var data = this.globalService.GetTimeNow();
+    data.subscribe(data => {
+      if (data.response == "success123") {
+        var time = data.data.split(':');
 
-    // if (false) {
-    if (
-      this.globalService.geoLatitude <= -6.24508
-      && this.globalService.geoLatitude >= -6.24587
-      && this.globalService.geoLongitude >= 106.87269
-      && this.globalService.geoLongitude <= 106.87379) {
+        var dateData = this.globalService.GetDateWithHourAndMinute(time[0], time[1]);
+        var reportData = new ReportData();
+        console.log(this.globalService.geoLongitude);
+        console.log(this.globalService.geoLatitude);
 
-      reportData.szUserId = this.globalService.userData.szToken;
-      reportData.dateAbsen = this.datePipe.transform(dateData.date, 'yyyy-MM-dd');
-      reportData.timeAbsen = dateData.szHour + ":" + dateData.szMinute;
-      reportData.isRequest = "0";
+        // if (false) {
+        if (
+          this.globalService.geoLatitude <= -6.24508
+          && this.globalService.geoLatitude >= -6.24587
+          && this.globalService.geoLongitude >= 106.87269
+          && this.globalService.geoLongitude <= 106.87379) {
 
-      if (!this.txtTimeArrived) {
-        if (reportData.timeAbsen > this.globalService.officeHourData.endtOfficeHourFrom) {
-          reportData.szActivityId = "belumcheckin";
+          reportData.szUserId = this.globalService.userData.szToken;
+          reportData.dateAbsen = this.datePipe.transform(dateData.date, 'yyyy-MM-dd');
+          reportData.timeAbsen = dateData.szHour + ":" + dateData.szMinute;
+          reportData.isRequest = "0";
+
+          if (!this.txtTimeArrived) {
+            if (reportData.timeAbsen > this.globalService.officeHourData.endtOfficeHourFrom) {
+              reportData.szActivityId = "belumcheckin";
+              let navigationExtras: NavigationExtras = {
+                state: {
+                  indexForm: reportData.szActivityId
+                }
+              }
+              this.GetDecisionFromUser(reportData, navigationExtras);
+            }
+            else {
+              this.DoingAbsen(reportData);
+            }
+          }
+          else {
+            if (reportData.timeAbsen < this.globalService.officeHourData.endtOfficeHourFrom) {
+              reportData.szActivityId = this.globalService.activityDataList.pulangCepat.id;
+              reportData.isRequest = "1";
+              let navigationExtras: NavigationExtras = {
+                state: {
+                  indexForm: reportData.szActivityId
+                }
+              }
+              this.GetDecisionFromUser(reportData, navigationExtras);
+            }
+            else if (reportData.timeAbsen > "17:45") {
+              reportData.szActivityId = this.globalService.activityDataList.lembur.id;
+              reportData.isRequest = "1";
+              let navigationExtras: NavigationExtras = {
+                state: {
+                  indexForm: reportData.szActivityId
+                }
+              }
+              this.DoingAbsenWithRequest(reportData);
+              // this.GetDecisionFromUser(reportData, navigationExtras);
+            }
+            else {
+              this.DoingAbsen(reportData);
+            }
+          }
+        }
+        else {
+          reportData.szUserId = this.globalService.userData.szToken;
+          reportData.dateAbsen = this.datePipe.transform(dateData.date, 'yyyy-MM-dd');
+          reportData.timeAbsen = dateData.szHour + ":" + dateData.szMinute;
+          reportData.isRequest = "1";
+
+          if (!this.txtTimeArrived) {
+            this.globalService.isArrived = true;
+            reportData.szActivityId = this.globalService.activityDataList.datangDiluarKantor.id;
+          }
+          else {
+            this.globalService.isArrived = false;
+            reportData.szActivityId = this.globalService.activityDataList.pulangDiluarKantor.id;
+          }
+
           let navigationExtras: NavigationExtras = {
             state: {
               indexForm: reportData.szActivityId
             }
           }
+          // if (this.globalService.userData.szUserId == "KD19.9797") {
+          //   this.DoingAbsen(reportData);
+          // }
+          // else
           this.GetDecisionFromUser(reportData, navigationExtras);
-        }
-        else {
-          this.DoingAbsen(reportData);
         }
       }
       else {
-        if (reportData.timeAbsen < this.globalService.officeHourData.endtOfficeHourFrom) {
-          reportData.szActivityId = this.globalService.activityDataList.pulangCepat.id;
-          reportData.isRequest = "1";
-          let navigationExtras: NavigationExtras = {
-            state: {
-              indexForm: reportData.szActivityId
-            }
-          }
-          this.GetDecisionFromUser(reportData, navigationExtras);
+        this.loadingController.dismiss();
+        this.alertController.create({
+          mode: 'ios',
+          message: 'Connection Problem: Cannot Access Current Time',
+          buttons: ['OK']
+        }).then(alert => {
+          return alert.present();
+        });
         }
-        else if (reportData.timeAbsen > "17:45") {
-          reportData.szActivityId = this.globalService.activityDataList.lembur.id;
-          reportData.isRequest = "1";
-          let navigationExtras: NavigationExtras = {
-            state: {
-              indexForm: reportData.szActivityId
-            }
-          }
-          this.DoingAbsenWithRequest(reportData);
-          // this.GetDecisionFromUser(reportData, navigationExtras);
-        }
-        else {
-          this.DoingAbsen(reportData);
-        }
-      }
-    }
-    else {
-      reportData.szUserId = this.globalService.userData.szToken;
-      reportData.dateAbsen = this.datePipe.transform(dateData.date, 'yyyy-MM-dd');
-      reportData.timeAbsen = dateData.szHour + ":" + dateData.szMinute;
-      reportData.isRequest = "1";
-
-      if (!this.txtTimeArrived) {
-        this.globalService.isArrived = true;
-        reportData.szActivityId = this.globalService.activityDataList.datangDiluarKantor.id;
-      }
-      else {
-        this.globalService.isArrived = false;
-        reportData.szActivityId = this.globalService.activityDataList.pulangDiluarKantor.id;
-      }
-
-      let navigationExtras: NavigationExtras = {
-        state: {
-          indexForm: reportData.szActivityId
-        }
-      }
-      // if (this.globalService.userData.szUserId == "KD19.9797") {
-      //   this.DoingAbsen(reportData);
-      // }
-      // else
-      this.GetDecisionFromUser(reportData, navigationExtras);
-    }
+    });
   }
 
   private async GetDecisionFromUser(reportData: ReportData, navigationExtras: NavigationExtras) {
