@@ -50,6 +50,6 @@ export class WarningUpdatesPage implements OnInit {
     if (this.platform.is('android'))
       this.market.open('com.hutamakarya.hkabsen');
     else if (this.platform.is('ios'))
-      this.market.open('HK Absen');
+      this.market.open('id1491468614');
   }
 }

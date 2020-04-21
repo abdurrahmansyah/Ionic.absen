@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { GlobalService } from 'src/app/services/global.service';
-import { AlertController } from '@ionic/angular';
+import { AlertController, Platform } from '@ionic/angular';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 import { File } from '@ionic-native/file/ngx';
@@ -16,7 +16,8 @@ export class WorkPermitPage implements OnInit {
     private alertController: AlertController,
     private inAppBrowser: InAppBrowser,
     private photoViewer: PhotoViewer,
-    private file: File) {
+    private file: File,
+    private platform: Platform) {
 
     // this.PresentAlert("Fungsi ini dapat diakses menggunakan aplikasi HITS")
     // this.globalService.PresentAlert("Fungsi ini dapat diakses menggunakan aplikasi Success Factor")
@@ -46,7 +47,8 @@ export class WorkPermitPage implements OnInit {
   }
 
   public ShowImage(img: string, title: string) {
-    this.photoViewer.show(this.file.applicationDirectory + img, title, { share: true });
+    if (this.platform.is('android'))
+      this.photoViewer.show(this.file.applicationDirectory + img, title, { share: true });
   }
 
   public OpenHits() {
