@@ -39,7 +39,7 @@ export class WarningLocationsPage implements OnInit {
   private Timer() {
     setInterval(function () {
       this.CheckIsLocationAvailable();
-    }.bind(this), 500);
+    }.bind(this), 1000);
   }
 
   ngOnInit() {

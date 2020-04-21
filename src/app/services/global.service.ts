@@ -571,6 +571,12 @@ export class GlobalService {
     return this.httpClient.get(url);
   }
 
+  public GetVersionNumber(): Observable<any>  {
+    var url = 'https://absensi.hutamakarya.com/api/mobile_version';
+
+    return this.httpClient.get(url);
+  }
+
   public SavePassword(currentPassword: string, newPassword: string) {
     var url = 'https://absensi.hutamakarya.com/api/update_password';
 

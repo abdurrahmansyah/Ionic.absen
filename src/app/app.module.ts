@@ -24,6 +24,8 @@ import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { OpenNativeSettings } from '@ionic-native/open-native-settings/ngx';
 import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
+import { AppVersion } from '@ionic-native/app-version/ngx';
+import { Market } from '@ionic-native/market/ngx';
 
 export let InjectorInstance: Injector;
 
@@ -55,7 +57,9 @@ export let InjectorInstance: Injector;
     InAppBrowser,
     OpenNativeSettings,
     NativeGeocoder,
-    PhotoViewer
+    PhotoViewer,
+    AppVersion,
+    Market
   ],
   bootstrap: [AppComponent]
 })

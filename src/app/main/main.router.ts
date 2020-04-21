@@ -60,6 +60,12 @@ const routes: Routes = [
                 loadChildren: () => import('../pages/warning-locations/warning-locations.module').then(
                     m => m.WarningLocationsPageModule
                 )
+            },
+            {
+                path: 'warning-updates',
+                loadChildren: () => import('../pages/warning-updates/warning-updates.module').then(
+                    m => m.WarningUpdatesPageModule
+                )
             }
         ]
     }

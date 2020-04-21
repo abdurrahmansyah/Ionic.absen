@@ -14,6 +14,7 @@ import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { OpenNativeSettings } from '@ionic-native/open-native-settings/ngx';
 import { NativeGeocoder, NativeGeocoderResult, NativeGeocoderOptions } from '@ionic-native/native-geocoder/ngx';
+import { AppVersion } from '@ionic-native/app-version/ngx';
 
 @Component({
   selector: 'app-home',
@@ -54,12 +55,33 @@ export class HomePage {
     private diagnostic: Diagnostic,
     private inAppBrowser: InAppBrowser,
     private openNativeSettings: OpenNativeSettings,
-    private nativeGeocoder: NativeGeocoder
+    private nativeGeocoder: NativeGeocoder,
+    private appVersion: AppVersion
   ) {
+    this.ValidateAppVersionNumber();
     this.InitializeApp();
     this.InitializeLoadingCtrl();
     this.InitializeData();
     this.Timer();
+  }
+
+  ValidateAppVersionNumber() {
+    var data = this.globalService.GetVersionNumber();
+    data.subscribe(data => {
+      if (data.response == "success") {
+        var versionNumberDb = data.data;
+
+        this.appVersion.getVersionNumber().then((versionNumber) => {
+          if (versionNumber != versionNumberDb)
+            this.router.navigate(['warning-updates']);
+
+          // this.globalService.PresentAlert(versionNumber)
+        }).catch((error) => {
+          this.globalService.PresentAlert(error.message);
+          this.router.navigate(['warning-updates']);
+        });
+      }
+    });
   }
 
   InitializeApp() {
@@ -276,6 +298,7 @@ export class HomePage {
   DoRefresh(event: any) {
     this.GetTimeWorkingAndStatusUser();
     this.GetLeaderboardDataList();
+    this.ValidateAppVersionNumber();
 
     setTimeout(() => {
       event.target.complete();
@@ -285,7 +308,29 @@ export class HomePage {
   async ButtonAbsen() {
     try {
       this.PresentLoading();
-      this.GetUserPositionThenValidateAbsen();
+
+      var data = this.globalService.GetVersionNumber();
+      data.subscribe(data => {
+        if (data.response == "success") {
+          var versionNumberDb = data.data;
+
+          this.appVersion.getVersionNumber().then((versionNumber) => {
+            if (versionNumber != versionNumberDb){
+              this.loadingController.dismiss();
+              this.router.navigate(['warning-updates']);
+            }
+            else
+              this.GetUserPositionThenValidateAbsen();
+          }).catch((error) => {
+            this.globalService.PresentAlert(error.message);
+            this.router.navigate(['warning-updates']);
+          });
+        }
+        else {
+          this.loadingController.dismiss();
+          this.globalService.PresentAlert("BUG: Error API Version Number");
+        }
+      });
     }
     catch (e) {
       this.loadingController.dismiss();
@@ -492,7 +537,7 @@ export class HomePage {
         }).then(alert => {
           return alert.present();
         });
-        }
+      }
     });
   }
 
