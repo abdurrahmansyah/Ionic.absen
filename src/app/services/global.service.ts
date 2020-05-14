@@ -282,7 +282,7 @@ export class GlobalService {
   }
 
   public SaveReportDataWithRequest(reportData: ReportData): Observable<any> {
-    var url = 'https://absensi.hutamakarya.com/api/attendance/request';
+    var url = 'https://absensi.hutamakarya.com/api/attendance/request2';
     let postdata = new FormData();
     postdata.append('attendance_type', this.mobile);
     postdata.append('authorization', reportData.szUserId);
