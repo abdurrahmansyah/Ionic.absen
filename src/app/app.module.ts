@@ -26,11 +26,12 @@ import { NativeGeocoder } from '@ionic-native/native-geocoder/ngx';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 import { AppVersion } from '@ionic-native/app-version/ngx';
 import { Market } from '@ionic-native/market/ngx';
+import { HideHeaderDirective } from './directives/hide-header.directive';
 
 export let InjectorInstance: Injector;
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, HideHeaderDirective],
   entryComponents: [],
   imports: [BrowserModule, 
     IonicModule.forRoot(), 

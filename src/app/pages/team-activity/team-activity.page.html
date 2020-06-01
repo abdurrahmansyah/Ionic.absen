@@ -17,13 +17,6 @@
     mode="ios">
   </ion-searchbar> -->
 
-  <span *ngFor="let buttonPropertyData of buttonPropertyDatas">
-    <ion-button shape="round" size="small" fill="{{ buttonPropertyData.fill }}" color="{{ buttonPropertyData.color }}"
-      (click)="GetDayData(buttonPropertyData.date)">
-      {{ buttonPropertyData.date }}
-    </ion-button>
-  </span>
-
   <div *ngFor="let activityData of activityDatas">
     <ion-card style="margin-top: 0px;">
       <ion-item lines="none" color="hk-blue">
