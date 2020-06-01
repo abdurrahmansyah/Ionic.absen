@@ -72,10 +72,8 @@ export class HomePage {
         var versionNumberDb = data.data;
 
         this.appVersion.getVersionNumber().then((versionNumber) => {
-          if (versionNumber != versionNumberDb)
+          if (versionNumber < versionNumberDb)
             this.router.navigate(['warning-updates']);
-
-          // this.globalService.PresentAlert(versionNumber)
         }).catch((error) => {
           this.globalService.PresentAlert(error.message);
           this.router.navigate(['warning-updates']);
@@ -305,7 +303,7 @@ export class HomePage {
     }, 1000);
   }
 
-  async ButtonAbsen() {
+  public async ButtonAbsen() {
     try {
       this.PresentLoading();
 
@@ -315,7 +313,7 @@ export class HomePage {
           var versionNumberDb = data.data;
 
           this.appVersion.getVersionNumber().then((versionNumber) => {
-            if (versionNumber != versionNumberDb){
+            if (versionNumber < versionNumberDb) {
               this.loadingController.dismiss();
               this.router.navigate(['warning-updates']);
             }
@@ -408,34 +406,9 @@ export class HomePage {
         var administrativeArea = result[1].administrativeArea ? ", " + result[1].administrativeArea : "";
         var postalCode = result[1].postalCode;
         this.globalService.location = thoroughfare + subThoroughfare + subLocality + locality + subAdministrativeArea + administrativeArea + postalCode;
-        // this.globalService.PresentAlert(JSON.stringify(result[0]) + "------------" + JSON.stringify(result[1]) + "------------" + JSON.stringify(result[2]))
-        // this.globalService.PresentAlert(thoroughfare + subThoroughfare + subLocality + locality + subAdministrativeArea + administrativeArea + postalCode);
       })
       .catch((error: any) => console.log(error));
   }
-
-  // private GetUserPositionThenValidateAbsen() {
-  //   var options: GeolocationOptions = {
-  //     enableHighAccuracy: true
-  //   };
-  //   this.geolocation.getCurrentPosition(options).then((pos: Geoposition) => {
-  //     this.globalService.geoLatitude = pos.coords.latitude;
-  //     this.globalService.geoLongitude = pos.coords.longitude;
-
-  //     this.ValidateAbsen();
-  //   }, (err: PositionError) => {
-  //     this.loadingController.dismiss();
-  //     this.alertController.create({
-  //       mode: 'ios',
-  //       message: "Tidak dapat mengakses lokasi: Aktifkan GPS anda",
-  //       buttons: ['OK']
-  //     }).then(alert => {
-  //       return alert.present();
-  //     });
-
-  //     // throw new Error("error : " + err.message);
-  //   });
-  // }
 
   private ValidateAbsen() {
     var data = this.globalService.GetTimeNow();
@@ -448,7 +421,7 @@ export class HomePage {
         console.log(this.globalService.geoLongitude);
         console.log(this.globalService.geoLatitude);
 
-        // if (false) {
+        // if (true) {
         if (
           this.globalService.geoLatitude <= -6.24508
           && this.globalService.geoLatitude >= -6.24587
@@ -471,7 +444,11 @@ export class HomePage {
               this.GetDecisionFromUser(reportData, navigationExtras);
             }
             else {
-              this.DoingAbsen(reportData);
+              // Only For WFO - NEW NORMAL
+              this.ByPassDoingAbsenWfoNewNormal(reportData);
+
+              // BackUp If WFO - NORMAL DONE
+              // this.DoingAbsen(reportData);
             }
           }
           else {
@@ -508,24 +485,38 @@ export class HomePage {
           reportData.isRequest = "1";
 
           if (!this.txtTimeArrived) {
-            this.globalService.isArrived = true;
-            reportData.szActivityId = this.globalService.activityDataList.datangDiluarKantor.id;
+            if (reportData.timeAbsen > this.globalService.officeHourData.endtOfficeHourFrom) {
+              reportData.szActivityId = "belumcheckin";
+              let navigationExtras: NavigationExtras = {
+                state: {
+                  indexForm: reportData.szActivityId
+                }
+              }
+              this.GetDecisionFromUser(reportData, navigationExtras);
+            }
+            else {
+              this.globalService.isArrived = true;
+              reportData.szActivityId = this.globalService.activityDataList.datangDiluarKantor.id;
+
+              let navigationExtras: NavigationExtras = {
+                state: {
+                  indexForm: reportData.szActivityId
+                }
+              }
+              this.GetDecisionFromUser(reportData, navigationExtras);
+            }
           }
           else {
             this.globalService.isArrived = false;
             reportData.szActivityId = this.globalService.activityDataList.pulangDiluarKantor.id;
-          }
 
-          let navigationExtras: NavigationExtras = {
-            state: {
-              indexForm: reportData.szActivityId
+            let navigationExtras: NavigationExtras = {
+              state: {
+                indexForm: reportData.szActivityId
+              }
             }
+            this.GetDecisionFromUser(reportData, navigationExtras);
           }
-          // if (this.globalService.userData.szUserId == "KD19.9797") {
-          //   this.DoingAbsen(reportData);
-          // }
-          // else
-          this.GetDecisionFromUser(reportData, navigationExtras);
         }
       }
       else {
@@ -539,6 +530,20 @@ export class HomePage {
         });
       }
     });
+  }
+
+  private ByPassDoingAbsenWfoNewNormal(reportData: ReportData) {
+    reportData.szActivityId = this.globalService.activityDataList.wfoNewNormal.id;
+    let navigationExtras: NavigationExtras = {
+      state: {
+        indexForm: reportData.szActivityId
+      }
+    }
+    this.loadingController.dismiss();
+
+    this.globalService.dateRequest = reportData.dateAbsen;
+    this.globalService.timeRequest = reportData.timeAbsen;
+    this.router.navigate(['form-request'], navigationExtras);
   }
 
   private async GetDecisionFromUser(reportData: ReportData, navigationExtras: NavigationExtras) {
@@ -642,6 +647,7 @@ export class HomePage {
   }
 
   private DoingAbsenWithRequest(reportData: ReportData) {
+    // KALO MAU DIPAKE LENGKAPI DATA REQUEST
     this.DoingAbsen(reportData);
     // var data = this.globalService.SaveReportDataWithRequest(reportData);
     // this.SubscribeGetReportDatas(data, true);
@@ -677,6 +683,12 @@ export class HomePage {
     else if (index == 4) {
       // window.open("https://servicedesk.hutamakarya.com/", '_system', 'location=yes');
       this.inAppBrowser.create("https://servicedesk.hutamakarya.com/");
+    }
+    else if (index == 5) {
+      this.router.navigate(['my-activity']);
+    }
+    else if (index == 6) {
+      this.router.navigate(['team-activity']);
     }
   }
 

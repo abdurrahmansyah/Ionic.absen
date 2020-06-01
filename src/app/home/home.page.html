@@ -1,23 +1,5 @@
-<!-- <ion-header no-border>
-  <ion-toolbar color="transparent" no-border>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>{{ txtDayNow }}</ion-title>
-  </ion-toolbar>
-</ion-header> -->
-
-<!-- <ion-view can-swipe-back="false"></ion-view> -->
-
 <ion-content fullscreen="true">
   <!-- scroll-y=false -->
-  <!-- <ion-toolbar color="transparent">
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-title>{{ txtDayNow }}</ion-title>
-  </ion-toolbar> -->
-
   <div class="content">
     <ion-row>
       <ion-col>
@@ -27,23 +9,6 @@
         </div>
       </ion-col>
     </ion-row>
-
-    <!-- <ion-card>
-      <ion-item lines="none" color="translucent">
-        <ion-icon name="card" slot="start"></ion-icon>
-        <ion-label>ion-item in a card, icon left, button right</ion-label>
-        <ion-button fill="outline" slot="end">View</ion-button>
-      </ion-item>
-
-      <ion-card-content>
-        This is content, without any paragraph or header tags,
-        within an ion-card-content element.
-      </ion-card-content>
-
-      <ion-card-content>
-        This is content.
-      </ion-card-content>
-    </ion-card> -->
 
     <ion-card>
       <img src="../../assets/images/img-8.png" />
@@ -64,24 +29,9 @@
     </ion-card>
   </div>
 
-
-
   <ion-refresher slot="fixed" pullFactor="0.5" pullMin="100" pullMax="200" (ionRefresh)="DoRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-
-  <!-- <div padding style="padding-top: 0px;">
-    <ion-text style="font-size: 14px;">Status: </ion-text>
-    <ion-text style="font-size: 14px ;" color="{{colorStatus}}">{{ txtWorkStatus }}</ion-text>
-  </div> -->
-
-  <!--<p>Example just hit <a target="_blank" rel="noopener" href="http://www.hutamakarya.com/id/">hutama karya</a>
-    text.
-  </p>-->
-
-  <!-- <ion-row class="nowrap ion-justify-content-center ion-align-items-center" padding>
-    <ion-text style="font-size: 34px; text-align: center">{{ txtTimeNow }}</ion-text>
-  </ion-row> -->
 
   <ion-grid>
     <ion-row align-items-center>
@@ -104,184 +54,52 @@
     </ion-row>
   </ion-grid>
 
-  <!-- <ion-grid>
-    <ion-row align-items-center>
-      <ion-col class="ion-text-center" size="6">
-        <img src="../../assets/images/img-1.png">
-        <ion-text style="font-size: 12px;" color="hk-red">Report</ion-text>
-      </ion-col>
-      <ion-col class="ion-text-center" size="6">
-        <img src="../../assets/images/img-2.png">
-        <ion-text style="font-size: 12px;" color="hk-red">Work Permit</ion-text>
-      </ion-col>
-    </ion-row>
-
-    <ion-row align-items-center>
-      <ion-col class="ion-text-center" size="6">
-        <img src="../../assets/images/img-3.png">
-        <ion-text style="font-size: 12px;" color="hk-red">Notification</ion-text>
-      </ion-col>
-      <ion-col class="ion-text-center" size="6">
-        <img src="../../assets/images/img-1.png">
-        <ion-text style="font-size: 12px;" color="hk-red">Settings</ion-text>
-      </ion-col>
-    </ion-row>
-  </ion-grid> -->
-
-  <!-- <div padding>
-    <ion-text>Leaderboards</ion-text>
+  <div padding>
+    <ion-text>Activity List</ion-text>
   </div>
 
-  <ion-item button mode="md" class="active-item" Lines="none" color="hk-grey" style="--min-height: 55px;">
-    <ion-avatar slot="end">
-      <img src="{{ userImage }}">
-    </ion-avatar>
-    <ion-text>1. Nur Ridho Abdurrahmansyah</ion-text>
-  </ion-item>
-
-  <hr style="height: 12px; background-color: transparent; margin-top: 0px; margin-bottom: 0px;" no-padding>
-
-  <ion-item button mode="md" class="active-item" Lines="none" color="hk-grey" style="--min-height: 55px;">
-    <ion-avatar slot="end">
-      <img src="{{ userImage }}">
-    </ion-avatar>
-    <ion-text>2. Firman Maulana</ion-text>
-  </ion-item>
-
-  <hr style="height: 12px; background-color: transparent; margin-top: 0px; margin-bottom: 0px;" no-padding>
-
-  <ion-item button mode="md" class="active-item" Lines="none" color="hk-grey" style="--min-height: 55px;">
-    <ion-avatar slot="end">
-      <img src="{{ userImage }}">
-    </ion-avatar>
-    <ion-text>3. Zain Maulana Azmi</ion-text>
-  </ion-item> -->
-
-  <!-- <ion-button expand="full">button</ion-button>
-  <ion-button expand="full">button</ion-button>
-  <ion-button expand="full">button</ion-button>
-  <ion-button expand="full">button</ion-button>
-  <ion-button expand="full">button</ion-button>
-  <ion-button expand="full">button</ion-button>
-  <ion-button expand="full">button</ion-button>
-  <ion-button expand="full">button</ion-button>
-  <ion-button expand="full">button</ion-button>
-  <ion-button expand="full">button</ion-button>
-  <ion-button expand="full">button</ion-button>
-  <ion-button expand="full">button</ion-button>
-  <ion-button expand="full">button</ion-button>
-  <ion-button expand="full">button</ion-button> -->
-
-  <!-- <div class="scroll" scrollX="true">
-    <span *ngFor="let buttonPropertyData of buttonPropertyDatas">
-      <ion-button shape="round" size="small" color="hk-red" mode="ios">
-        {{ buttonPropertyData }}
-      </ion-button>
-    </span>
-  </div> -->
+  <div class="container" padding>
+    <div class="scroll" scrollX="true">
+      <img style="padding-right:10px; width: 80%;" (click)="NavRouterMenu(5)" src="../../assets/images/img-11.png" />
+      <img style="padding-right:10px; width: 80%;" (click)="NavRouterMenu(6)" src="../../assets/images/img-12.png" />
+    </div>
+  </div>
 
 </ion-content>
 
 <ion-footer no-border color="translucent">
-  <!-- <ion-card>
-    <div class="footer-content">
-      <ion-grid>
-        <ion-row>
-          <ion-col class="ion-float-left" size="8" style="background: transparent">
-            <ion-text>Datang : {{txtTimeArrived}}</ion-text>
-            <br>
-            <ion-text>Pulang : {{txtTimeReturn}}</ion-text>
-          </ion-col>
-          <ion-col class="ion-float-right" size="4" style="background: transparent">
-            <ion-text (click)="NavigateToReportPage(0)">Detail </ion-text>
-            <ion-icon name="arrow-forward" mode="ios" style="font-size: 14px; vertical-align: middle"></ion-icon>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </div>
-  </ion-card> 
+  <ion-toolbar style="--background: #f0f0f0;">
+    <ion-card>
+      <ion-item lines="none" color="translucent">
+        <ion-avatar slot="start">
+          <img src="{{ userImage }}">
+        </ion-avatar>
+        <ion-label>
+          <p>{{ userName }}</p>
+          <ion-text style="font-size: 12px ;">Status: </ion-text>
+          <ion-text style="font-size: 12px ;" color="{{colorStatus}}">{{ txtWorkStatus }}</ion-text>
+        </ion-label>
+        <ion-button (click)="NavigateToSettingsPage()" fill="outline" slot="end">View</ion-button>
+      </ion-item>
+    </ion-card>
 
-  <ion-card color="hk-red" class="ion-text-center">
-    <ion-item button color="hk-red">ABSEN</ion-item>
-  </ion-card> -->
-
-  <!-- <ion-card color="hk-red">
-    <ion-button expand="block" color="hk-red" style="--box-shadow: none;">ABSEN</ion-button>
-  </ion-card>
-
-  <ion-card button padding class="ion-text-center" color="hk-red">
-    <ion-text>ABSEN 2</ion-text>
-  </ion-card> -->
-
-  <!-- <div style="padding-top: 0px; width: 90%;" class="ion-justify-content-center">
-    <ion-button expand="block" color="hk-red">ABSEN</ion-button>
-  </div> -->
-
-  <ion-card>
-    <ion-item lines="none" color="translucent">
-      <ion-avatar slot="start">
-        <img src="{{ userImage }}">
-      </ion-avatar>
-      <ion-label>
-        <p>{{ userName }}</p>
-        <ion-text style="font-size: 12px ;">Status: </ion-text>
-        <ion-text style="font-size: 12px ;" color="{{colorStatus}}">{{ txtWorkStatus }}</ion-text>
-      </ion-label>
-      <ion-button (click)="NavigateToSettingsPage()" fill="outline" slot="end">View</ion-button>
-    </ion-item>
-  </ion-card>
-
-  <ion-card>
-    <div class="footer-content">
-      <ion-grid>
-        <ion-row>
-          <ion-col class="ion-float-left" size="8" style="background: transparent">
-            <ion-text>Datang : {{txtTimeArrived}}</ion-text>
-            <br>
-            <ion-text>Pulang : {{txtTimeReturn}}</ion-text>
-          </ion-col>
-          <ion-col class="ion-float-right" size="4" style="background: transparent">
-            <ion-text (click)="NavigateToReportPage()">Detail </ion-text>
-            <ion-icon name="arrow-forward" mode="ios" style="font-size: 14px; vertical-align: middle"></ion-icon>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-      <ion-button expand="block" color="hk-red" (click)="ButtonAbsen()">ABSEN</ion-button>
-    </div>
-  </ion-card>
-
-  <!-- <div padding>
-    <ion-text style="font-size: 14px">Status : </ion-text>
-    <ion-text style="font-size: 14px ;" color="{{colorStatus}}">{{ txtWorkStatus }}</ion-text>
-  </div> -->
-
-  <!-- <div class="footer-content">
-    <ion-grid>
-      <ion-row>
-        <ion-col class="ion-float-left" size="8" style="background: transparent">
-          <ion-text>Datang : {{txtTimeArrived}}</ion-text>
-          <br>
-          <ion-text>Pulang : {{txtTimeReturn}}</ion-text>
-        </ion-col>
-        <ion-col class="ion-float-right" size="4" style="background: transparent">
-          <ion-text (click)="NavigateToReportPage(0)">Detail </ion-text>
-          <ion-icon name="arrow-forward" mode="ios" style="font-size: 14px; vertical-align: middle"></ion-icon>
-        </ion-col>
-      </ion-row>
-    </ion-grid> -->
-
-  <!-- <ion-chip class="ontime">
-    <ion-label color="light">On Time</ion-label>
-  </ion-chip>
-
-  <ion-chip class="terlambat">
-    <ion-label color="light">Terlambat</ion-label>
-  </ion-chip>
-
-  <ion-chip class="diluarkantor">
-    <ion-label color="light">Absen Diluar Kantor</ion-label>
-  </ion-chip> -->
-
-  <!-- <ion-button padding expand="block" color="hk-red" (click)="ButtonAbsen()">ABSEN</ion-button> -->
-  <!-- </div> -->
+    <ion-card>
+      <div class="footer-content">
+        <ion-grid>
+          <ion-row>
+            <ion-col class="ion-float-left" size="8" style="background: transparent">
+              <ion-text>Datang : {{txtTimeArrived}}</ion-text>
+              <br>
+              <ion-text>Pulang : {{txtTimeReturn}}</ion-text>
+            </ion-col>
+            <ion-col class="ion-float-right" size="4" style="background: transparent">
+              <ion-text (click)="NavigateToReportPage()">Detail </ion-text>
+              <ion-icon name="arrow-forward" mode="ios" style="font-size: 14px; vertical-align: middle"></ion-icon>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        <ion-button expand="block" color="hk-red" (click)="ButtonAbsen()">ABSEN</ion-button>
+      </div>
+    </ion-card>
+  </ion-toolbar>
 </ion-footer>

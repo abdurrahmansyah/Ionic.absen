@@ -3,6 +3,14 @@
 
 /** Ionic CSS Variables **/
 :root {
+  /** hk-blue **/
+  --ion-color-hk-blue: #2C388B;
+  --ion-color-hk-blue-rgb: 44,56,139;
+  --ion-color-hk-blue-contrast: #ffffff;
+  --ion-color-hk-blue-contrast-rgb: 255,255,255;
+  --ion-color-hk-blue-shade: #27317a;
+  --ion-color-hk-blue-tint: #414c97;
+
   /** hk-tweet **/
   --ion-color-hk-tweet: #f5f8fa;
   --ion-color-hk-tweet-rgb: 245, 248, 250;
@@ -419,4 +427,13 @@ ion-alert {
   --ion-color-contrast-rgb: var(--ion-color-hk-tweet-contrast-rgb);
   --ion-color-shade: var(--ion-color-hk-tweet-shade);
   --ion-color-tint: var(--ion-color-hk-tweet-tint);
+}
+
+.ion-color-hk-blue {
+  --ion-color-base: var(--ion-color-hk-blue);
+  --ion-color-base-rgb: var(--ion-color-hk-blue-rgb);
+  --ion-color-contrast: var(--ion-color-hk-blue-contrast);
+  --ion-color-contrast-rgb: var(--ion-color-hk-blue-contrast-rgb);
+  --ion-color-shade: var(--ion-color-hk-blue-shade);
+  --ion-color-tint: var(--ion-color-hk-blue-tint);
 }

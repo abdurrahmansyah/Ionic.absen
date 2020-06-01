@@ -6,7 +6,7 @@ import { Directive, Input, Renderer2 } from '@angular/core';
     '(ionScroll)': 'onContentScroll($event)'
   }
 })
-export class CustomHeaderDirective {
+export class CustomHeaderDirective {  
   @Input('header') header: any;
   @Input('label') label: any;
 

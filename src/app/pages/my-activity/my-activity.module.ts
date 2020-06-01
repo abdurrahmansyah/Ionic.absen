@@ -5,14 +5,13 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { NotificationsPage } from './notifications.page';
-import { ComponentsModule } from 'src/app/components/components.module';
-import { PopoverComponent } from 'src/app/components/popover/popover.component';
+import { MyActivityPage } from './my-activity.page';
+import { CustomHeaderDirective } from 'src/app/directives/custom-header.directive';
 
 const routes: Routes = [
   {
     path: '',
-    component: NotificationsPage
+    component: MyActivityPage
   }
 ];
 
@@ -21,10 +20,8 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
-    ComponentsModule,
     RouterModule.forChild(routes)
   ],
-  entryComponents: [ PopoverComponent ],
-  declarations: [NotificationsPage]
+  declarations: [MyActivityPage, CustomHeaderDirective]
 })
-export class NotificationsPageModule {}
+export class MyActivityPageModule {}

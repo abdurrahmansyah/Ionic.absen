@@ -8,6 +8,7 @@
     <ion-title *ngIf="isPulangCepat">Form Pulang Cepat</ion-title>
     <ion-title *ngIf="isPulangDiluarKantor">Form Pulang Diluar</ion-title>
     <ion-title *ngIf="isLembur">Form Pulang Diluar</ion-title>
+    <ion-title *ngIf="isWfoNewNormal">Form WFO - New Normal</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -26,5 +27,8 @@
   </div>
   <div *ngIf="isLembur">
     <app-form-lembur></app-form-lembur>
+  </div>
+  <div *ngIf="isWfoNewNormal">
+    <app-form-wfo-new-normal></app-form-wfo-new-normal>
   </div>
 </ion-content>

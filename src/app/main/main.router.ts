@@ -66,6 +66,24 @@ const routes: Routes = [
                 loadChildren: () => import('../pages/warning-updates/warning-updates.module').then(
                     m => m.WarningUpdatesPageModule
                 )
+            },
+            {
+                path: 'my-activity',
+                loadChildren: () => import('../pages/my-activity/my-activity.module').then(
+                    m => m.MyActivityPageModule
+                )
+            },
+            {
+                path: 'team-activity',
+                loadChildren: () => import('../pages/team-activity/team-activity.module').then(
+                    m => m.TeamActivityPageModule
+                )
+            },
+            {
+                path: 'new-activity',
+                loadChildren: () => import('../pages/new-activity/new-activity.module').then(
+                    m => m.NewActivityPageModule
+                )
             }
         ]
     }

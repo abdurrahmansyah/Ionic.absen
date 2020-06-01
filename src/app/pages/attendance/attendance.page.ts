@@ -105,7 +105,9 @@ export class AttendancePage implements OnInit {
   }
 
   async GetReportDatasForThisDay() {
-    var date = this.decCurrentYear + "/" + this.decCurrentMonth + "/" + this.decCurrentDay;
+    var month = this.decCurrentMonth < 10 ? "0" + this.decCurrentMonth : this.decCurrentMonth;
+    var day = this.decCurrentDay < 10 ? "0" + this.decCurrentDay : this.decCurrentDay;
+    var date = this.decCurrentYear + "-" + month + "-" + day;
 
     var url = 'https://absensi.hutamakarya.com/api/attendance/perdate';
     let postdata = new FormData();
@@ -123,7 +125,7 @@ export class AttendancePage implements OnInit {
         var reportDataFromDb = data.data ? data.data : data.data_db;
         var reportData: ReportData = this.MappingReportData(reportDataFromDb);
 
-        console.log(reportData.szImageArrived);
+        // console.log(reportData.szImageArrived);
 
         this.isArrived = reportData.szImageArrived.startsWith(',') ? false : reportData.szImageArrived ? true : false;
         this.isReturn = reportData.szImageReturn.startsWith(',') ? false : reportData.szImageReturn ? true : false;

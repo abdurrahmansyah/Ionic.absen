@@ -1,0 +1,71 @@
+<ion-header #header>
+  <ion-toolbar color="hk-red">
+    <ion-buttons slot="start">
+      <ion-back-button color="hk-white-red"></ion-back-button>
+    </ion-buttons>
+    <ion-title>My Team Activity</ion-title>
+    <!-- <ion-title #label style="visibility: hidden;">My Activity</ion-title> -->
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="content">
+  <!-- scrollEvents="true" appCustomHeader [header]="header" [label]="label" -->
+  <!-- <ion-label padding style="font-size: 34px; font-weight: bold;">My Activity</ion-label> -->
+
+  <br>
+  <!-- <ion-searchbar showCancelButton="focus" placeholder="Search Request" color="light" style="width: 90%; margin: 0 auto;"
+    mode="ios">
+  </ion-searchbar> -->
+
+  <span *ngFor="let buttonPropertyData of buttonPropertyDatas">
+    <ion-button shape="round" size="small" fill="{{ buttonPropertyData.fill }}" color="{{ buttonPropertyData.color }}"
+      (click)="GetDayData(buttonPropertyData.date)">
+      {{ buttonPropertyData.date }}
+    </ion-button>
+  </span>
+
+  <div *ngFor="let activityData of activityDatas">
+    <ion-card style="margin-top: 0px;">
+      <ion-item lines="none" color="hk-blue">
+        <ion-avatar slot="start">
+          <img src="{{ activityData.userData.szImage }}">
+        </ion-avatar>
+        <ion-label style="font-size: 16px; color: whitesmoke;">
+          <p>{{ activityData.userData.szUserName }} - {{ activityData.userData.szSectionName }}</p>
+          <p>{{ activityData.userData.szDivisionName }}</p>
+        </ion-label>
+      </ion-item>
+      <div *ngIf="activityData.isAnyActivity" class="ion-text-start" padding
+        style="padding-top: 0px; padding-bottom: 0px; line-height: 150%;">
+        <ion-text color="dark">{{ activityData.workCondition }}</ion-text>
+        <ion-text> - </ion-text>
+        <ion-text>{{ activityData.szLocation }}</ion-text> <br>
+        <ion-row no-padding>
+          <ion-col size="6" no-padding>
+            <ion-text>Health Check</ion-text> <br>
+            <ion-text>Datang</ion-text> <br>
+            <ion-text>Pulang</ion-text> <br>
+            <ion-text>Rencana Keluar</ion-text> <br>
+            <ion-text>Bertemu External</ion-text> <br>
+            <ion-text>Keluarga Sakit</ion-text> <br>
+          </ion-col>
+          <ion-col size="6" no-padding>
+            <ion-text>: {{ activityData.health_check }}</ion-text> <br>
+            <ion-text>: {{ activityData.timeValidArrived }}</ion-text> <br>
+            <ion-text>: {{ activityData.timeValidReturn }}</ion-text> <br>
+            <ion-text>: {{ activityData.rencana_keluar }}</ion-text> <br>
+            <ion-text>: {{ activityData.external }}</ion-text> <br>
+            <ion-text>: {{ activityData.kondisi_keluarga }}</ion-text> <br>
+          </ion-col>
+        </ion-row>
+        <ion-text (click)="OpenOutlook()" color="primary">See Activity on Outlook</ion-text>
+        <ion-icon name="arrow-forward" mode="ios" color="primary" style="font-size: 14px; vertical-align: middle">
+        </ion-icon>
+      </div>
+      <div *ngIf="!activityData.isAnyActivity" padding class="ion-text-center" >
+        <ion-text>Karyawan belum mengisi form activity</ion-text>
+      </div>
+    </ion-card>
+  </div>
+
+</ion-content>

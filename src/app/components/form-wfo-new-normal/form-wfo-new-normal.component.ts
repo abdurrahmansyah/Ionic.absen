@@ -6,21 +6,18 @@ import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-form-absen-diluar',
-  templateUrl: './form-absen-diluar.component.html',
-  styleUrls: ['./form-absen-diluar.component.scss'],
+  selector: 'app-form-wfo-new-normal',
+  templateUrl: './form-wfo-new-normal.component.html',
+  styleUrls: ['./form-wfo-new-normal.component.scss'],
 })
-export class FormAbsenDiluarComponent implements OnInit {
+export class FormWfoNewNormalComponent implements OnInit {
   public txtTimeRequest: string;
-  public txtDesc: string;
-  public photo: any = [];
-  public kesehatan: any;
+  public txtTemperature: string;
   public isOutPlan: boolean = true;
   public isExternal: boolean = true;
   public isFamilyMemberSick: boolean = true;
   public isFamilyMemberSick2: boolean = false;
   public isFamilyMemberSick3: boolean = false;
-  public isArrived: any;
   public txtHubungan: any;
   public txtUsia: any;
   public txtSickDesc: any;
@@ -30,8 +27,7 @@ export class FormAbsenDiluarComponent implements OnInit {
   public txtHubungan3: any;
   public txtUsia3: any;
   public txtSickDesc3: any;
-  private dataimage: string;
-  private loading: any;
+  public loading: any;
 
   constructor(private camera: Camera,
     private alertController: AlertController,
@@ -49,7 +45,6 @@ export class FormAbsenDiluarComponent implements OnInit {
 
   ngOnInit() {
     this.txtTimeRequest = this.globalService.timeRequest;
-    this.isArrived = this.globalService.isArrived;
   }
 
   public IsFamilyMemberSick() {
@@ -65,16 +60,10 @@ export class FormAbsenDiluarComponent implements OnInit {
     this.isFamilyMemberSick3 = true;
   }
 
-  public SaveOutsideRequest() {
+  public SaveWfoNewNormalRequest() {
     try {
       this.ValidateData();
-
-      if (this.globalService.isArrived) {
-        this.SaveRequestData(this.globalService.activityDataList.datangDiluarKantor.id);
-      }
-      else {
-        this.SaveRequestData(this.globalService.activityDataList.pulangDiluarKantor.id);
-      }
+      this.SaveRequestData();
     } catch (e) {
       this.alertController.create({
         mode: 'ios',
@@ -87,64 +76,41 @@ export class FormAbsenDiluarComponent implements OnInit {
   }
 
   private ValidateData() {
-    if (!this.txtDesc) {
-      throw new Error("Alasan wajib diisi.");
+    if (!this.txtTemperature) {
+      throw new Error("Suhu badan wajib diisi.");
     }
 
-    if (!this.dataimage) {
-      throw new Error("Foto wajib diisi.");
+    if (this.isFamilyMemberSick) {
+      if (!this.txtHubungan)
+        throw new Error("Hubungan dengan karyawan wajib diisi.");
+      if (!this.txtUsia)
+        throw new Error("Usia wajib diisi.");
+      if (!this.txtSickDesc)
+        throw new Error("Deskripsi kondisi wajib diisi.");
     }
 
-    if (this.isArrived) {
-      if (!this.kesehatan) {
-        throw new Error("Kondisi kesehatan wajib diisi.");
-      }
+    if (this.isFamilyMemberSick2) {
+      if (!this.txtHubungan2)
+        throw new Error("Hubungan dengan karyawan wajib diisi.");
+      if (!this.txtUsia2)
+        throw new Error("Usia wajib diisi.");
+      if (!this.txtSickDesc2)
+        throw new Error("Deskripsi kondisi wajib diisi.");
+    }
 
-      if (this.isFamilyMemberSick) {
-        if (!this.txtHubungan)
-          throw new Error("Hubungan dengan karyawan wajib diisi.");
-        if (!this.txtUsia)
-          throw new Error("Usia wajib diisi.");
-        if (!this.txtSickDesc)
-          throw new Error("Deskripsi kondisi wajib diisi.");
-      }
-
-      if (this.isFamilyMemberSick2) {
-        if (!this.txtHubungan2)
-          throw new Error("Hubungan dengan karyawan wajib diisi.");
-        if (!this.txtUsia2)
-          throw new Error("Usia wajib diisi.");
-        if (!this.txtSickDesc2)
-          throw new Error("Deskripsi kondisi wajib diisi.");
-      }
-
-      if (this.isFamilyMemberSick3) {
-        if (!this.txtHubungan3)
-          throw new Error("Hubungan dengan karyawan wajib diisi.");
-        if (!this.txtUsia3)
-          throw new Error("Usia wajib diisi.");
-        if (!this.txtSickDesc3)
-          throw new Error("Deskripsi kondisi wajib diisi.");
-      }
+    if (this.isFamilyMemberSick3) {
+      if (!this.txtHubungan3)
+        throw new Error("Hubungan dengan karyawan wajib diisi.");
+      if (!this.txtUsia3)
+        throw new Error("Usia wajib diisi.");
+      if (!this.txtSickDesc3)
+        throw new Error("Deskripsi kondisi wajib diisi.");
     }
   }
 
-  private SaveRequestData(szActivityId: string) {
+  public SaveRequestData() {
     this.PresentLoading();
     this.byPassSaveReportData();
-
-    // var requestData = new RequestData();
-    // requestData.szUserId = this.globalService.userData.szToken;
-    // requestData.dateRequest = this.globalService.dateRequest;
-    // requestData.timeRequest = this.globalService.timeRequest;
-    // requestData.szActivityId = szActivityId;
-    // requestData.szDesc = this.txtDesc;
-    // requestData.szLocation = this.globalService.geoLatitude + ", " + this.globalService.geoLongitude;
-    // // requestData.szStatusId = StatusId.ST003;
-    // requestData.decTotal = "";
-    // requestData.szReasonImage = this.dataimage;
-    // // requestData.bActiveRequest = true;
-    // this.globalService.SaveRequestData(requestData);
   }
 
   byPassSaveReportData() {
@@ -152,11 +118,10 @@ export class FormAbsenDiluarComponent implements OnInit {
     reportData.szUserId = this.globalService.userData.szToken;
     reportData.dateAbsen = this.globalService.dateRequest;
     reportData.timeAbsen = this.globalService.timeRequest;
-    reportData.szActivityId = this.globalService.diluarKantor;
-    reportData.szImage = this.dataimage;
-    reportData.szDesc = this.txtDesc;
-    reportData.health_check = this.kesehatan;
-    reportData.szLocation = this.globalService.location;
+    reportData.szActivityId = this.globalService.activityDataList.wfoNewNormal.id;
+    reportData.szDesc = "WFO - New Normal";
+    reportData.health_check = this.txtTemperature + " Celcius";
+    reportData.szLocation = "HK Tower";
     reportData.rencana_keluar = this.isOutPlan ? "Ada" : "Tidak ada";
     reportData.external = this.isExternal ? "Ada" : "Tidak ada";
     reportData.kondisi_keluarga = this.isFamilyMemberSick ? "Ada" : "Tidak ada";
@@ -175,11 +140,7 @@ export class FormAbsenDiluarComponent implements OnInit {
         this.loadingController.dismiss();
         this.router.navigate(['home']);
 
-        if (this.globalService.diluarKantor == this.globalService.activityDataList.datangDiluarKantor.id)
-          this.PresentNotif(true);
-        else
-          this.PresentNotif(false);
-        // this.globalService.PresentToast("Berhasil melakukan absensi");
+        this.PresentNotif(true);
       }
       else {
         this.loadingController.dismiss();
@@ -199,28 +160,6 @@ export class FormAbsenDiluarComponent implements OnInit {
       }]
     }).then(alert => {
       return alert.present();
-    });
-  }
-
-  public TakePhotos() {
-    const options: CameraOptions = {
-      quality: 100,
-      mediaType: this.camera.MediaType.PICTURE,
-      destinationType: this.camera.DestinationType.DATA_URL,
-      sourceType: this.camera.PictureSourceType.CAMERA,
-      encodingType: this.camera.EncodingType.JPEG,
-      targetWidth: 200,
-      targetHeight: 200,
-      allowEdit: true,
-      saveToPhotoAlbum: false
-    }
-
-    this.camera.getPicture(options).then((imageData) => {
-      this.photo = 'data:image/jpeg;base64,' + imageData;
-      this.dataimage = imageData;
-    }, (err) => {
-      // Handle error
-      console.log("Camera issue:" + err);
     });
   }
 

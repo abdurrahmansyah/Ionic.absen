@@ -1,0 +1,124 @@
+<ion-header>
+  <ion-toolbar color="hk-red">
+    <ion-buttons slot="start">
+      <ion-back-button color="hk-white-red"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Add Activity</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-item color="hk-yellow">
+      <ion-icon name="warning" slot="start"></ion-icon>
+      <ion-label class="ion-text-wrap">
+        <p>Ketentuan foto : Menggunakan atribut kantor dan memperlihatkan aktifitas kerja.</p>
+      </ion-label>
+    </ion-item>
+  </ion-card>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-subtitle>Form WFO - New Normal</ion-card-subtitle>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-item Lines="full">
+        {{txtTimeRequest}}
+      </ion-item>
+
+      <ion-item Lines="full">
+        <ion-input type="text" placeholder="Suhu badan hari ini" [(ngModel)]="txtTemperature" name="txtTemperature"
+          required>
+        </ion-input>
+        <ion-label position="end">Celcius</ion-label>
+      </ion-item>
+
+      <ion-item Lines="full">
+        <ion-label>Adakah rencana keluar</ion-label>
+        <ion-toggle [(ngModel)]="isOutPlan" slot="end"></ion-toggle>
+      </ion-item>
+
+      <ion-item Lines="full">
+        <ion-label>Bertemu pihak eksternal</ion-label>
+        <ion-toggle [(ngModel)]="isExternal" slot="end"></ion-toggle>
+      </ion-item>
+
+      <ion-item Lines="full">
+        <ion-label>Ada keluarga sakit</ion-label>
+        <ion-toggle [(ngModel)]="isFamilyMemberSick" slot="end" (ionChange)="IsFamilyMemberSick()"></ion-toggle>
+      </ion-item>
+
+      <div *ngIf="isFamilyMemberSick">
+        <ion-item Lines="full">
+          <ion-input type="text" placeholder="Hubungan Dengan Karyawan" [(ngModel)]="txtHubungan" name="txtHubungan"
+            required>
+          </ion-input>
+        </ion-item>
+
+        <ion-item Lines="full">
+          <ion-input type="text" placeholder="Usia" [(ngModel)]="txtUsia" name="txtUsia" required>
+          </ion-input>
+        </ion-item>
+
+        <ion-item Lines="full">
+          <ion-input type="text" placeholder="Sakit/Deskripsi" [(ngModel)]="txtSickDesc" name="txtSickDesc" required>
+          </ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="!isFamilyMemberSick2" Lines="full" (click)="AddFamilyMemberSick2()">
+          <ion-label color="hk-red">Add Member Familly</ion-label>
+        </ion-item>
+      </div>
+
+      <div *ngIf="isFamilyMemberSick && isFamilyMemberSick2">
+        <ion-item Lines="full">
+          <ion-input type="text" placeholder="Hubungan Dengan Karyawan" [(ngModel)]="txtHubungan2" name="txtHubungan2"
+            required>
+          </ion-input>
+        </ion-item>
+
+        <ion-item Lines="full">
+          <ion-input type="text" placeholder="Usia" [(ngModel)]="txtUsia2" name="txtUsia2" required>
+          </ion-input>
+        </ion-item>
+
+        <ion-item Lines="full">
+          <ion-input type="text" placeholder="Sakit/Deskripsi" [(ngModel)]="txtSickDesc2" name="txtSickDesc2" required>
+          </ion-input>
+        </ion-item>
+
+        <ion-item *ngIf="!isFamilyMemberSick3" Lines="full" (click)="AddFamilyMemberSick3()">
+          <ion-label color="hk-red">Add Member Familly</ion-label>
+        </ion-item>
+      </div>
+
+      <div *ngIf="isFamilyMemberSick && isFamilyMemberSick2 && isFamilyMemberSick3">
+        <ion-item Lines="full">
+          <ion-input type="text" placeholder="Hubungan Dengan Karyawan" [(ngModel)]="txtHubungan3" name="txtHubungan3"
+            required>
+          </ion-input>
+        </ion-item>
+
+        <ion-item Lines="full">
+          <ion-input type="text" placeholder="Usia" [(ngModel)]="txtUsia3" name="txtUsia3" required>
+          </ion-input>
+        </ion-item>
+
+        <ion-item Lines="full">
+          <ion-input type="text" placeholder="Sakit/Deskripsi" [(ngModel)]="txtSickDesc3" name="txtSickDesc3" required>
+          </ion-input>
+        </ion-item>
+      </div>
+
+    </ion-card-content>
+
+    <ion-row class="ion-align-items-center">
+      <ion-col class="signup-col">
+        <ion-button shape="round" expand="block" color='hk-blue' (click)="SaveWfoNewNormalRequest()" type="submit">
+          Submit
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-card>
+</ion-content>

@@ -1,0 +1,22 @@
+// .content {
+//   --background: none;
+//   background-image: url("../../../assets/images/bg-5.png");
+//   background-position: center top;
+//   background-repeat: no-repeat;
+//   background-size: 100%;
+// }
+
+ion-card {
+  --background: #f0f0f0;
+  box-shadow: none;
+  border-radius: 20px;
+}
+
+.ios ion-card {
+  margin-bottom: 15px;
+}
+
+hr {
+  height: 0.75px;
+  background-color: #cecece;
+}

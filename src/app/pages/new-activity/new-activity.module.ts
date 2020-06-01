@@ -5,14 +5,13 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { NotificationsPage } from './notifications.page';
+import { NewActivityPage } from './new-activity.page';
 import { ComponentsModule } from 'src/app/components/components.module';
-import { PopoverComponent } from 'src/app/components/popover/popover.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: NotificationsPage
+    component: NewActivityPage
   }
 ];
 
@@ -21,10 +20,9 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
-    ComponentsModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    ComponentsModule
   ],
-  entryComponents: [ PopoverComponent ],
-  declarations: [NotificationsPage]
+  declarations: [NewActivityPage]
 })
-export class NotificationsPageModule {}
+export class NewActivityPageModule {}

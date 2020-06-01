@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { InjectorInstance } from '../app.module';
 import { Observable } from 'rxjs';
-import { ToastController, AlertController, LoadingController } from '@ionic/angular';
+import { ToastController, AlertController, LoadingController, Platform } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { AuthenticationService } from './authentication.service';
 import { Storage } from '@ionic/storage';
@@ -44,6 +44,7 @@ export class GlobalService {
     private datePipe: DatePipe,
     private fcm: FCM,
     public loadingController: LoadingController,
+    private platform: Platform
   ) {
     this.InitializeLoadingCtrl();
   }
@@ -191,6 +192,7 @@ export class GlobalService {
     activityData.sakit = activityDataFromDb[7];
     activityData.izin = activityDataFromDb[8];
     activityData.cuti = activityDataFromDb[9];
+    activityData.wfoNewNormal = activityDataFromDb[10];
 
     return activityData;
   }
@@ -294,6 +296,13 @@ export class GlobalService {
     postdata.append('reason', reportData.szDesc);
     postdata.append('dectotal', "no data");
     postdata.append('location', reportData.szLocation);
+    postdata.append('health_check', reportData.health_check);
+    postdata.append('rencana_keluar', reportData.rencana_keluar);
+    postdata.append('external', reportData.external);
+    postdata.append('kondisi_keluarga', reportData.kondisi_keluarga);
+    postdata.append('hub_keluarga', reportData.hub_keluarga);
+    postdata.append('umur_keluarga', reportData.umur_keluarga);
+    postdata.append('desc_kondisi', reportData.desc_kondisi);
     postdata.append('status', "aktif");
 
     return this.httpClient.post(url, postdata);
@@ -565,14 +574,17 @@ export class GlobalService {
     // this.SubscribeGetLeaderboardDataList(data);
   }
 
-  public GetTimeNow(): Observable<any>  {
+  public GetTimeNow(): Observable<any> {
     var url = 'https://absensi.hutamakarya.com/api/timenow';
 
     return this.httpClient.get(url);
   }
 
-  public GetVersionNumber(): Observable<any>  {
+  public GetVersionNumber(): Observable<any> {
     var url = 'https://absensi.hutamakarya.com/api/mobile_version';
+
+    if (this.platform.is('ios'))
+      url = 'https://absensi.hutamakarya.com/api/ios_version';
 
     return this.httpClient.get(url);
   }
@@ -597,6 +609,24 @@ export class GlobalService {
         throw new Error(data.message);
       }
     });
+  }
+
+  public SaveNewActivity(reportData: ReportData): Observable<any> {
+    var url = 'https://absensi.hutamakarya.com/api/attendance/setActivity';
+    let postdata = new FormData();
+    postdata.append('authorization', reportData.szUserId);
+    postdata.append('activity_id', reportData.szActivityId);
+    postdata.append('reason', reportData.szDesc);
+    postdata.append('location', reportData.szLocation);
+    postdata.append('health_check', reportData.health_check);
+    postdata.append('rencana_keluar', reportData.rencana_keluar);
+    postdata.append('external', reportData.external);
+    postdata.append('kondisi_keluarga', reportData.kondisi_keluarga);
+    postdata.append('hub_keluarga', reportData.hub_keluarga);
+    postdata.append('umur_keluarga', reportData.umur_keluarga);
+    postdata.append('desc_kondisi', reportData.desc_kondisi);
+
+    return this.httpClient.post(url, postdata);
   }
 
   public Logout() {
@@ -649,6 +679,7 @@ export class ActivityData {
   public sakit: any;
   public izin: any;
   public cuti: any;
+  public wfoNewNormal: any;
 }
 
 export class UserData {
@@ -688,6 +719,7 @@ export class DateData {
 }
 
 export class ReportData {
+  public userData: UserData = new UserData();
   public szUserId: string;
   public dateAbsen: string;
   public timeAbsen: string;
@@ -696,14 +728,25 @@ export class ReportData {
   public timeReturn: string;
   public timeValidReturn: string;
   public decMonth: number;
+  public isAnyActivity: boolean;
   public szActivityId: string;
+  public szActivityName: string;
   public szDesc: string;
   public szLocation: string;
   public decTotal: string;
   public szImage: string;
+  public health_check: string;
+  public rencana_keluar: string;
+  public external: string;
+  public kondisi_keluarga: string;
+  public hub_keluarga: string;
+  public umur_keluarga: string;
+  public desc_kondisi: string;
   public szImageArrived: string;
   public szImageReturn: string;
   public isRequest: string;
+
+  public workCondition: string; // WFH / WFO -> for team activity page
 }
 
 export class SummaryReportData {

@@ -14,6 +14,7 @@ export class FormRequestPage implements OnInit {
   isPulangDiluarKantor: boolean = false;
   isPulangCepat: boolean = false;
   isLembur: boolean = false;
+  isWfoNewNormal: boolean = false;
   constructor(public activatedRoute: ActivatedRoute, public router: Router, private globalService: GlobalService) { }
 
   ngOnInit() {
@@ -28,6 +29,7 @@ export class FormRequestPage implements OnInit {
         this.isPulangDiluarKantor = this.router.getCurrentNavigation().extras.state.indexForm == this.globalService.activityDataList.pulangDiluarKantor.id ? true : false;
         this.isPulangCepat = this.router.getCurrentNavigation().extras.state.indexForm == this.globalService.activityDataList.pulangCepat.id ? true : false; // pulang cepat
         this.isLembur = this.router.getCurrentNavigation().extras.state.indexForm == this.globalService.activityDataList.lembur.id ? true : false; // lembur
+        this.isWfoNewNormal = this.router.getCurrentNavigation().extras.state.indexForm == this.globalService.activityDataList.wfoNewNormal.id ? true : false; // wfoNewNormal
       }
     });
   }
