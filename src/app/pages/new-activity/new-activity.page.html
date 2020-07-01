@@ -29,9 +29,37 @@
 
       <ion-item Lines="full">
         <ion-input type="text" placeholder="Suhu badan hari ini" [(ngModel)]="txtTemperature" name="txtTemperature"
-          required>
+          type="number" required no-padding>
         </ion-input>
         <ion-label position="end">Celcius</ion-label>
+      </ion-item>
+
+      <ion-item Lines="full">
+        <ion-label class="ion-text-wrap">
+          Berinteraksi dengan ODP/PDP/Pasien Terkonfirmasi Positif COVID-19
+          <p></p>
+          <ion-text style="font-size: 12px ;">(dalam 14 hari terakhir)</ion-text>
+        </ion-label>
+        <ion-toggle [(ngModel)]="isInteraksi" slot="end"></ion-toggle>
+      </ion-item>
+
+      <ion-item Lines="full">
+        <ion-label class="ion-text-wrap">
+          Pernah mengalami demam / batuk / pilek / sakit tenggorokan / sesak
+          <p></p>
+          <ion-text style="font-size: 12px ;">(dalam 14 hari terakhir)</ion-text>
+        </ion-label>
+        <ion-toggle [(ngModel)]="isRiwayatSakit" slot="end"></ion-toggle>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Kendaraan ke area kerja</ion-label>
+        <ion-select mode="ios" [(ngModel)]="kendaraan">
+          <ion-select-option value="Jalan kaki" selected>Jalan kaki</ion-select-option>
+          <ion-select-option value="Kendaraan umum">Kendaraan umum</ion-select-option>
+          <ion-select-option value="Kendaraan pribadi">Kendaraan pribadi</ion-select-option>
+          <ion-select-option value="Car pooling">Car pooling</ion-select-option>
+        </ion-select>
       </ion-item>
 
       <ion-item Lines="full">

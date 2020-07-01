@@ -199,13 +199,7 @@ export class HomePage {
   private GetLeaderboardDataList() {
     var dateData = this.globalService.GetDate();
 
-    // var url = 'https://absensi.hutamakarya.com/api/get_ontime_employee?date=' + this.datePipe.transform(dateData.date, 'yyyy-MM-dd');
     var url = 'https://absensi.hutamakarya.com/api/attendance/employee_limit/ASC/1?date=' + this.datePipe.transform(dateData.date, 'yyyy-MM-dd');
-    // let postdata = new FormData();
-
-    // postdata.append('date', this.datePipe.transform(dateData.date, 'yyyy-MM-dd'));
-
-    // var data: Observable<any> = this.http.post(url, postdata);
     var data: Observable<any> = this.http.get(url);
     this.SubscribeGetLeaderboardDataList(data);
   }
@@ -398,16 +392,25 @@ export class HomePage {
     };
     this.nativeGeocoder.reverseGeocode(latitude, longitude, options)
       .then((result: NativeGeocoderResult[]) => {
-        var thoroughfare = result[1].thoroughfare;
-        var subThoroughfare = result[1].subThoroughfare;
-        var subLocality = result[1].subLocality ? ", " + result[1].subLocality : "";
-        var locality = result[1].locality ? ", " + result[1].locality : "";
-        var subAdministrativeArea = result[1].subAdministrativeArea ? ", " + result[1].subAdministrativeArea : "";
-        var administrativeArea = result[1].administrativeArea ? ", " + result[1].administrativeArea : "";
-        var postalCode = result[1].postalCode;
-        this.globalService.location = thoroughfare + subThoroughfare + subLocality + locality + subAdministrativeArea + administrativeArea + postalCode;
+        if (this.platform.is('ios'))
+          this.MappingLocationGeocode(0, result);
+        else
+          this.MappingLocationGeocode(1, result);
       })
       .catch((error: any) => console.log(error));
+  }
+
+  private MappingLocationGeocode(index: number, result: NativeGeocoderResult[]) {
+    var thoroughfare = result[index].thoroughfare;
+    var subThoroughfare = result[index].subThoroughfare;
+    var subLocality = result[index].subLocality ? ", " + result[index].subLocality : "";
+    var locality = result[index].locality ? ", " + result[index].locality : "";
+    var subAdministrativeArea = result[index].subAdministrativeArea ? ", " + result[index].subAdministrativeArea : "";
+    var administrativeArea = result[index].administrativeArea ? ", " + result[index].administrativeArea : "";
+    var postalCode = result[index].postalCode ? " " + result[index].postalCode : "";
+    this.globalService.kota = result[index].subAdministrativeArea;
+    this.globalService.provinsi = result[index].administrativeArea;
+    this.globalService.location = thoroughfare + subThoroughfare + subLocality + locality + subAdministrativeArea + administrativeArea + postalCode;
   }
 
   private ValidateAbsen() {
@@ -417,6 +420,7 @@ export class HomePage {
         var time = data.data.split(':');
 
         var dateData = this.globalService.GetDateWithHourAndMinute(time[0], time[1]);
+        // var dateData = this.globalService.GetDateWithHourAndMinute(8, 15);
         var reportData = new ReportData();
         console.log(this.globalService.geoLongitude);
         console.log(this.globalService.geoLatitude);
@@ -474,7 +478,8 @@ export class HomePage {
               // this.GetDecisionFromUser(reportData, navigationExtras);
             }
             else {
-              this.DoingAbsen(reportData);
+              this.DoingAbsenWithRequest(reportData);
+              // this.DoingAbsen(reportData);
             }
           }
         }
@@ -560,52 +565,65 @@ export class HomePage {
                 reportData.szActivityId == this.globalService.activityDataList.pulangCepat.id ? 'alert-pulangcepat' :
                   reportData.szActivityId == "belumcheckin" ? 'alert-belumcheckin' :
                     'alert-pulang',
-      buttons: reportData.szActivityId == this.globalService.activityDataList.datangDiluarKantor.id || reportData.szActivityId == this.globalService.activityDataList.pulangDiluarKantor.id ? [{
-        text: 'CANCEL',
-        role: 'Cancel'
+      buttons: reportData.szActivityId == this.globalService.activityDataList.datangDiluarKantor.id ? [{
+        text: 'WFO - Proyek',
+        handler: () => {
+          this.ByPassDoingAbsenWfoNewNormal(reportData);
+        }        // role: 'Cancel'
       }, {
-        text: 'NEXT',
+        text: 'WFH',
         handler: () => {
           this.globalService.dateRequest = reportData.dateAbsen;
           this.globalService.timeRequest = reportData.timeAbsen;
           this.globalService.diluarKantor = reportData.szActivityId;
-          // this.inAppBrowser.create("https://performancemanager10.successfactors.com/login?company=pthutamaka&username=" + this.globalService.userData.szUserId);
-          // window.open("https://performancemanager10.successfactors.com/login?company=pthutamaka&username=" + this.globalService.userData.szUserId, '_system', 'location=yes');
+          this.router.navigate(['form-request'], navigationExtras);
+        }
+      }] : reportData.szActivityId == this.globalService.activityDataList.pulangDiluarKantor.id ? [{
+        text: 'WFO - Proyek',
+        handler: () => {
+          this.DoingAbsenWithRequest(reportData);
+        }        // role: 'Cancel'
+      }, {
+        text: 'WFH',
+        handler: () => {
+          this.globalService.dateRequest = reportData.dateAbsen;
+          this.globalService.timeRequest = reportData.timeAbsen;
+          this.globalService.diluarKantor = reportData.szActivityId;
           this.router.navigate(['form-request'], navigationExtras);
         }
       }] :
-        reportData.szActivityId == "DILUAR-WIFIAKSES" ? [{
-          text: 'BACK',
-          role: 'Cancel'
-        }] : // reportData.szActivityId == this.globalService.activityDataList.terlambat.id ||
-          reportData.szActivityId == this.globalService.activityDataList.pulangCepat.id // ||
-            // reportData.szActivityId == this.globalService.activityDataList.lembur.id 
-            ? [{
-              text: 'CANCEL',
-              role: 'Cancel'
-            }, {
-              text: 'YES',
-              handler: () => {
-                this.globalService.dateRequest = reportData.dateAbsen;
-                this.globalService.timeRequest = reportData.timeAbsen;
-                this.DoingAbsenWithRequest(reportData);
-                // this.router.navigate(['form-request'], navigationExtras);
-              }
-            }] : reportData.szActivityId == "belumcheckin" ? [{
-              text: 'CANCEL',
-              role: 'Cancel'
-            }, {
-              text: 'YES',
-              handler: () => {
-                this.globalService.dateRequest = reportData.dateAbsen;
-                this.globalService.timeRequest = reportData.timeAbsen;
-                this.inAppBrowser.create("https://performancemanager10.successfactors.com/login?company=pthutamaka&username=" + this.globalService.userData.szUserId);
-                // window.open("https://performancemanager10.successfactors.com/login?company=pthutamaka&username=" + this.globalService.userData.szUserId, '_system', 'location=yes');
-              }
-            }] : [{
-              text: 'OK',
-              role: 'Cancel'
-            }]
+          reportData.szActivityId == "DILUAR-WIFIAKSES" ? [{
+            text: 'BACK',
+            role: 'Cancel'
+          }] : // reportData.szActivityId == this.globalService.activityDataList.terlambat.id ||
+            reportData.szActivityId == this.globalService.activityDataList.pulangCepat.id // ||
+              // reportData.szActivityId == this.globalService.activityDataList.lembur.id 
+              ? [{
+                text: 'CANCEL',
+                role: 'Cancel'
+              }, {
+                text: 'YES',
+                handler: () => {
+                  this.globalService.dateRequest = reportData.dateAbsen;
+                  this.globalService.timeRequest = reportData.timeAbsen;
+                  this.DoingAbsenWithRequest(reportData);
+                  // this.router.navigate(['form-request'], navigationExtras);
+                }
+              }] : reportData.szActivityId == "belumcheckin" ? [{
+                text: 'CANCEL',
+                role: 'Cancel'
+              }, {
+                text: 'YES',
+                handler: () => {
+                  this.globalService.dateRequest = reportData.dateAbsen;
+                  this.globalService.timeRequest = reportData.timeAbsen;
+                  this.inAppBrowser.create("https://performancemanager10.successfactors.com/login?company=pthutamaka&username=" + this.globalService.userData.szUserId);
+                  // window.open("https://performancemanager10.successfactors.com/login?company=pthutamaka&username=" + this.globalService.userData.szUserId, '_system', 'location=yes');
+                }
+              }] : [{
+                text: 'OK',
+                role: 'Cancel'
+              }]
     }).then(alert => {
       return alert.present();
     });
@@ -647,10 +665,14 @@ export class HomePage {
   }
 
   private DoingAbsenWithRequest(reportData: ReportData) {
-    // KALO MAU DIPAKE LENGKAPI DATA REQUEST
-    this.DoingAbsen(reportData);
-    // var data = this.globalService.SaveReportDataWithRequest(reportData);
-    // this.SubscribeGetReportDatas(data, true);
+    reportData.szActivityId = "";
+    reportData.szLocation = "HK Tower";
+    reportData.kota = "Kota Jakarta Timur";
+    reportData.provinsi = "Daerah Khusus Ibukota Jakarta";
+    reportData.isRequest = "1";
+
+    var data = this.globalService.SaveReportDataWithRequest(reportData);
+    this.SubscribeGetReportDatas(data, true);
   }
 
   NavigateToReportPage() {

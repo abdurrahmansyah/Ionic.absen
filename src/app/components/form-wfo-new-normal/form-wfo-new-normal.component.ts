@@ -13,6 +13,10 @@ import { Router } from '@angular/router';
 export class FormWfoNewNormalComponent implements OnInit {
   public txtTimeRequest: string;
   public txtTemperature: string;
+  public lokasi: string;
+  public kendaraan: string;
+  public isInteraksi: boolean = true;
+  public isRiwayatSakit: boolean = true;
   public isOutPlan: boolean = true;
   public isExternal: boolean = true;
   public isFamilyMemberSick: boolean = true;
@@ -76,8 +80,20 @@ export class FormWfoNewNormalComponent implements OnInit {
   }
 
   private ValidateData() {
+    if (!this.lokasi) {
+      throw new Error("Lokasi kerja wajib diisi.");
+    }
+
     if (!this.txtTemperature) {
       throw new Error("Suhu badan wajib diisi.");
+    }
+
+    if (this.txtTemperature < "34" || this.txtTemperature > "39") {
+      throw new Error("Silahkan mengisi suhu tubuh normal (34-39 Celcius).");
+    }
+
+    if (!this.kendaraan) {
+      throw new Error("Kendaraan ke area kerja wajib diisi.");
     }
 
     if (this.isFamilyMemberSick) {
@@ -118,10 +134,17 @@ export class FormWfoNewNormalComponent implements OnInit {
     reportData.szUserId = this.globalService.userData.szToken;
     reportData.dateAbsen = this.globalService.dateRequest;
     reportData.timeAbsen = this.globalService.timeRequest;
+    reportData.kota = this.lokasi == "0" ? "Kota Jakarta Timur" : this.globalService.kota;
+    reportData.provinsi = this.lokasi == "0" ? "Daerah Khusus Ibukota Jakarta" : this.globalService.provinsi;
+    reportData.work_from = this.lokasi == "0" ? "WFO" : "WFO - Proyek";
     reportData.szActivityId = this.globalService.activityDataList.wfoNewNormal.id;
     reportData.szDesc = "WFO - New Normal";
-    reportData.health_check = this.txtTemperature + " Celcius";
-    reportData.szLocation = "HK Tower";
+    reportData.health_check = "";
+    reportData.suhu = this.txtTemperature;
+    reportData.szLocation = this.lokasi == "0" ?  "HK Tower" : this.globalService.location;
+    reportData.interaksi = this.isInteraksi ? "Ada" : "Tidak ada";
+    reportData.riwayat_sakit = this.isRiwayatSakit ? "Pernah" : "Tidak pernah";
+    reportData.kendaraan = this.kendaraan;
     reportData.rencana_keluar = this.isOutPlan ? "Ada" : "Tidak ada";
     reportData.external = this.isExternal ? "Ada" : "Tidak ada";
     reportData.kondisi_keluarga = this.isFamilyMemberSick ? "Ada" : "Tidak ada";

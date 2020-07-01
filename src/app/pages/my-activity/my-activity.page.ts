@@ -18,8 +18,12 @@ export class MyActivityPage implements OnInit {
   public txtWork: string;
   public txtLocation: string;
   public txtHealthCheck: string;
+  public txtSuhu: string;
+  public txtInteraksi: string;
+  public txtRiwayatSakit: string;
   public txtTimeArrived: string;
   public txtTimeReturn: string;
+  public txtKendaraan: string;
   public txtRencanaKeluar: string;
   public txtExternal: string;
   public txtKondisiKeluarga: string;
@@ -70,10 +74,13 @@ export class MyActivityPage implements OnInit {
         this.txtTimeReturn = hour == 0 && minute == 0 ? "" : hour + ":" + minute + " " + ampm;
 
         if (reportData.szDesc) {
-
-          this.txtWork = reportData.szActivityId == "22" ? "WFO" : "WFH";
+          this.txtWork = reportData.work_from;
           this.txtLocation = reportData.szLocation;
+          this.txtSuhu = reportData.suhu  + " Celcius";
           this.txtHealthCheck = reportData.health_check;
+          this.txtInteraksi = reportData.interaksi;
+          this.txtRiwayatSakit = reportData.riwayat_sakit;
+          this.txtKendaraan = reportData.kendaraan;
           this.txtRencanaKeluar = reportData.rencana_keluar;
           this.txtExternal = reportData.external;
           this.txtKondisiKeluarga = reportData.kondisi_keluarga;
@@ -101,8 +108,13 @@ export class MyActivityPage implements OnInit {
     reportData.szActivityId = reportDataFromDb.activity.length > 0 ? reportDataFromDb.activity[0].activity_type_id[0] : "";
     reportData.szActivityName = reportDataFromDb.activity.length > 0 ? reportDataFromDb.activity[0].activity_type_id[1] : "";
     reportData.szLocation = reportDataFromDb.check_in_location;
+    reportData.work_from = reportDataFromDb.work_from;
     reportData.szDesc = reportDataFromDb.activity.length > 0 ? reportDataFromDb.activity[0].reason : "";
     reportData.health_check = reportDataFromDb.activity.length > 0 ? reportDataFromDb.activity[0].health_check : "";
+    reportData.suhu = reportDataFromDb.activity.length > 0 ? reportDataFromDb.activity[0].suhu : "";
+    reportData.interaksi = reportDataFromDb.activity.length > 0 ? reportDataFromDb.activity[0].interaksi : "";
+    reportData.riwayat_sakit = reportDataFromDb.activity.length > 0 ? reportDataFromDb.activity[0].riwayat_sakit : "";
+    reportData.kendaraan = reportDataFromDb.activity.length > 0 ? reportDataFromDb.activity[0].kendaraan : "";
     reportData.rencana_keluar = reportDataFromDb.activity.length > 0 ? reportDataFromDb.activity[0].rencana_keluar : "";
     reportData.external = reportDataFromDb.activity.length > 0 ? reportDataFromDb.activity[0].external : "";
     reportData.kondisi_keluarga = reportDataFromDb.activity.length > 0 ? reportDataFromDb.activity[0].kondisi_keluarga : "";

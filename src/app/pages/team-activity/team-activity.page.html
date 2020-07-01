@@ -35,20 +35,36 @@
         <ion-text>{{ activityData.szLocation }}</ion-text> <br>
         <ion-row no-padding>
           <ion-col size="6" no-padding>
-            <ion-text>Health Check</ion-text> <br>
-            <ion-text>Datang</ion-text> <br>
-            <ion-text>Pulang</ion-text> <br>
-            <ion-text>Rencana Keluar</ion-text> <br>
-            <ion-text>Bertemu External</ion-text> <br>
-            <ion-text>Keluarga Sakit</ion-text> <br>
+            <div class="ion-text-nowrap" style="overflow: hidden; text-overflow: ellipsis;">
+              <ion-text *ngIf="activityData.work_from == 'WFO'">Suhu</ion-text>
+              <ion-text *ngIf="activityData.work_from == 'WFH'">Health Check</ion-text>
+              <br>
+              <ion-text>Datang</ion-text> <br>
+              <ion-text>Pulang</ion-text> <br>
+              <ion-text>Interaksi dengan ODP / PDP / Pasien</ion-text> <br>
+              <ion-text>Riwayat sakit</ion-text> <br>
+              <ion-text *ngIf="activityData.work_from == 'WFO'">Kendaraan ke area kerja</ion-text>
+              <br *ngIf="activityData.work_from == 'WFO'">
+              <ion-text>Rencana Keluar</ion-text> <br>
+              <ion-text>Bertemu External</ion-text> <br>
+              <ion-text>Keluarga Sakit</ion-text> <br>
+            </div>
           </ion-col>
           <ion-col size="6" no-padding>
-            <ion-text>: {{ activityData.health_check }}</ion-text> <br>
-            <ion-text>: {{ activityData.timeValidArrived }}</ion-text> <br>
-            <ion-text>: {{ activityData.timeValidReturn }}</ion-text> <br>
-            <ion-text>: {{ activityData.rencana_keluar }}</ion-text> <br>
-            <ion-text>: {{ activityData.external }}</ion-text> <br>
-            <ion-text>: {{ activityData.kondisi_keluarga }}</ion-text> <br>
+            <div class="ion-text-nowrap" style="overflow: hidden; text-overflow: ellipsis;">
+              <ion-text *ngIf="activityData.work_from == 'WFO'">: {{ activityData.suhu }}</ion-text>
+              <ion-text *ngIf="activityData.work_from == 'WFH'">: {{ activityData.health_check }}</ion-text>
+              <br>
+              <ion-text>: {{ activityData.timeValidArrived }}</ion-text> <br>
+              <ion-text>: {{ activityData.timeValidReturn }}</ion-text> <br>
+              <ion-text>: {{ activityData.interaksi }}</ion-text> <br>
+              <ion-text>: {{ activityData.riwayat_sakit }}</ion-text> <br>
+              <ion-text *ngIf="activityData.work_from == 'WFO'">: {{ activityData.kendaraan }}</ion-text> 
+              <br *ngIf="activityData.work_from == 'WFO'">
+              <ion-text>: {{ activityData.rencana_keluar }}</ion-text> <br>
+              <ion-text>: {{ activityData.external }}</ion-text> <br>
+              <ion-text>: {{ activityData.kondisi_keluarga }}</ion-text> <br>
+            </div>
           </ion-col>
         </ion-row>
         <ion-text (click)="OpenOutlook()" color="primary">See Activity on Outlook</ion-text>

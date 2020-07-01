@@ -13,7 +13,7 @@
     <ion-card>
       <img src="../../assets/images/img-8.png" />
       <div class="card-title" padding>
-        <ion-avatar slot="end">
+        <ion-avatar slot="end" *ngIf="leadImage">
           <img src="{{ leadImage }}">
         </ion-avatar>
         <br>
@@ -23,7 +23,7 @@
       </div>
       <div class="card-subtitle">
         <ion-item lines="none" color="translucent">
-          <ion-button shape="round" fill="outline" size="small" slot="end" (click)="NavRouterMenu(0)">show</ion-button>
+          <ion-button shape="round" fill="outline" size="small" slot="end" (click)="NavRouterMenu(0)" *ngIf="leadImage">show</ion-button>
         </ion-item>
       </div>
     </ion-card>

@@ -15,6 +15,8 @@ export class FormAbsenDiluarComponent implements OnInit {
   public txtDesc: string;
   public photo: any = [];
   public kesehatan: any;
+  public isInteraksi: boolean = true;
+  public isRiwayatSakit: boolean = true;
   public isOutPlan: boolean = true;
   public isExternal: boolean = true;
   public isFamilyMemberSick: boolean = true;
@@ -152,17 +154,27 @@ export class FormAbsenDiluarComponent implements OnInit {
     reportData.szUserId = this.globalService.userData.szToken;
     reportData.dateAbsen = this.globalService.dateRequest;
     reportData.timeAbsen = this.globalService.timeRequest;
+    reportData.szLocation = this.globalService.location;
+    reportData.kota = this.globalService.kota;
+    reportData.provinsi = this.globalService.provinsi;
+    reportData.work_from = "WFH";
     reportData.szActivityId = this.globalService.diluarKantor;
     reportData.szImage = this.dataimage;
     reportData.szDesc = this.txtDesc;
-    reportData.health_check = this.kesehatan;
-    reportData.szLocation = this.globalService.location;
-    reportData.rencana_keluar = this.isOutPlan ? "Ada" : "Tidak ada";
-    reportData.external = this.isExternal ? "Ada" : "Tidak ada";
-    reportData.kondisi_keluarga = this.isFamilyMemberSick ? "Ada" : "Tidak ada";
-    reportData.hub_keluarga = this.isFamilyMemberSick3 ? this.txtHubungan + " ; " + this.txtHubungan2 + " ; " + this.txtHubungan3 : this.isFamilyMemberSick2 ? this.txtHubungan + " ; " + this.txtHubungan2 : this.isFamilyMemberSick ? this.txtHubungan : "";
-    reportData.umur_keluarga = this.isFamilyMemberSick3 ? this.txtUsia + " ; " + this.txtUsia2 + " ; " + this.txtUsia3 : this.isFamilyMemberSick2 ? this.txtUsia + " ; " + this.txtUsia2 : this.isFamilyMemberSick ? this.txtUsia : "";
-    reportData.desc_kondisi = this.isFamilyMemberSick3 ? this.txtSickDesc + " ; " + this.txtSickDesc2 + " ; " + this.txtSickDesc3 : this.isFamilyMemberSick2 ? this.txtSickDesc + " ; " + this.txtSickDesc2 : this.isFamilyMemberSick ? this.txtSickDesc : "";
+
+    if (this.isArrived) {
+      reportData.health_check = this.kesehatan;
+      reportData.suhu = "";
+      reportData.interaksi = this.isInteraksi ? "Ada" : "Tidak ada";
+      reportData.riwayat_sakit = this.isRiwayatSakit ? "Pernah" : "Tidak pernah";
+      reportData.kendaraan = "";
+      reportData.rencana_keluar = this.isOutPlan ? "Ada" : "Tidak ada";
+      reportData.external = this.isExternal ? "Ada" : "Tidak ada";
+      reportData.kondisi_keluarga = this.isFamilyMemberSick ? "Ada" : "Tidak ada";
+      reportData.hub_keluarga = this.isFamilyMemberSick3 ? this.txtHubungan + " ; " + this.txtHubungan2 + " ; " + this.txtHubungan3 : this.isFamilyMemberSick2 ? this.txtHubungan + " ; " + this.txtHubungan2 : this.isFamilyMemberSick ? this.txtHubungan : "";
+      reportData.umur_keluarga = this.isFamilyMemberSick3 ? this.txtUsia + " ; " + this.txtUsia2 + " ; " + this.txtUsia3 : this.isFamilyMemberSick2 ? this.txtUsia + " ; " + this.txtUsia2 : this.isFamilyMemberSick ? this.txtUsia : "";
+      reportData.desc_kondisi = this.isFamilyMemberSick3 ? this.txtSickDesc + " ; " + this.txtSickDesc2 + " ; " + this.txtSickDesc3 : this.isFamilyMemberSick2 ? this.txtSickDesc + " ; " + this.txtSickDesc2 : this.isFamilyMemberSick ? this.txtSickDesc : "";
+    }
     reportData.isRequest = "1";
 
     var data = this.globalService.SaveReportDataWithRequest(reportData);

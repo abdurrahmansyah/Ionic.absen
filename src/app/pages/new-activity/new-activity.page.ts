@@ -12,6 +12,9 @@ import { Observable } from 'rxjs';
 export class NewActivityPage implements OnInit {
   public txtTimeRequest: string;
   public txtTemperature: string;
+  public kendaraan: string;
+  public isInteraksi: boolean = true;
+  public isRiwayatSakit: boolean = true;
   public isOutPlan: boolean = true;
   public isExternal: boolean = true;
   public isFamilyMemberSick: boolean = true;
@@ -26,7 +29,7 @@ export class NewActivityPage implements OnInit {
   public txtHubungan3: any;
   public txtUsia3: any;
   public txtSickDesc3: any;
-  private loading: any;
+  public loading: any;
 
   constructor(private globalService: GlobalService,
     private loadingController: LoadingController,
@@ -78,6 +81,14 @@ export class NewActivityPage implements OnInit {
       throw new Error("Suhu badan wajib diisi.");
     }
 
+    if (this.txtTemperature < "34" || this.txtTemperature > "39") {
+      throw new Error("Silahkan mengisi suhu tubuh normal (34-39 Celcius).");
+    }
+
+    if (!this.kendaraan) {
+      throw new Error("Kendaraan ke area kerja wajib diisi.");
+    }
+
     if (this.isFamilyMemberSick) {
       if (!this.txtHubungan)
         throw new Error("Hubungan dengan karyawan wajib diisi.");
@@ -114,10 +125,17 @@ export class NewActivityPage implements OnInit {
   byPassSaveReportData() {
     var reportData = new ReportData();
     reportData.szUserId = this.globalService.userData.szToken;
+    reportData.kota = "Kota Jakarta Timur";
+    reportData.provinsi = "Daerah Khusus Ibukota Jakarta";
+    reportData.work_from = "WFO";
     reportData.szActivityId = this.globalService.activityDataList.wfoNewNormal.id;
     reportData.szDesc = "WFO - New Normal";
-    reportData.health_check = this.txtTemperature + " Celcius";
+    reportData.health_check = "";
+    reportData.suhu = this.txtTemperature;
     reportData.szLocation = "HK Tower";
+    reportData.interaksi = this.isInteraksi ? "Ada" : "Tidak ada";
+    reportData.riwayat_sakit = this.isRiwayatSakit ? "Pernah" : "Tidak pernah";
+    reportData.kendaraan = this.kendaraan;
     reportData.rencana_keluar = this.isOutPlan ? "Ada" : "Tidak ada";
     reportData.external = this.isExternal ? "Ada" : "Tidak ada";
     reportData.kondisi_keluarga = this.isFamilyMemberSick ? "Ada" : "Tidak ada";

@@ -31,6 +31,24 @@
       </ion-item>
 
       <ion-item Lines="full">
+        <ion-label class="ion-text-wrap">
+          Berinteraksi dengan ODP/PDP/Pasien Terkonfirmasi Positif COVID-19
+          <p></p>
+          <ion-text style="font-size: 12px ;">(dalam 14 hari terakhir)</ion-text>
+        </ion-label>
+        <ion-toggle [(ngModel)]="isInteraksi" slot="end"></ion-toggle>
+      </ion-item>
+  
+      <ion-item Lines="full">
+        <ion-label class="ion-text-wrap">
+          Pernah mengalami demam / batuk / pilek / sakit tenggorokan / sesak
+          <p></p>
+          <ion-text style="font-size: 12px ;">(dalam 14 hari terakhir)</ion-text>
+        </ion-label>
+        <ion-toggle [(ngModel)]="isRiwayatSakit" slot="end"></ion-toggle>
+      </ion-item>
+  
+      <ion-item Lines="full">
         <ion-label>Adakah rencana keluar</ion-label>
         <ion-toggle [(ngModel)]="isOutPlan" slot="end"></ion-toggle>
       </ion-item>

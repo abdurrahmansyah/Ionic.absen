@@ -34,20 +34,36 @@
         <ion-text>{{ txtLocation }}</ion-text> <br>
         <ion-row no-padding>
           <ion-col size="6" no-padding>
-            <ion-text>Health Check</ion-text> <br>
-            <ion-text>Datang</ion-text> <br>
-            <ion-text>Pulang</ion-text> <br>
-            <ion-text>Rencana Keluar</ion-text> <br>
-            <ion-text>Bertemu External</ion-text> <br>
-            <ion-text>Keluarga Sakit</ion-text> <br>
+            <div class="ion-text-nowrap" style="overflow: hidden; text-overflow: ellipsis;">
+              <ion-text *ngIf="txtWork == 'WFO'">Suhu</ion-text>
+              <ion-text *ngIf="txtWork == 'WFH'">Health Check</ion-text>
+              <br>
+              <ion-text>Datang</ion-text> <br>
+              <ion-text>Pulang</ion-text> <br>
+              <ion-text>Interaksi dengan ODP / PDP / Pasien</ion-text> <br>
+              <ion-text>Riwayat sakit</ion-text> <br>
+              <ion-text *ngIf="txtWork == 'WFO'">Kendaraan ke area kerja</ion-text>
+              <br *ngIf="txtWork == 'WFO'">
+              <ion-text>Rencana Keluar</ion-text> <br>
+              <ion-text>Bertemu External</ion-text> <br>
+              <ion-text>Keluarga Sakit</ion-text> <br>
+            </div>
           </ion-col>
           <ion-col size="6" no-padding>
-            <ion-text>: {{ txtHealthCheck }}</ion-text> <br>
-            <ion-text>: {{ txtTimeArrived }}</ion-text> <br>
-            <ion-text>: {{ txtTimeReturn }}</ion-text> <br>
-            <ion-text>: {{ txtRencanaKeluar }}</ion-text> <br>
-            <ion-text>: {{ txtExternal }}</ion-text> <br>
-            <ion-text>: {{ txtKondisiKeluarga }}</ion-text> <br>
+            <div class="ion-text-nowrap" style="overflow: hidden; text-overflow: ellipsis;">
+              <ion-text *ngIf="txtWork == 'WFO'">: {{ txtSuhu }}</ion-text>
+              <ion-text *ngIf="txtWork == 'WFH'">: {{ txtHealthCheck }}</ion-text>
+              <br>
+              <ion-text>: {{ txtTimeArrived }}</ion-text> <br>
+              <ion-text>: {{ txtTimeReturn }}</ion-text> <br>
+              <ion-text>: {{ txtInteraksi }}</ion-text> <br>
+              <ion-text>: {{ txtRiwayatSakit }}</ion-text> <br>
+              <ion-text *ngIf="txtWork == 'WFO'">: {{ txtKendaraan }}</ion-text> 
+              <br *ngIf="txtWork == 'WFO'">
+              <ion-text>: {{ txtRencanaKeluar }}</ion-text> <br>
+              <ion-text>: {{ txtExternal }}</ion-text> <br>
+              <ion-text>: {{ txtKondisiKeluarga }}</ion-text> <br>
+            </div>
           </ion-col>
         </ion-row>
         <ion-text (click)="OpenOutlook()" color="primary">See Activity on Outlook</ion-text>
@@ -57,7 +73,7 @@
     </ion-card>
   </div>
 
-  <div class="ion-text-center"  *ngIf="isNoActivity" padding>
+  <div class="ion-text-center" *ngIf="isNoActivity" padding>
     <img src="../../../assets/images/img-14.png">
 
     <ion-text style="font-weight: 700;">
@@ -69,7 +85,7 @@
     </ion-text>
   </div>
 
-  <div class="ion-text-center"  *ngIf="isNoReport" padding>
+  <div class="ion-text-center" *ngIf="isNoReport" padding>
     <img src="../../../assets/images/img-14.png">
 
     <ion-text style="font-weight: 700;">
