@@ -474,11 +474,11 @@ export class HomePage {
                   indexForm: reportData.szActivityId
                 }
               }
-              this.DoingAbsenWithRequest(reportData);
+              this.DoingAbsenWithRequest(reportData, true);
               // this.GetDecisionFromUser(reportData, navigationExtras);
             }
             else {
-              this.DoingAbsenWithRequest(reportData);
+              this.DoingAbsenWithRequest(reportData, true);
               // this.DoingAbsen(reportData);
             }
           }
@@ -581,7 +581,7 @@ export class HomePage {
       }] : reportData.szActivityId == this.globalService.activityDataList.pulangDiluarKantor.id ? [{
         text: 'WFO - Proyek',
         handler: () => {
-          this.DoingAbsenWithRequest(reportData);
+          this.DoingAbsenWithRequest(reportData, false);
         }        // role: 'Cancel'
       }, {
         text: 'WFH',
@@ -606,7 +606,7 @@ export class HomePage {
                 handler: () => {
                   this.globalService.dateRequest = reportData.dateAbsen;
                   this.globalService.timeRequest = reportData.timeAbsen;
-                  this.DoingAbsenWithRequest(reportData);
+                  this.DoingAbsenWithRequest(reportData, true);
                   // this.router.navigate(['form-request'], navigationExtras);
                 }
               }] : reportData.szActivityId == "belumcheckin" ? [{
@@ -664,11 +664,11 @@ export class HomePage {
     });
   }
 
-  private DoingAbsenWithRequest(reportData: ReportData) {
+  private DoingAbsenWithRequest(reportData: ReportData, isKantorPusat: Boolean) {
     reportData.szActivityId = "";
-    reportData.szLocation = "HK Tower";
-    reportData.kota = "Kota Jakarta Timur";
-    reportData.provinsi = "Daerah Khusus Ibukota Jakarta";
+    reportData.szLocation = isKantorPusat ? "HK Tower" : this.globalService.location;
+    reportData.kota = isKantorPusat ? "Kota Jakarta Timur" : this.globalService.kota;
+    reportData.provinsi = isKantorPusat ? "Daerah Khusus Ibukota Jakarta" : this.globalService.provinsi;
     reportData.isRequest = "1";
 
     var data = this.globalService.SaveReportDataWithRequest(reportData);
