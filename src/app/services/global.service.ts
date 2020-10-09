@@ -9,6 +9,7 @@ import { Storage } from '@ionic/storage';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { DatePipe } from '@angular/common';
 import { FCM } from '@ionic-native/fcm/ngx';
+import { toTypeScript } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root'
@@ -646,11 +647,45 @@ export class GlobalService {
     return this.httpClient.post(url, postdata);
   }
 
-  public Logout() {
-    this.PresentAlert("User tidak diperkenankan logout");
+  public SetTracking(trackingData: TrackingData): Observable<any> {
+    var url = 'https://absensi.hutamakarya.com/api/attendance/setTracking';
+    let postdata = new FormData();
+    postdata.append('authorization', this.userData.szToken);
+    postdata.append('lokasisch', trackingData.lokasiSch);
+    postdata.append('datesch', trackingData.dateSch);
+    postdata.append('timesch', trackingData.timeSch);
+    postdata.append('scheduleke', trackingData.scheduleKe);
 
-    // this.authService.logout();
-    // this.fcm.unsubscribeFromTopic(this.userData.szUserId);
+    return this.httpClient.post(url, postdata);
+  }
+
+  public pushNotif(title: string, body: string) {
+    var url = 'https://absensi.hutamakarya.com/api/attendance/pushNotif';
+    let postdata = new FormData();
+    var TITLE = title != "" ? title : "HARAP MENGAKTIFKAN GPS";
+    var BODY = body != "" ? body : "Hai. Aktifin GPSnya ya supaya absen rutin 2 jam sekali berjalan normal";
+
+    postdata.append('authorization', this.userData.szToken);
+    postdata.append('title', TITLE);
+    postdata.append('body', BODY);
+
+    var data: any = this.httpClient.post(url, postdata);
+    data.subscribe(data => {
+      if (data.response == "success") {
+
+        var targetnik = data.targetnik;
+        var title = data.title;
+        var body = data.body;
+        console.log(targetnik, title, body);
+      }
+    });
+  }
+
+  public Logout() {
+    // this.PresentAlert("User tidak diperkenankan logout");
+
+    this.authService.logout();
+    this.fcm.unsubscribeFromTopic(this.userData.szUserId);
   }
 
   async PresentLoading() {
@@ -842,6 +877,27 @@ export class LeaderboardData {
   public szSuperiorUserName: string;
 }
 
+export class TrackingData {
+  public scheduleKe: string;
+  public lokasiSch: string;
+  public dateSch: string;
+  public timeSch: string;
+
+  constructor() { }
+}
+
+export class LocationData{
+  public id: number;
+  public provider: string;
+  public latitude: string;
+  public longitude: string;
+  public time: string;
+  public accuracy: string;
+  public location: string;
+
+  constructor() {}
+}
+
 export class ErrorData {
   public szMessage: string;
 }
@@ -864,4 +920,3 @@ export class StatusId {
   public static readonly ST002: string = "ST002"; //Not Approved 
   public static readonly ST003: string = "ST003"; //Need Approval 
 }
-
