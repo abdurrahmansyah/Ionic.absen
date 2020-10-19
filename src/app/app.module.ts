@@ -28,6 +28,8 @@ import { AppVersion } from '@ionic-native/app-version/ngx';
 import { Market } from '@ionic-native/market/ngx';
 import { HideHeaderDirective } from './directives/hide-header.directive';
 import { BackgroundGeolocation } from "@ionic-native/background-geolocation/ngx";
+import { BackgroundMode } from '@ionic-native/background-mode/ngx';
+import { AppMinimize } from '@ionic-native/app-minimize/ngx';
 
 export let InjectorInstance: Injector;
 
@@ -62,7 +64,9 @@ export let InjectorInstance: Injector;
     PhotoViewer,
     AppVersion,
     Market,
-    BackgroundGeolocation
+    BackgroundGeolocation,
+    BackgroundMode,
+    AppMinimize
   ],
   bootstrap: [AppComponent]
 })

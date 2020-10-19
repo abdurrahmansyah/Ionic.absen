@@ -9,7 +9,6 @@ import { Storage } from '@ionic/storage';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { DatePipe } from '@angular/common';
 import { FCM } from '@ionic-native/fcm/ngx';
-import { toTypeScript } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root'
@@ -226,6 +225,39 @@ export class GlobalService {
         this.PresentToast("Login Gagal");
       }
     });
+  }
+
+  public LoginSSO(szUserId: string, szPassword: string) {
+    this.PresentLoading();
+    var url = 'https://absensi.hutamakarya.com/api/authAD'; //ganti dengan API AD mas jerino
+
+    let postdata = new FormData();
+    postdata.append('username', szUserId);
+    postdata.append('password', szPassword);
+
+
+    var data: any = this.httpClient.post(url, postdata);
+    data.subscribe(data => {
+      if (data.auth == 1) {
+        var url = 'https://absensi.hutamakarya.com/api/loginSSO'; // Kondisi kalau 
+        var data: any = this.httpClient.post(url, postdata);
+        data.subscribe(data => {
+          var userDataFromDb = data.data;//.find(x => x);
+          var userData = this.MappingUserData(userDataFromDb);
+
+          this.storage.set('userData', userData);
+          this.loadingController.dismiss();
+          this.PresentToast("Login Berhasil");
+          this.authService.login();
+          this.router.navigate(['home']);
+        });
+      }
+      else {
+        this.loadingController.dismiss();
+        this.PresentToast("Login Gagal");
+      }
+    });
+
   }
 
   public GetUserData2(requestData: RequestData, szUserId: string, szPassword: string) {
@@ -886,7 +918,7 @@ export class TrackingData {
   constructor() { }
 }
 
-export class LocationData{
+export class LocationData {
   public id: number;
   public provider: string;
   public latitude: string;
@@ -895,7 +927,7 @@ export class LocationData{
   public accuracy: string;
   public location: string;
 
-  constructor() {}
+  constructor() { }
 }
 
 export class ErrorData {

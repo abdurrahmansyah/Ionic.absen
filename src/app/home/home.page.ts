@@ -5,9 +5,9 @@ import { Geolocation, GeolocationOptions, Geoposition, PositionError } from '@io
 import { Component, ViewChild } from '@angular/core';
 import { PopoverController, AlertController, NavController, Platform, IonRouterOutlet, LoadingController } from '@ionic/angular';
 import { Observable } from 'rxjs/Observable';
-import { GlobalService, ActivityId, ReportData, LeaderboardData, TrackingData, DateData } from '../services/global.service';
+import { GlobalService, ActivityId, ReportData, LeaderboardData, TrackingData, DateData, LocationData } from '../services/global.service';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
-import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
+import { ELocalNotificationTriggerUnit, LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { DatePipe } from '@angular/common';
 import { FCM } from '@ionic-native/fcm/ngx';
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
@@ -16,6 +16,8 @@ import { OpenNativeSettings } from '@ionic-native/open-native-settings/ngx';
 import { NativeGeocoder, NativeGeocoderResult, NativeGeocoderOptions } from '@ionic-native/native-geocoder/ngx';
 import { AppVersion } from '@ionic-native/app-version/ngx';
 import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationEvents, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation/ngx';
+import { BackgroundMode } from '@ionic-native/background-mode/ngx';
+import { AppMinimize } from '@ionic-native/app-minimize/ngx';
 
 declare var window;
 
@@ -41,12 +43,6 @@ export class HomePage {
   public leadImage: any;
   private loading: any;
   private subscription: any;
-  private timerForGetPositionBy3Hours: any;
-  private counter: number = 1;
-  private isTracking1Done = false;
-  private isTracking2Done = false;
-  private isTracking3Done = false;
-  locations: any;
   @ViewChild(IonRouterOutlet, { static: false }) routerOutlet: IonRouterOutlet;
 
   constructor(public navCtrl: NavController, public alertController: AlertController,
@@ -66,7 +62,9 @@ export class HomePage {
     private openNativeSettings: OpenNativeSettings,
     private nativeGeocoder: NativeGeocoder,
     private appVersion: AppVersion,
-    private backgroundGeolocation: BackgroundGeolocation
+    private backgroundGeolocation: BackgroundGeolocation,
+    private backgroundMode: BackgroundMode,
+    private appMinimize: AppMinimize
   ) {
     this.ValidateAppVersionNumber();
     this.InitializeApp();
@@ -76,45 +74,79 @@ export class HomePage {
   }
 
   ValidateAppVersionNumber() {
-    // var data = this.globalService.GetVersionNumber();
-    // data.subscribe(data => {
-    //   if (data.response == "success") {
-    //     var versionNumberDb = data.data;
+    var data = this.globalService.GetVersionNumber();
+    data.subscribe(data => {
+      if (data.response == "success") {
+        var versionNumberDb = data.data;
 
-    //     this.appVersion.getVersionNumber().then((versionNumber) => {
-    //       if (versionNumber < versionNumberDb)
-    //         this.router.navigate(['warning-updates']);
-    //     }).catch((error) => {
-    //       this.globalService.PresentAlert(error.message);
-    //       this.router.navigate(['warning-updates']);
-    //     });
-    //   }
-    // });
-
-    this.locations = [];
-    // window.app.
+        this.appVersion.getVersionNumber().then((versionNumber) => {
+          if (versionNumber < versionNumberDb)
+            this.router.navigate(['warning-updates']);
+        }).catch((error) => {
+          this.globalService.PresentAlert(error.message);
+          this.router.navigate(['warning-updates']);
+        });
+      }
+    });
   }
 
-  StartBackGroundTracking() {
-    window.app.backgroundGeolocation.start();
-  }
-
-  StopBackGroundTracking() {
-    window.app.backgroundGeolocation.stop();
-  }
-
-  GetLocations() {
-    this.locations = (JSON.parse(localStorage.getItem("location")) == null) ? [] : JSON.parse(localStorage.getItem("location"));
-  }
-
-  ClearLocation(){
-    localStorage.removeItem("location");
+  StartLocalNotification() {
+    this.localNotifications.schedule([{
+      id: 1,
+      title: "Tracking WFH 1",
+      text: "Anda berada diluar kantor, mohon minimize aplikasi namun tidak melakukan close app",
+      data: { mydata: "TRACKING1" },
+      trigger: { in: 1, unit: ELocalNotificationTriggerUnit.MINUTE }
+    }, {
+      id: 2,
+      title: "Tracking WFH 2",
+      text: "Anda berada diluar kantor, mohon minimize aplikasi namun tidak melakukan close app",
+      data: { mydata: "TRACKING2" },
+      trigger: { in: 2, unit: ELocalNotificationTriggerUnit.MINUTE }
+    }, {
+      id: 3,
+      title: "Tracking WFH 3",
+      text: "Anda berada diluar kantor, mohon minimize aplikasi namun tidak melakukan close app",
+      data: { mydata: "TRACKING3" },
+      trigger: { in: 3, unit: ELocalNotificationTriggerUnit.MINUTE }
+    }]);
   }
 
   InitializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleBlackTranslucent();
+
+      this.localNotifications.on('click').subscribe(res => {
+        this.globalService.PresentAlert("BUG : dari klik - " + res.text);
+      });
+
+      this.localNotifications.on('trigger').subscribe(res => {
+        let msg = res.data ? res.data.mydata : "";
+        if (msg.toUpperCase() == "TRACKING1".toUpperCase()) {
+          window.app.backgroundGeolocation.start();
+        }
+        if (msg.toUpperCase() == "TRACKING2".toUpperCase()) {
+          window.app.backgroundGeolocation.start();
+        }
+        if (msg.toUpperCase() == "TRACKING3".toUpperCase()) {
+          window.app.backgroundGeolocation.start();
+        }
+      });
+
+      this.localNotifications.on('schedule').subscribe(res => {
+        this.globalService.PresentAlert("BUG : error from local notif schedule" + res.text);
+      });
     });
+
+    this.backgroundMode.enable();
+
+    this.platform.backButton.subscribe(() => {
+      // navigator['app'].appMinimize.minimize();
+      this.appMinimize.minimize();
+
+    });
+
+    // this.swipebackEnabled = false;
   }
 
   async InitializeLoadingCtrl() {
@@ -291,7 +323,8 @@ export class HomePage {
 
   ionViewDidEnter() {
     this.subscription = this.platform.backButton.subscribe(() => {
-      navigator['app'].exitApp();
+      this.appMinimize.minimize();
+      // navigator['app'].appMinimize.minimize();
     });
     this.swipebackEnabled = false;
   }
@@ -327,114 +360,45 @@ export class HomePage {
   }
 
   public async ButtonAbsen() {
-    // this.LoopingGetPositionFor3Times();
-    // this.BackgroundGeolocation();
+    try {
+      this.PresentLoading();
 
-    // try {
-    //   this.PresentLoading();
+      var data = this.globalService.GetVersionNumber();
+      data.subscribe(data => {
+        if (data.response == "success") {
+          var versionNumberDb = data.data;
 
-    //   var data = this.globalService.GetVersionNumber();
-    //   data.subscribe(data => {
-    //     if (data.response == "success") {
-    //       var versionNumberDb = data.data;
-
-    //       this.appVersion.getVersionNumber().then((versionNumber) => {
-    //         if (versionNumber < versionNumberDb) {
-    //           this.loadingController.dismiss();
-    //           this.router.navigate(['warning-updates']);
-    //         }
-    //         else
-    //           this.GetUserPositionThenValidateAbsen();
-    //       }).catch((error) => {
-    //         this.globalService.PresentAlert(error.message);
-    //         this.router.navigate(['warning-updates']);
-    //       });
-    //     }
-    //     else {
-    //       this.loadingController.dismiss();
-    //       this.globalService.PresentAlert("BUG: Error API Version Number");
-    //     }
-    //   });
-    // }
-    // catch (e) {
-    //   this.loadingController.dismiss();
-    //   this.alertController.create({
-    //     mode: 'ios',
-    //     message: e.message,
-    //     buttons: ['OK']
-    //   }).then(alert => {
-    //     return alert.present();
-    //   });
-    // }
-  }
-
-  private BackgroundGeolocation() {
-    const config: BackgroundGeolocationConfig = {
-      desiredAccuracy: 10,
-      stationaryRadius: 20,
-      distanceFilter: 30,
-      debug: true, //  enable this hear sounds for background-geolocation life-cycle.
-      stopOnTerminate: false, // enable this to clear background location settings when the app terminates
-      // interval: 1000,
-      // fastestInterval: 500,
-      // activitiesInterval: 1000,
-    };
-
-    this.backgroundGeolocation.configure(config)
-      .then(() => {
-
-        this.backgroundGeolocation.on(BackgroundGeolocationEvents.location).subscribe((location: BackgroundGeolocationResponse) => {
-          console.log(location);
-          this.CallErrorForFailedGPS();
-          this.globalService.pushNotif("location", JSON.stringify(location));
-
-          // IMPORTANT:  You must execute the finish method here to inform the native plugin that you're finished,
-          // and the background-task may be completed.  You must do this regardless if your operations are successful or not.
-          // IF YOU DON'T, ios will CRASH YOUR APP for spending too much time in the background.
-          this.backgroundGeolocation.finish(); // FOR IOS ONLY
-        });
-
+          this.appVersion.getVersionNumber().then((versionNumber) => {
+            if (versionNumber < versionNumberDb) {
+              this.loadingController.dismiss();
+              this.router.navigate(['warning-updates']);
+            }
+            else
+              this.GetUserPositionThenValidateAbsen();
+          }).catch((error) => {
+            this.globalService.PresentAlert(error.message);
+            this.router.navigate(['warning-updates']);
+          });
+        }
+        else {
+          this.loadingController.dismiss();
+          this.globalService.PresentAlert("BUG: Error API Version Number");
+        }
       });
-
-    // start recording location
-    this.backgroundGeolocation.start();
+    }
+    catch (e) {
+      this.loadingController.dismiss();
+      this.alertController.create({
+        mode: 'ios',
+        message: e.message,
+        buttons: ['OK']
+      }).then(alert => {
+        return alert.present();
+      });
+    }
   }
 
-  private LoopingGetPositionFor3Times() {
-    clearInterval(this.timerForGetPositionBy3Hours);
-    this.isTracking1Done, this.isTracking2Done, this.isTracking3Done = false;
-    this.counter = 1;
-
-    this.timerForGetPositionBy3Hours = setInterval(function () {
-      this.GetPositionFor3Times();
-    }.bind(this), 1000);
-  }
-
-  GetPositionFor3Times() {
-    this.BackgroundGeolocation();
-
-    // this.counter += 1;
-    // console.log(this.counter);
-
-    // if (this.counter > 60 && !this.isTracking1Done) {
-    //   var scheduleKe = "1";
-    //   console.log(scheduleKe);
-
-    //   // this.GetUserPositionThenValidateAbsenOrSetTracking(false, scheduleKe);
-    // }
-    // if (this.counter > 120 && !this.isTracking2Done) {
-    //   var scheduleKe = "2";
-    //   console.log(scheduleKe);
-    //   // this.GetUserPositionThenValidateAbsenOrSetTracking(false, scheduleKe);
-    // }
-    // if (this.counter > 180 && !this.isTracking3Done) {
-    //   var scheduleKe = "3";
-    //   console.log(scheduleKe);
-    //   // this.GetUserPositionThenValidateAbsenOrSetTracking(false, scheduleKe);
-    // }
-  }
-
-  private GetUserPositionThenValidateAbsenOrSetTracking(isAbsen: boolean, scheduleKe: string) {
+  private GetUserPositionThenValidateAbsen() {
     let successCallback = (enabled) => {
       if (enabled) {
         this.diagnostic.isLocationAvailable().then((allowed) => {
@@ -446,23 +410,14 @@ export class HomePage {
               this.globalService.geoLatitude = pos.coords.latitude;
               this.globalService.geoLongitude = pos.coords.longitude;
 
-              if (isAbsen)
-                this.ValidateAbsen();
-              else
-                this.MappingDataAndSetTracking(scheduleKe);
+              this.ValidateAbsen();
             }).catch((error) => {
-              if (isAbsen)
-                throw new Error(error.message);
-              else
-                this.CallErrorForFailedGPS();
+              throw new Error(error.message);
             });
           }
           else {
-            if (isAbsen) {
-              this.loadingController.dismiss();
-              this.router.navigate(['warning-locations']);
-            } else
-              this.CallErrorForFailedGPS();
+            this.loadingController.dismiss();
+            this.router.navigate(['warning-locations']);
           }
         }).catch((e) => {
           this.loadingController.dismiss();
@@ -476,10 +431,7 @@ export class HomePage {
         });
       }
       else
-        if (isAbsen)
-          throw new Error("Tidak dapat mengakses lokasi: Aktifkan GPS anda");
-        else
-          this.CallErrorForFailedGPS();
+        throw new Error("Tidak dapat mengakses lokasi: Aktifkan GPS anda");
     }
     let errorCallback = (e) => {
       this.loadingController.dismiss();
@@ -493,10 +445,6 @@ export class HomePage {
     };
 
     this.diagnostic.isLocationEnabled().then(successCallback).catch(errorCallback);
-  }
-
-  private CallErrorForFailedGPS() {
-    this.globalService.pushNotif("", "");
   }
 
   private ReadGeocode(latitude, longitude) {
@@ -526,7 +474,7 @@ export class HomePage {
     this.globalService.provinsi = result[index].administrativeArea;
     this.globalService.location = thoroughfare + subThoroughfare + subLocality + locality + subAdministrativeArea + administrativeArea + postalCode;
   }
-
+  
   private ValidateAbsen() {
     var data = this.globalService.GetTimeNow();
     data.subscribe(data => {
@@ -762,33 +710,6 @@ export class HomePage {
   private async DoingAbsen(reportData: ReportData) {
     var data = this.globalService.SaveReportData(reportData);
     this.SubscribeGetReportDatas(data, true);
-  }
-
-  private MappingDataAndSetTracking(scheduleKe: string) {
-    var trackingData = new TrackingData();
-    var dateData = this.globalService.GetDate();
-    trackingData.scheduleKe = scheduleKe;
-    trackingData.dateSch = this.datePipe.transform(dateData.date, 'yyyy-MM-dd');
-    trackingData.timeSch = dateData.szHour + ":" + dateData.szMinute;
-    trackingData.lokasiSch = this.globalService.location;
-
-    var data = this.globalService.SetTracking(trackingData);
-    this.SubscribeSetTracking(data, scheduleKe);
-  }
-
-  private async SubscribeSetTracking(data: Observable<any>, scheduleKe: string) {
-    data.subscribe(data => {
-      if (data.response == "success" && scheduleKe == "1") {
-        this.isTracking1Done = true;
-      }
-      if (data.response == "success" && scheduleKe == "2") {
-        this.isTracking2Done = true;
-      }
-      if (data.response == "success" && scheduleKe == "3") {
-        this.isTracking3Done = true;
-        clearInterval(this.timerForGetPositionBy3Hours);
-      }
-    });
   }
 
   private async PresentNotif(isArrived: boolean) {

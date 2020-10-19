@@ -65,12 +65,6 @@
     </div>
   </div>
 
-  <ion-list *ngFor="let location of locations">
-    <ion-item><ion-label><b>ID:</b>{{location.id}}</ion-label></ion-item>
-    <ion-item><ion-label><b>Location:</b>{{location.location}}</ion-label></ion-item>
-    <ion-item><ion-label><b>Provider:</b>{{location.provider}}</ion-label></ion-item>
-    <ion-item><ion-label><b>Time:</b>{{location.time}}</ion-label></ion-item>
-  </ion-list>
 </ion-content>
 
 <ion-footer no-border color="translucent">
@@ -105,10 +99,7 @@
           </ion-row>
         </ion-grid>
         <ion-button expand="block" color="hk-red" (click)="ButtonAbsen()">ABSEN</ion-button>
-        <ion-button expand="block" color="hk-red" (click)="StartBackGroundTracking()">Start</ion-button>
-        <ion-button expand="block" color="hk-red" (click)="StopBackGroundTracking()">Stop</ion-button>
-        <ion-button expand="block" color="hk-red" (click)="GetLocations()">Get</ion-button>
-        <ion-button expand="block" color="hk-red" (click)="ClearLocation()">Clear</ion-button>
+        <ion-button expand="block" color="hk-red" (click)="StartLocalNotification()">Start Local Notif</ion-button>
       </div>
     </ion-card>
   </ion-toolbar>
