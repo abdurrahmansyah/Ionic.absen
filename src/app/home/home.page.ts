@@ -74,20 +74,20 @@ export class HomePage {
   }
 
   ValidateAppVersionNumber() {
-    var data = this.globalService.GetVersionNumber();
-    data.subscribe(data => {
-      if (data.response == "success") {
-        var versionNumberDb = data.data;
+    // var data = this.globalService.GetVersionNumber();
+    // data.subscribe(data => {
+    //   if (data.response == "success") {
+    //     var versionNumberDb = data.data;
 
-        this.appVersion.getVersionNumber().then((versionNumber) => {
-          if (versionNumber < versionNumberDb)
-            this.router.navigate(['warning-updates']);
-        }).catch((error) => {
-          this.globalService.PresentAlert(error.message);
-          this.router.navigate(['warning-updates']);
-        });
-      }
-    });
+    //     this.appVersion.getVersionNumber().then((versionNumber) => {
+    //       if (versionNumber < versionNumberDb)
+    //         this.router.navigate(['warning-updates']);
+    //     }).catch((error) => {
+    //       this.globalService.PresentAlert(error.message);
+    //       this.router.navigate(['warning-updates']);
+    //     });
+    //   }
+    // });
   }
 
   StartLocalNotification() {

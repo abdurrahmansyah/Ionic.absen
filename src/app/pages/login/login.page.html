@@ -1,35 +1,89 @@
 <ion-content>
   <div class="bg-img" padding></div>
-  <form registerForm="ngForm" (ngSubmit)="Login()">
+  <form registerForm="ngForm">
     <ion-card mode="ios">
-      <ion-row class="ion-align-items-center">
+      <!-- <ion-row class="ion-align-items-center">
         <ion-col>
           <h1>Login</h1>
         </ion-col>
-      </ion-row>
-      <ion-row class="ion-align-items-center">
-        <ion-col>
-          <ion-item>
-            <ion-input type="text" placeholder="Username" [(ngModel)]="szUserId" name="szUserId" required></ion-input>
-          </ion-item>
-        </ion-col>
-      </ion-row>
+      </ion-row> -->
 
-      <ion-row class="ion-align-items-center">
-        <ion-col>
-          <ion-item>
-            <ion-input type="password" placeholder="Password" [(ngModel)]="szPassword" name="szPassword" required>
-            </ion-input>
-          </ion-item>
-        </ion-col>
-      </ion-row>
+      <ion-segment color="hk-red" value="sso" [(ngModel)]="segment" name="segment">
+        <ion-segment-button value="nik" mode="md">
+          <ion-label>Login NIK</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="sso" mode="md" checked>
+          <ion-label>SSO HK</ion-label>
+        </ion-segment-button>
+      </ion-segment>
 
-      <ion-row class="ion-align-items-center">
-        <ion-col class="signup-col">
-          <ion-button shape="round" expand="block" color='hk-red' type="submit"> Login
-          </ion-button>
-        </ion-col>
-      </ion-row>
+      <br>
+
+      <div [ngSwitch]="segment">
+        <div *ngSwitchCase="'nik'">
+          <ion-row class="ion-align-items-center">
+            <ion-col>
+              <ion-item>
+                <ion-input type="text" placeholder="NIK" [(ngModel)]="szUserId" name="szUserId" required>
+                </ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="ion-align-items-center">
+            <ion-col>
+              <ion-item>
+                <ion-input [type]="passwordType" placeholder="Password" [(ngModel)]="szPassword" name="szPassword"
+                  required>
+                </ion-input>
+                <ion-icon name="{{iconName}}" [color]="black" item-end (click)="togglePass()"></ion-icon>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+
+          <br>
+
+          <ion-row class="ion-align-items-center">
+            <ion-col class="signup-col">
+              <ion-button shape="round" expand="block" color='hk-red' type="submit" (click)="Login()">Login</ion-button>
+            </ion-col>
+          </ion-row>
+        </div>
+
+        <div *ngSwitchCase="'sso'">
+          <ion-row class="ion-align-items-center">
+            <ion-col>
+              <ion-item>
+                <ion-input type="text" placeholder="Email" [(ngModel)]="szUserId" name="szUserId" required>
+                </ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+
+          <ion-row class="ion-align-items-center">
+            <ion-col>
+              <ion-item>
+                <ion-input [type]="passwordType" placeholder="Password" [(ngModel)]="szPassword" name="szPassword"
+                  required>
+                </ion-input>
+                <ion-icon name="{{iconName}}" [color]="black" item-end (click)="togglePass()"></ion-icon>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+
+          <br>
+
+          <ion-row class="ion-align-items-center">
+            <ion-col class="signup-col">
+              <ion-button shape="round" expand="block" color='hk-red' type="submit" (click)="LoginSSO()">Login SSO HK
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </div>
+      </div>
+
+
+
     </ion-card>
   </form>
 </ion-content>
