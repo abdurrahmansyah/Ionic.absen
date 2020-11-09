@@ -74,23 +74,23 @@ export class HomePage {
   }
 
   ValidateAppVersionNumber() {
-    // var data = this.globalService.GetVersionNumber();
-    // data.subscribe(data => {
-    //   if (data.response == "success") {
-    //     var versionNumberDb = data.data;
+    var data = this.globalService.GetVersionNumber();
+    data.subscribe(data => {
+      if (data.response == "success") {
+        var versionNumberDb = data.data;
 
-    //     this.appVersion.getVersionNumber().then((versionNumber) => {
-    //       if (versionNumber < versionNumberDb)
-    //         this.router.navigate(['warning-updates']);
-    //     }).catch((error) => {
-    //       this.globalService.PresentAlert(error.message);
-    //       this.router.navigate(['warning-updates']);
-    //     });
-    //   }
-    // });
+        this.appVersion.getVersionNumber().then((versionNumber) => {
+          if (versionNumber < versionNumberDb)
+            this.router.navigate(['warning-updates']);
+        }).catch((error) => {
+          this.globalService.PresentAlert(error.message);
+          this.router.navigate(['warning-updates']);
+        });
+      }
+    });
   }
 
-  StartLocalNotification() {
+  public StartLocalNotification() {
     this.localNotifications.schedule([{
       id: 1,
       title: "Tracking WFH 1",
@@ -142,8 +142,8 @@ export class HomePage {
 
     this.platform.backButton.subscribe(() => {
       // navigator['app'].appMinimize.minimize();
-      this.appMinimize.minimize();
-
+      // this.appMinimize.minimize();
+      window.plugins.appMinimize.minimize();
     });
 
     // this.swipebackEnabled = false;
@@ -323,7 +323,8 @@ export class HomePage {
 
   ionViewDidEnter() {
     this.subscription = this.platform.backButton.subscribe(() => {
-      this.appMinimize.minimize();
+      // this.appMinimize.minimize();
+      window.plugins.appMinimize.minimize();
       // navigator['app'].appMinimize.minimize();
     });
     this.swipebackEnabled = false;
@@ -474,7 +475,7 @@ export class HomePage {
     this.globalService.provinsi = result[index].administrativeArea;
     this.globalService.location = thoroughfare + subThoroughfare + subLocality + locality + subAdministrativeArea + administrativeArea + postalCode;
   }
-  
+
   private ValidateAbsen() {
     var data = this.globalService.GetTimeNow();
     data.subscribe(data => {
@@ -487,12 +488,12 @@ export class HomePage {
         console.log(this.globalService.geoLongitude);
         console.log(this.globalService.geoLatitude);
 
-        // if (true) {
-        if (
-          this.globalService.geoLatitude <= -6.24508
-          && this.globalService.geoLatitude >= -6.24587
-          && this.globalService.geoLongitude >= 106.87269
-          && this.globalService.geoLongitude <= 106.87379) {
+        // if (false) {
+          if (
+            this.globalService.geoLatitude <= -6.24508
+            && this.globalService.geoLatitude >= -6.24587
+            && this.globalService.geoLongitude >= 106.87269
+            && this.globalService.geoLongitude <= 106.87379) {
 
           reportData.szUserId = this.globalService.userData.szToken;
           reportData.dateAbsen = this.datePipe.transform(dateData.date, 'yyyy-MM-dd');
@@ -511,7 +512,8 @@ export class HomePage {
             }
             else {
               // Only For WFO - NEW NORMAL
-              this.ByPassDoingAbsenWfoNewNormal(reportData);
+              this.globalService.isArrived = true;
+              this.ByPassDoingAbsenWfoNewNormal(reportData, false);
 
               // BackUp If WFO - NORMAL DONE
               // this.DoingAbsen(reportData);
@@ -526,7 +528,8 @@ export class HomePage {
                   indexForm: reportData.szActivityId
                 }
               }
-              this.GetDecisionFromUser(reportData, navigationExtras);
+              this.DoingAbsenWithRequest(reportData, true);
+              // this.GetDecisionFromUser(reportData, navigationExtras); 
             }
             else if (reportData.timeAbsen > "17:45") {
               reportData.szActivityId = this.globalService.activityDataList.lembur.id;
@@ -599,8 +602,12 @@ export class HomePage {
     });
   }
 
-  private ByPassDoingAbsenWfoNewNormal(reportData: ReportData) {
-    reportData.szActivityId = this.globalService.activityDataList.wfoNewNormal.id;
+  private ByPassDoingAbsenWfoNewNormal(reportData: ReportData, isWfoProyek: boolean) {
+    if (isWfoProyek)
+      reportData.szActivityId = this.globalService.activityDataList.wfoProyek.id;
+    else
+      reportData.szActivityId = this.globalService.activityDataList.wfoNewNormal.id;
+
     let navigationExtras: NavigationExtras = {
       state: {
         indexForm: reportData.szActivityId
@@ -630,7 +637,7 @@ export class HomePage {
       buttons: reportData.szActivityId == this.globalService.activityDataList.datangDiluarKantor.id ? [{
         text: 'WFO - Proyek',
         handler: () => {
-          this.ByPassDoingAbsenWfoNewNormal(reportData);
+          this.ByPassDoingAbsenWfoNewNormal(reportData, true);
         }        // role: 'Cancel'
       }, {
         text: 'WFH',
@@ -735,6 +742,7 @@ export class HomePage {
 
     var data = this.globalService.SaveReportDataWithRequest(reportData);
     this.SubscribeGetReportDatas(data, true);
+    this.globalService.CancelLocalNotification();
   }
 
   NavigateToReportPage() {

@@ -8,7 +8,7 @@
         </ion-col>
       </ion-row> -->
 
-      <ion-segment color="hk-red" value="sso" [(ngModel)]="segment" name="segment">
+      <ion-segment color="hk-red" value="sso" (ionChange)="SegmentChanged($event)" [(ngModel)]="segment" name="segment">
         <ion-segment-button value="nik" mode="md">
           <ion-label>Login NIK</ion-label>
         </ion-segment-button>

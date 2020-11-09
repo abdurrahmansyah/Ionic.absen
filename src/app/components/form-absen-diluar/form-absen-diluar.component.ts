@@ -192,6 +192,11 @@ export class FormAbsenDiluarComponent implements OnInit {
         else
           this.PresentNotif(false);
         // this.globalService.PresentToast("Berhasil melakukan absensi");
+
+        if (this.isArrived)
+          this.globalService.StartLocalNotification();
+        else
+          this.globalService.CancelLocalNotification();
       }
       else {
         this.loadingController.dismiss();

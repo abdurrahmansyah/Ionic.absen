@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivityId, StatusId, GlobalService, RequestData, ReportData } from 'src/app/services/global.service';
+import { GlobalService, ReportData } from 'src/app/services/global.service';
 import { AlertController, LoadingController } from '@ionic/angular';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-form-wfo-new-normal',
-  templateUrl: './form-wfo-new-normal.component.html',
-  styleUrls: ['./form-wfo-new-normal.component.scss'],
+  selector: 'app-form-absen-proyek',
+  templateUrl: './form-absen-proyek.component.html',
+  styleUrls: ['./form-absen-proyek.component.scss'],
 })
-export class FormWfoNewNormalComponent implements OnInit {
+export class FormAbsenProyekComponent implements OnInit {
   public txtTimeRequest: string;
   public txtTemperature: string;
   public lokasi: string;
@@ -39,7 +39,7 @@ export class FormWfoNewNormalComponent implements OnInit {
     private loadingController: LoadingController,
     public router: Router) {
     this.InitializeLoadingCtrl();
-    this.lokasi = "0";
+    this.lokasi = "1";
   }
 
   async InitializeLoadingCtrl() {
@@ -138,8 +138,8 @@ export class FormWfoNewNormalComponent implements OnInit {
     reportData.kota = this.lokasi == "0" ? "Kota Jakarta Timur" : this.globalService.kota;
     reportData.provinsi = this.lokasi == "0" ? "Daerah Khusus Ibukota Jakarta" : this.globalService.provinsi;
     reportData.work_from = this.lokasi == "0" ? "WFO" : "WFO - Proyek";
-    reportData.szActivityId = this.globalService.activityDataList.wfoNewNormal.id;
-    reportData.szDesc = "WFO - New Normal";
+    reportData.szActivityId = this.globalService.activityDataList.wfoProyek.id;
+    reportData.szDesc = "WFO - Absen Proyek";
     reportData.health_check = "";
     reportData.suhu = this.txtTemperature;
     reportData.szLocation = this.lokasi == "0" ?  "HK Tower" : this.globalService.location;

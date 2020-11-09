@@ -1,4 +1,5 @@
 <ion-content fullscreen scroll-y=false>
+
   <ion-slides fullscreen pager="true" [options]="slideOpts">
     <ion-slide>
       <ion-row>
@@ -47,4 +48,8 @@
       </ion-row> -->
     </ion-slide>
   </ion-slides>
+
+  <div class="overlay">
+    <ion-text style="font-size: small;">Version : {{versionNumber}}</ion-text>
+  </div>
 </ion-content>

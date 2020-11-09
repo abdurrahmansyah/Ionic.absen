@@ -84,7 +84,8 @@ export class AppComponent {
         fastestInterval: 1000,
         activitiesInterval: 1000,
         notificationsEnabled: true,
-        // startForeground: true
+        notificationTitle: 'Please wait...',
+        notificationText: 'HK ABSEN Tracking',// startForeground: true
       };
 
       this.backgroundGeolocation.configure(config)

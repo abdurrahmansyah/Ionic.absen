@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AppVersion } from '@ionic-native/app-version/ngx';
 import { Platform } from '@ionic/angular';
+import { GlobalService } from 'src/app/services/global.service';
 
 @Component({
   selector: 'app-welcome',
@@ -15,8 +17,22 @@ export class WelcomePage implements OnInit {
   };
 
   private subscription: any;
+  private versionNumber: string;
 
-  constructor(private router: Router, private platform: Platform) { }
+  constructor(private router: Router, 
+    private platform: Platform, 
+    private appVersion: AppVersion, 
+    private globalService: GlobalService) {
+    this.GetVersion();
+  }
+
+  GetVersion() {
+    this.appVersion.getVersionNumber().then((versionNumber) => {
+      this.versionNumber = versionNumber;
+    }).catch((error) => {
+      this.globalService.PresentAlert(error.message);
+    });
+  }
 
   ngOnInit() {
   }
@@ -31,7 +47,7 @@ export class WelcomePage implements OnInit {
     this.subscription.unsubscribe();
   }
 
-  navigateToLoginPage(){
+  navigateToLoginPage() {
     this.router.navigate(['login']);
   }
 }

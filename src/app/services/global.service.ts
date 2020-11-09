@@ -9,6 +9,9 @@ import { Storage } from '@ionic/storage';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { DatePipe } from '@angular/common';
 import { FCM } from '@ionic-native/fcm/ngx';
+import { ELocalNotificationTriggerUnit, LocalNotifications } from '@ionic-native/local-notifications/ngx';
+
+declare var window;
 
 @Injectable({
   providedIn: 'root'
@@ -46,9 +49,62 @@ export class GlobalService {
     private datePipe: DatePipe,
     private fcm: FCM,
     public loadingController: LoadingController,
-    private platform: Platform
+    private platform: Platform,
+    private localNotifications: LocalNotifications
   ) {
+    this.InitializeApp();
     this.InitializeLoadingCtrl();
+  }
+
+  InitializeApp() {
+    this.platform.ready().then(() => {
+      this.localNotifications.on('click').subscribe(res => {
+        this.PresentAlert("BUG : dari klik - " + res.text);
+      });
+
+      this.localNotifications.on('trigger').subscribe(res => {
+        let msg = res.data ? res.data.mydata : "";
+        if (msg.toUpperCase() == "TRACKING1".toUpperCase()) {
+          window.app.backgroundGeolocation.start();
+        }
+        if (msg.toUpperCase() == "TRACKING2".toUpperCase()) {
+          window.app.backgroundGeolocation.start();
+        }
+        if (msg.toUpperCase() == "TRACKING3".toUpperCase()) {
+          window.app.backgroundGeolocation.start();
+        }
+      });
+
+      this.localNotifications.on('schedule').subscribe(res => {
+        this.PresentAlert("BUG : error from local notif schedule" + res.text);
+      });
+    });
+  }
+
+  public StartLocalNotification() {
+    this.localNotifications.schedule([{
+      id: 1,
+      title: "Tracking WFH",
+      text: "Anda berada diluar kantor, mohon minimize aplikasi namun tidak melakukan close app",
+      data: { mydata: "TRACKING1" },
+      trigger: { in: 1, unit: ELocalNotificationTriggerUnit.MINUTE }
+    }, {
+      id: 2,
+      title: "Tracking WFH",
+      text: "Anda berada diluar kantor, mohon minimize aplikasi namun tidak melakukan close app",
+      data: { mydata: "TRACKING2" },
+      trigger: { in: 2, unit: ELocalNotificationTriggerUnit.MINUTE }
+    }, {
+      id: 3,
+      title: "Tracking WFH",
+      text: "Anda berada diluar kantor, mohon minimize aplikasi namun tidak melakukan close app",
+      data: { mydata: "TRACKING3" },
+      trigger: { in: 3, unit: ELocalNotificationTriggerUnit.MINUTE }
+    }]);
+  }
+
+  public CancelLocalNotification(){
+    this.localNotifications.cancel([1, 2, 3]);
   }
 
   async InitializeLoadingCtrl() {
@@ -195,6 +251,7 @@ export class GlobalService {
     activityData.izin = activityDataFromDb[8];
     activityData.cuti = activityDataFromDb[9];
     activityData.wfoNewNormal = activityDataFromDb[10];
+    activityData.wfoProyek = activityDataFromDb[11];
 
     return activityData;
   }
@@ -714,10 +771,10 @@ export class GlobalService {
   }
 
   public Logout() {
-    // this.PresentAlert("User tidak diperkenankan logout");
+    this.PresentAlert("User tidak diperkenankan logout");
 
-    this.authService.logout();
-    this.fcm.unsubscribeFromTopic(this.userData.szUserId);
+    // this.authService.logout();
+    // this.fcm.unsubscribeFromTopic(this.userData.szUserId);
   }
 
   async PresentLoading() {
@@ -764,6 +821,7 @@ export class ActivityData {
   public izin: any;
   public cuti: any;
   public wfoNewNormal: any;
+  public wfoProyek: any;
 }
 
 export class UserData {

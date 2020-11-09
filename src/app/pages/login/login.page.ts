@@ -40,4 +40,9 @@ export class LoginPage implements OnInit {
       this.iconName = 'eye-off';
     }
   }
+
+  public SegmentChanged(ev: any) {
+    this.szUserId = "";
+    this.szPassword = "";
+  }
 }
