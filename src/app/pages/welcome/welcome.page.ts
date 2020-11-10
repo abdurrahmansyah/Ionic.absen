@@ -17,7 +17,7 @@ export class WelcomePage implements OnInit {
   };
 
   private subscription: any;
-  private versionNumber: string;
+  public versionNumber: string;
 
   constructor(private router: Router, 
     private platform: Platform, 

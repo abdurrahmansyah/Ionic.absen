@@ -35,11 +35,13 @@ export class GlobalService {
   public kota: string = "";
   public provinsi: string = "";
   public timestamp: number;
+  public mobile: string = "";
   loading: any;
 
   httpClient = InjectorInstance.get<HttpClient>(HttpClient);
   dataimage: any;
-  readonly mobile = "mobile";
+  readonly mobileIos = "mobile - iOS";
+  readonly mobileAndroid = "mobile - Android";
 
   constructor(private router: Router,
     private toastController: ToastController,
@@ -54,6 +56,7 @@ export class GlobalService {
   ) {
     this.InitializeApp();
     this.InitializeLoadingCtrl();
+    this.InitializeData();
   }
 
   InitializeApp() {
@@ -87,23 +90,23 @@ export class GlobalService {
       title: "Tracking WFH",
       text: "Anda berada diluar kantor, mohon minimize aplikasi namun tidak melakukan close app",
       data: { mydata: "TRACKING1" },
-      trigger: { in: 1, unit: ELocalNotificationTriggerUnit.MINUTE }
+      trigger: { in: 2, unit: ELocalNotificationTriggerUnit.HOUR }
     }, {
       id: 2,
       title: "Tracking WFH",
       text: "Anda berada diluar kantor, mohon minimize aplikasi namun tidak melakukan close app",
       data: { mydata: "TRACKING2" },
-      trigger: { in: 2, unit: ELocalNotificationTriggerUnit.MINUTE }
+      trigger: { in: 4, unit: ELocalNotificationTriggerUnit.HOUR }
     }, {
       id: 3,
       title: "Tracking WFH",
       text: "Anda berada diluar kantor, mohon minimize aplikasi namun tidak melakukan close app",
       data: { mydata: "TRACKING3" },
-      trigger: { in: 3, unit: ELocalNotificationTriggerUnit.MINUTE }
+      trigger: { in: 6, unit: ELocalNotificationTriggerUnit.HOUR }
     }]);
   }
 
-  public CancelLocalNotification(){
+  public CancelLocalNotification() {
     this.localNotifications.cancel([1, 2, 3]);
   }
 
@@ -111,6 +114,13 @@ export class GlobalService {
     this.loading = await this.loadingController.create({
       mode: 'ios'
     });
+  }
+
+  private InitializeData() {
+    if (this.platform.is('ios'))
+      this.mobile = this.mobileIos;
+    else
+      this.mobile = this.mobileAndroid;
   }
 
   public GetDate(): DateData {
