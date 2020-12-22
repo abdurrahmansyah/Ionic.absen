@@ -48,6 +48,8 @@
               <ion-text>Rencana Keluar</ion-text> <br>
               <ion-text>Bertemu External</ion-text> <br>
               <ion-text>Keluarga Sakit</ion-text> <br>
+              <ion-text>Terakhir Olahraga</ion-text> <br>
+              <ion-text>Jenis Olahraga</ion-text> <br>
             </div>
           </ion-col>
           <ion-col size="6" no-padding>
@@ -59,11 +61,13 @@
               <ion-text>: {{ activityData.timeValidReturn }}</ion-text> <br>
               <ion-text>: {{ activityData.interaksi }}</ion-text> <br>
               <ion-text>: {{ activityData.riwayat_sakit }}</ion-text> <br>
-              <ion-text *ngIf="activityData.work_from == 'WFO'">: {{ activityData.kendaraan }}</ion-text> 
+              <ion-text *ngIf="activityData.work_from == 'WFO'">: {{ activityData.kendaraan }}</ion-text>
               <br *ngIf="activityData.work_from == 'WFO'">
               <ion-text>: {{ activityData.rencana_keluar }}</ion-text> <br>
               <ion-text>: {{ activityData.external }}</ion-text> <br>
               <ion-text>: {{ activityData.kondisi_keluarga }}</ion-text> <br>
+              <ion-text>: {{ activityData.waktu_olahraga }}</ion-text> <br>
+              <ion-text>: {{ activityData.jenis_olahraga }}</ion-text> <br>
             </div>
           </ion-col>
         </ion-row>
@@ -71,7 +75,7 @@
         <ion-icon name="arrow-forward" mode="ios" color="primary" style="font-size: 14px; vertical-align: middle">
         </ion-icon>
       </div>
-      <div *ngIf="!activityData.isAnyActivity" padding class="ion-text-center" >
+      <div *ngIf="!activityData.isAnyActivity" padding class="ion-text-center">
         <ion-text>Karyawan belum mengisi form activity</ion-text>
       </div>
     </ion-card>

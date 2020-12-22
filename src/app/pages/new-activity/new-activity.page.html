@@ -139,6 +139,19 @@
         </ion-item>
       </div>
 
+      <div>
+        <ion-item Lines="full">
+          <ion-label>Kapan Anda Terakhir Olahraga</ion-label>
+          <ion-datetime [(ngModel)]="waktuOlahraga" displayFormat="YYYY MM DD" placeholder="Select Date"></ion-datetime>
+        </ion-item>
+
+        <ion-item Lines="full">
+          <ion-input type="text" placeholder="Jenis Olahraga yang Dilakukan" [(ngModel)]="jenisOlahraga"
+            name="txtOlahraga" required>
+          </ion-input>
+        </ion-item>
+      </div>
+
     </ion-card-content>
 
     <ion-row class="ion-align-items-center">

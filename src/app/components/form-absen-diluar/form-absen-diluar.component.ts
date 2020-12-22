@@ -32,6 +32,8 @@ export class FormAbsenDiluarComponent implements OnInit {
   public txtHubungan3: any;
   public txtUsia3: any;
   public txtSickDesc3: any;
+  public waktuOlahraga: any;
+  public jenisOlahraga: any;
   private dataimage: string;
   private loading: any;
 
@@ -128,6 +130,14 @@ export class FormAbsenDiluarComponent implements OnInit {
         if (!this.txtSickDesc3)
           throw new Error("Deskripsi kondisi wajib diisi.");
       }
+
+      if (!this.waktuOlahraga) {
+        throw new Error("Jadwal olahraga wajib diisi.");
+      }
+
+      if (!this.jenisOlahraga) {
+        throw new Error("Jenis olahraga wajib diisi.");
+      }
     }
   }
 
@@ -174,6 +184,8 @@ export class FormAbsenDiluarComponent implements OnInit {
       reportData.hub_keluarga = this.isFamilyMemberSick3 ? this.txtHubungan + " ; " + this.txtHubungan2 + " ; " + this.txtHubungan3 : this.isFamilyMemberSick2 ? this.txtHubungan + " ; " + this.txtHubungan2 : this.isFamilyMemberSick ? this.txtHubungan : "";
       reportData.umur_keluarga = this.isFamilyMemberSick3 ? this.txtUsia + " ; " + this.txtUsia2 + " ; " + this.txtUsia3 : this.isFamilyMemberSick2 ? this.txtUsia + " ; " + this.txtUsia2 : this.isFamilyMemberSick ? this.txtUsia : "";
       reportData.desc_kondisi = this.isFamilyMemberSick3 ? this.txtSickDesc + " ; " + this.txtSickDesc2 + " ; " + this.txtSickDesc3 : this.isFamilyMemberSick2 ? this.txtSickDesc + " ; " + this.txtSickDesc2 : this.isFamilyMemberSick ? this.txtSickDesc : "";
+      reportData.waktu_olahraga = this.waktuOlahraga;
+      reportData.jenis_olahraga = this.jenisOlahraga;
     }
     reportData.isRequest = "1";
 
