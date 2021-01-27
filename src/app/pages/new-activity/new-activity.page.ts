@@ -3,6 +3,7 @@ import { GlobalService, ReportData } from 'src/app/services/global.service';
 import { LoadingController, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-new-activity',
@@ -36,6 +37,7 @@ export class NewActivityPage implements OnInit {
   constructor(private globalService: GlobalService,
     private loadingController: LoadingController,
     private alertController: AlertController,
+    private datePipe: DatePipe,
     public router: Router) {
     this.InitializeLoadingCtrl();
   }
@@ -152,7 +154,7 @@ export class NewActivityPage implements OnInit {
     reportData.hub_keluarga = this.isFamilyMemberSick3 ? this.txtHubungan + " ; " + this.txtHubungan2 + " ; " + this.txtHubungan3 : this.isFamilyMemberSick2 ? this.txtHubungan + " ; " + this.txtHubungan2 : this.isFamilyMemberSick ? this.txtHubungan : "";
     reportData.umur_keluarga = this.isFamilyMemberSick3 ? this.txtUsia + " ; " + this.txtUsia2 + " ; " + this.txtUsia3 : this.isFamilyMemberSick2 ? this.txtUsia + " ; " + this.txtUsia2 : this.isFamilyMemberSick ? this.txtUsia : "";
     reportData.desc_kondisi = this.isFamilyMemberSick3 ? this.txtSickDesc + " ; " + this.txtSickDesc2 + " ; " + this.txtSickDesc3 : this.isFamilyMemberSick2 ? this.txtSickDesc + " ; " + this.txtSickDesc2 : this.isFamilyMemberSick ? this.txtSickDesc : "";
-    reportData.waktu_olahraga = this.waktuOlahraga;
+    reportData.waktu_olahraga = this.datePipe.transform(this.waktuOlahraga, 'yyyy-MM-dd');
     reportData.jenis_olahraga = this.jenisOlahraga;
 
     var data = this.globalService.SaveNewActivity(reportData);
