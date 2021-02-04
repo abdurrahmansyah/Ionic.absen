@@ -94,9 +94,11 @@ export class AppComponent {
             this.ReadGeocode(location.latitude, location.longitude);
           });
         }, (err) => {
-          this.globalService.PresentAlert("eror didalam : " + JSON.stringify(err));
+          console.log("eror didalam : " + JSON.stringify(err));
+          // this.globalService.PresentAlert("eror didalam : " + JSON.stringify(err));
         }).catch((error) => {
-          this.globalService.PresentAlert("eror diluar : " + JSON.stringify(error));
+          console.log("eror diluar : " + JSON.stringify(error));
+          // this.globalService.PresentAlert("eror diluar : " + JSON.stringify(error));
         });
 
       window.app = this;

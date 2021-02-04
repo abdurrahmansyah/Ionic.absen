@@ -734,7 +734,7 @@ export class HomePage {
   }
 
   private DoingAbsenWithRequest(reportData: ReportData, isKantorPusat: Boolean) {
-    reportData.szActivityId = "";
+    // reportData.szActivityId = "";
     reportData.szLocation = isKantorPusat ? "HK Tower" : this.globalService.location;
     reportData.kota = isKantorPusat ? "Kota Jakarta Timur" : this.globalService.kota;
     reportData.provinsi = isKantorPusat ? "Daerah Khusus Ibukota Jakarta" : this.globalService.provinsi;
