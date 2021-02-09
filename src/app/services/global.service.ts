@@ -39,7 +39,6 @@ export class GlobalService {
   loading: any;
 
   httpClient = InjectorInstance.get<HttpClient>(HttpClient);
-  dataimage: any;
   readonly mobileIos = "mobile - iOS";
   readonly mobileAndroid = "mobile - Android";
 

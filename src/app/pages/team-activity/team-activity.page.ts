@@ -60,7 +60,7 @@ export class TeamActivityPage implements OnInit {
 
   private async SubscribeGetReportDatas(data: Observable<any>, isDoingAbsen: boolean) {
     data.subscribe(data => {
-      if (data.response == "success" && data.data.length > 0) {
+      if (data.response == "success" && data.count2 > 0) {
         var reportDatasFromDb = data.data;
         this.MappingReportData(reportDatasFromDb);
 
@@ -68,6 +68,7 @@ export class TeamActivityPage implements OnInit {
       }
       else {
         this.loadingController.dismiss();
+        this.globalService.PresentAlert("Tidak ada data yang dapat ditampilkan");
       }
     });
   }

@@ -98,7 +98,8 @@ export class FormAbsenDiluarComponent implements OnInit {
     }
 
     if (!this.dataimage) {
-      throw new Error("Foto wajib diisi.");
+      console.log("NEED UPDATE");
+      // throw new Error("Foto wajib diisi.");
     }
 
     if (this.isArrived) {
