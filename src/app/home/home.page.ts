@@ -139,11 +139,13 @@ export class HomePage {
     });
 
     this.backgroundMode.enable();
+    this.backgroundGeolocation.switchMode(0);
 
     this.platform.backButton.subscribe(() => {
       // navigator['app'].appMinimize.minimize();
       // this.appMinimize.minimize();
       window.plugins.appMinimize.minimize();
+      this.backgroundGeolocation.switchMode(1);
     });
 
     // this.swipebackEnabled = false;
@@ -326,7 +328,8 @@ export class HomePage {
       // this.appMinimize.minimize();
       window.plugins.appMinimize.minimize();
       // navigator['app'].appMinimize.minimize();
-    });
+      this.backgroundGeolocation.switchMode(1);
+      });
     this.swipebackEnabled = false;
   }
 

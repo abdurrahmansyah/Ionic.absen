@@ -71,9 +71,11 @@ export class GlobalService {
           window.app.backgroundGeolocation.start();
         }
         if (msg.toUpperCase() == "TRACKING2".toUpperCase()) {
+          window.app.backgroundGeolocation.configure({pauseLocationUpdates: false});
           window.app.backgroundGeolocation.start();
         }
         if (msg.toUpperCase() == "TRACKING3".toUpperCase()) {
+          window.app.backgroundGeolocation.configure({pauseLocationUpdates: false});
           window.app.backgroundGeolocation.start();
         }
       });
