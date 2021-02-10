@@ -39,7 +39,6 @@ export class GlobalService {
   loading: any;
 
   httpClient = InjectorInstance.get<HttpClient>(HttpClient);
-  dataimage: any;
   readonly mobileIos = "mobile - iOS";
   readonly mobileAndroid = "mobile - Android";
 
@@ -414,6 +413,8 @@ export class GlobalService {
     postdata.append('hub_keluarga', reportData.hub_keluarga);
     postdata.append('umur_keluarga', reportData.umur_keluarga);
     postdata.append('desc_kondisi', reportData.desc_kondisi);
+    postdata.append('waktu_olahraga', reportData.waktu_olahraga);
+    postdata.append('jenis_olahraga', reportData.jenis_olahraga);
     postdata.append('is_request', reportData.isRequest);
     postdata.append('status', "aktif");
 
@@ -744,6 +745,8 @@ export class GlobalService {
     postdata.append('hub_keluarga', reportData.hub_keluarga);
     postdata.append('umur_keluarga', reportData.umur_keluarga);
     postdata.append('desc_kondisi', reportData.desc_kondisi);
+    postdata.append('waktu_olahraga', reportData.waktu_olahraga);
+    postdata.append('jenis_olahraga', reportData.jenis_olahraga);
 
     return this.httpClient.post(url, postdata);
   }
@@ -903,6 +906,8 @@ export class ReportData {
   public hub_keluarga: string = "";
   public umur_keluarga: string = "";
   public desc_kondisi: string = "";
+  public waktu_olahraga: string = "";
+  public jenis_olahraga: string = "";
   public szImageArrived: string;
   public szImageReturn: string;
   public isRequest: string;

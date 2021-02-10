@@ -18,8 +18,10 @@ import { AppVersion } from '@ionic-native/app-version/ngx';
 import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationEvents, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation/ngx';
 import { BackgroundMode } from '@ionic-native/background-mode/ngx';
 import { AppMinimize } from '@ionic-native/app-minimize/ngx';
+import { defineCustomElements } from '@ionic/pwa-elements/loader';
 
 declare var window;
+defineCustomElements(window);
 
 @Component({
   selector: 'app-home',
@@ -737,7 +739,7 @@ export class HomePage {
   }
 
   private DoingAbsenWithRequest(reportData: ReportData, isKantorPusat: Boolean) {
-    reportData.szActivityId = "";
+    // reportData.szActivityId = "";
     reportData.szLocation = isKantorPusat ? "HK Tower" : this.globalService.location;
     reportData.kota = isKantorPusat ? "Kota Jakarta Timur" : this.globalService.kota;
     reportData.provinsi = isKantorPusat ? "Daerah Khusus Ibukota Jakarta" : this.globalService.provinsi;

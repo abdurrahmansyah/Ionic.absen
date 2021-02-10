@@ -18,7 +18,7 @@
     <ion-item>
       <ion-input type="text" placeholder="Alasan Absen Diluar" [(ngModel)]="txtDesc" name="txtDesc" required>
       </ion-input>
-      <ion-icon class="takepicture" (click)="TakePhotos()" name="camera" color="hk-red"></ion-icon>
+      <!-- <ion-icon class="takepicture" (click)="TakePhotos()" name="camera" color="hk-red"></ion-icon> -->
     </ion-item>
 
     <div *ngIf="isArrived">
@@ -38,7 +38,7 @@
         </ion-label>
         <ion-toggle [(ngModel)]="isInteraksi" slot="end"></ion-toggle>
       </ion-item>
-  
+
       <ion-item Lines="full">
         <ion-label class="ion-text-wrap">
           Pernah mengalami demam / batuk / pilek / sakit tenggorokan / sesak
@@ -47,7 +47,7 @@
         </ion-label>
         <ion-toggle [(ngModel)]="isRiwayatSakit" slot="end"></ion-toggle>
       </ion-item>
-  
+
       <ion-item Lines="full">
         <ion-label>Adakah rencana keluar</ion-label>
         <ion-toggle [(ngModel)]="isOutPlan" slot="end"></ion-toggle>
@@ -123,6 +123,29 @@
       <ion-item Lines="full">
         <ion-input type="text" placeholder="Sakit/Deskripsi" [(ngModel)]="txtSickDesc3" name="txtSickDesc3" required>
         </ion-input>
+      </ion-item>
+    </div>
+
+    <div *ngIf="isArrived">
+      <ion-item Lines="full">
+        <ion-label>Kapan Anda Terakhir Olahraga</ion-label>
+        <ion-datetime [(ngModel)]="waktuOlahraga" displayFormat="YYYY MM DD" placeholder="Select Date"></ion-datetime>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Jenis Olahraga yang Dilakukan</ion-label>
+        <ion-select mode="ios" [(ngModel)]="jenisOlahraga">
+          <ion-select-option value="Jogging/Jalan/Lari" selected>Jogging/Jalan/Lari</ion-select-option>
+          <ion-select-option value="Workout/Zumba/Yoga/Senam">Workout/Zumba/Yoga/Senam</ion-select-option>
+          <ion-select-option value="Bersepeda">Bersepeda</ion-select-option>
+          <ion-select-option value="Renang">Renang</ion-select-option>
+          <ion-select-option value="Badminton/Tenis Lapangan">Badminton/Tenis Lapangan</ion-select-option>
+          <ion-select-option value="Tenis Meja">Tenis Meja</ion-select-option>
+          <ion-select-option value="Basket/Voli">Basket/Voli</ion-select-option>
+          <ion-select-option value="Futsal/Sepak Bola">Futsal/Sepak Bola</ion-select-option>
+          <ion-select-option value="Golf">Golf</ion-select-option>
+          <ion-select-option value="Lain-Lain">Lain-Lain</ion-select-option>
+        </ion-select>
       </ion-item>
     </div>
 

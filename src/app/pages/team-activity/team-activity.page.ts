@@ -60,7 +60,7 @@ export class TeamActivityPage implements OnInit {
 
   private async SubscribeGetReportDatas(data: Observable<any>, isDoingAbsen: boolean) {
     data.subscribe(data => {
-      if (data.response == "success" && data.data.length > 0) {
+      if (data.response == "success" && data.count2 > 0) {
         var reportDatasFromDb = data.data;
         this.MappingReportData(reportDatasFromDb);
 
@@ -68,6 +68,7 @@ export class TeamActivityPage implements OnInit {
       }
       else {
         this.loadingController.dismiss();
+        this.globalService.PresentAlert("Tidak ada data yang dapat ditampilkan");
       }
     });
   }
@@ -107,6 +108,8 @@ export class TeamActivityPage implements OnInit {
         reportData.rencana_keluar = activityData.length > 0 ? activityData[0].rencana_keluar : "";
         reportData.external = activityData.length > 0 ? activityData[0].external : "";
         reportData.kondisi_keluarga = activityData.length > 0 ? activityData[0].kondisi_keluarga : "";
+        reportData.waktu_olahraga = attendanceData.waktu_olahraga;
+        reportData.jenis_olahraga = attendanceData.jenis_olahraga;
         
         this.activityDatas.push(reportData);
       }

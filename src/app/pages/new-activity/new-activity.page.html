@@ -9,15 +9,6 @@
 
 <ion-content>
   <ion-card>
-    <ion-item color="hk-yellow">
-      <ion-icon name="warning" slot="start"></ion-icon>
-      <ion-label class="ion-text-wrap">
-        <p>Ketentuan foto : Menggunakan atribut kantor dan memperlihatkan aktifitas kerja.</p>
-      </ion-label>
-    </ion-item>
-  </ion-card>
-
-  <ion-card>
     <ion-card-header>
       <ion-card-subtitle>Form WFO - New Normal</ion-card-subtitle>
     </ion-card-header>
@@ -138,6 +129,27 @@
           </ion-input>
         </ion-item>
       </div>
+
+      <ion-item Lines="full">
+        <ion-label>Kapan Anda Terakhir Olahraga</ion-label>
+        <ion-datetime [(ngModel)]="waktuOlahraga" displayFormat="YYYY MM DD" placeholder="Select Date"></ion-datetime>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Jenis Olahraga yang Dilakukan</ion-label>
+        <ion-select mode="ios" [(ngModel)]="jenisOlahraga">
+          <ion-select-option value="Jogging/Jalan/Lari" selected>Jogging/Jalan/Lari</ion-select-option>
+          <ion-select-option value="Workout/Zumba/Yoga/Senam">Workout/Zumba/Yoga/Senam</ion-select-option>
+          <ion-select-option value="Bersepeda">Bersepeda</ion-select-option>
+          <ion-select-option value="Renang">Renang</ion-select-option>
+          <ion-select-option value="Badminton/Tenis Lapangan">Badminton/Tenis Lapangan</ion-select-option>
+          <ion-select-option value="Tenis Meja">Tenis Meja</ion-select-option>
+          <ion-select-option value="Basket/Voli">Basket/Voli</ion-select-option>
+          <ion-select-option value="Futsal/Sepak Bola">Futsal/Sepak Bola</ion-select-option>
+          <ion-select-option value="Golf">Golf</ion-select-option>
+          <ion-select-option value="Lain-Lain">Lain-Lain</ion-select-option>
+        </ion-select>
+      </ion-item>
 
     </ion-card-content>
 

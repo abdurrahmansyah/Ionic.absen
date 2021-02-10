@@ -4,6 +4,7 @@ import { AlertController, LoadingController } from '@ionic/angular';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-form-absen-diluar',
@@ -32,6 +33,8 @@ export class FormAbsenDiluarComponent implements OnInit {
   public txtHubungan3: any;
   public txtUsia3: any;
   public txtSickDesc3: any;
+  public waktuOlahraga: any;
+  public jenisOlahraga: any;
   private dataimage: string;
   private loading: any;
 
@@ -39,6 +42,7 @@ export class FormAbsenDiluarComponent implements OnInit {
     private alertController: AlertController,
     private globalService: GlobalService,
     private loadingController: LoadingController,
+    private datePipe: DatePipe,
     public router: Router) {
     this.InitializeLoadingCtrl();
   }
@@ -94,7 +98,8 @@ export class FormAbsenDiluarComponent implements OnInit {
     }
 
     if (!this.dataimage) {
-      throw new Error("Foto wajib diisi.");
+      console.log("NEED UPDATE");
+      // throw new Error("Foto wajib diisi.");
     }
 
     if (this.isArrived) {
@@ -127,6 +132,14 @@ export class FormAbsenDiluarComponent implements OnInit {
           throw new Error("Usia wajib diisi.");
         if (!this.txtSickDesc3)
           throw new Error("Deskripsi kondisi wajib diisi.");
+      }
+
+      if (!this.waktuOlahraga) {
+        throw new Error("Jadwal olahraga wajib diisi.");
+      }
+
+      if (!this.jenisOlahraga) {
+        throw new Error("Jenis olahraga wajib diisi.");
       }
     }
   }
@@ -174,6 +187,8 @@ export class FormAbsenDiluarComponent implements OnInit {
       reportData.hub_keluarga = this.isFamilyMemberSick3 ? this.txtHubungan + " ; " + this.txtHubungan2 + " ; " + this.txtHubungan3 : this.isFamilyMemberSick2 ? this.txtHubungan + " ; " + this.txtHubungan2 : this.isFamilyMemberSick ? this.txtHubungan : "";
       reportData.umur_keluarga = this.isFamilyMemberSick3 ? this.txtUsia + " ; " + this.txtUsia2 + " ; " + this.txtUsia3 : this.isFamilyMemberSick2 ? this.txtUsia + " ; " + this.txtUsia2 : this.isFamilyMemberSick ? this.txtUsia : "";
       reportData.desc_kondisi = this.isFamilyMemberSick3 ? this.txtSickDesc + " ; " + this.txtSickDesc2 + " ; " + this.txtSickDesc3 : this.isFamilyMemberSick2 ? this.txtSickDesc + " ; " + this.txtSickDesc2 : this.isFamilyMemberSick ? this.txtSickDesc : "";
+      reportData.waktu_olahraga = this.datePipe.transform(this.waktuOlahraga, 'yyyy-MM-dd');
+      reportData.jenis_olahraga = this.jenisOlahraga;
     }
     reportData.isRequest = "1";
 

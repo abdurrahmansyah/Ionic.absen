@@ -27,6 +27,8 @@ export class MyActivityPage implements OnInit {
   public txtRencanaKeluar: string;
   public txtExternal: string;
   public txtKondisiKeluarga: string;
+  public txtWaktuOlahraga: string;
+  public txtJenisOlahraga: string;
   public isNoActivity: boolean = false;
   public isNoReport: boolean = false;
 
@@ -84,6 +86,8 @@ export class MyActivityPage implements OnInit {
           this.txtRencanaKeluar = reportData.rencana_keluar;
           this.txtExternal = reportData.external;
           this.txtKondisiKeluarga = reportData.kondisi_keluarga;
+          this.txtWaktuOlahraga = reportData.waktu_olahraga;
+          this.txtJenisOlahraga = reportData.jenis_olahraga;
         }
         else {
           this.isNoActivity = true;
@@ -109,6 +113,8 @@ export class MyActivityPage implements OnInit {
     reportData.szActivityName = reportDataFromDb.activity.length > 0 ? reportDataFromDb.activity[0].activity_type_id[1] : "";
     reportData.szLocation = reportDataFromDb.check_in_location;
     reportData.work_from = reportDataFromDb.work_from;
+    reportData.waktu_olahraga = reportDataFromDb.waktu_olahraga ? reportDataFromDb.waktu_olahraga : "";
+    reportData.jenis_olahraga = reportDataFromDb.jenis_olahraga ? reportDataFromDb.jenis_olahraga : "";
     reportData.szDesc = reportDataFromDb.activity.length > 0 ? reportDataFromDb.activity[0].reason : "";
     reportData.health_check = reportDataFromDb.activity.length > 0 ? reportDataFromDb.activity[0].health_check : "";
     reportData.suhu = reportDataFromDb.activity.length > 0 ? reportDataFromDb.activity[0].suhu : "";
