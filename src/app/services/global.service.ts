@@ -310,14 +310,20 @@ export class GlobalService {
         var url = 'https://absensi.hutamakarya.com/api/loginSSO'; // Kondisi kalau 
         var data: any = this.httpClient.post(url, postdata);
         data.subscribe(data => {
-          var userDataFromDb = data.data;//.find(x => x);
-          var userData = this.MappingUserData(userDataFromDb);
-
-          this.storage.set('userData', userData);
-          this.loadingController.dismiss();
-          this.PresentToast("Login Berhasil");
-          this.authService.login();
-          this.router.navigate(['home']);
+          if (data != null){ // #supaya jika ada email tapi tidak ada data di hk absen dia ditolak
+            var userDataFromDb = data.data;//.find(x => x);
+            var userData = this.MappingUserData(userDataFromDb);
+  
+            this.storage.set('userData', userData);
+            this.loadingController.dismiss();
+            this.PresentToast("Login Berhasil");
+            this.authService.login();
+            this.router.navigate(['home']);
+          }
+          else {
+            this.loadingController.dismiss();
+            this.PresentToast("Login Gagal");
+          }
         });
       }
       else {
