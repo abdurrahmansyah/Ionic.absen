@@ -527,6 +527,7 @@ export class HomePage {
           else {
             if (reportData.timeAbsen < this.globalService.officeHourData.endtOfficeHourFrom) {
               reportData.szActivityId = this.globalService.activityDataList.pulangCepat.id;
+              reportData.szDesc = "Pulang Cepat";
               reportData.isRequest = "1";
               let navigationExtras: NavigationExtras = {
                 state: {
@@ -538,6 +539,7 @@ export class HomePage {
             }
             else if (reportData.timeAbsen > "17:45") {
               reportData.szActivityId = this.globalService.activityDataList.lembur.id;
+              reportData.szDesc = "Lembur";
               reportData.isRequest = "1";
               let navigationExtras: NavigationExtras = {
                 state: {
