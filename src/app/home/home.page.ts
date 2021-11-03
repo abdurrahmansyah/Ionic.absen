@@ -5,7 +5,7 @@ import { Geolocation, GeolocationOptions, Geoposition, PositionError } from '@io
 import { Component, ViewChild } from '@angular/core';
 import { PopoverController, AlertController, NavController, Platform, IonRouterOutlet, LoadingController } from '@ionic/angular';
 import { Observable } from 'rxjs/Observable';
-import { GlobalService, ActivityId, ReportData, LeaderboardData, TrackingData, DateData, LocationData } from '../services/global.service';
+import { GlobalService, ActivityId, ReportData, LeaderboardData, DateData, LocationData } from '../services/global.service';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { ELocalNotificationTriggerUnit, LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { DatePipe } from '@angular/common';
@@ -92,52 +92,52 @@ export class HomePage {
     });
   }
 
-  public StartLocalNotification() {
-    this.localNotifications.schedule([{
-      id: 1,
-      title: "Tracking WFH 1",
-      text: "Anda berada diluar kantor, mohon minimize aplikasi namun tidak melakukan close app",
-      data: { mydata: "TRACKING1" },
-      trigger: { in: 1, unit: ELocalNotificationTriggerUnit.MINUTE }
-    }, {
-      id: 2,
-      title: "Tracking WFH 2",
-      text: "Anda berada diluar kantor, mohon minimize aplikasi namun tidak melakukan close app",
-      data: { mydata: "TRACKING2" },
-      trigger: { in: 2, unit: ELocalNotificationTriggerUnit.MINUTE }
-    }, {
-      id: 3,
-      title: "Tracking WFH 3",
-      text: "Anda berada diluar kantor, mohon minimize aplikasi namun tidak melakukan close app",
-      data: { mydata: "TRACKING3" },
-      trigger: { in: 3, unit: ELocalNotificationTriggerUnit.MINUTE }
-    }]);
-  }
+  // public StartLocalNotification() {
+  //   this.localNotifications.schedule([{
+  //     id: 1,
+  //     title: "Tracking WFH 1",
+  //     text: "Anda berada diluar kantor, mohon minimize aplikasi namun tidak melakukan close app",
+  //     data: { mydata: "TRACKING1" },
+  //     trigger: { in: 1, unit: ELocalNotificationTriggerUnit.MINUTE }
+  //   }, {
+  //     id: 2,
+  //     title: "Tracking WFH 2",
+  //     text: "Anda berada diluar kantor, mohon minimize aplikasi namun tidak melakukan close app",
+  //     data: { mydata: "TRACKING2" },
+  //     trigger: { in: 2, unit: ELocalNotificationTriggerUnit.MINUTE }
+  //   }, {
+  //     id: 3,
+  //     title: "Tracking WFH 3",
+  //     text: "Anda berada diluar kantor, mohon minimize aplikasi namun tidak melakukan close app",
+  //     data: { mydata: "TRACKING3" },
+  //     trigger: { in: 3, unit: ELocalNotificationTriggerUnit.MINUTE }
+  //   }]);
+  // }
 
   InitializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleBlackTranslucent();
 
-      this.localNotifications.on('click').subscribe(res => {
-        this.globalService.PresentAlert("BUG : dari klik - " + res.text);
-      });
+      // this.localNotifications.on('click').subscribe(res => {
+      //   this.globalService.PresentAlert("BUG : dari klik - " + res.text);
+      // });
 
-      this.localNotifications.on('trigger').subscribe(res => {
-        let msg = res.data ? res.data.mydata : "";
-        if (msg.toUpperCase() == "TRACKING1".toUpperCase()) {
-          window.app.backgroundGeolocation.start();
-        }
-        if (msg.toUpperCase() == "TRACKING2".toUpperCase()) {
-          window.app.backgroundGeolocation.start();
-        }
-        if (msg.toUpperCase() == "TRACKING3".toUpperCase()) {
-          window.app.backgroundGeolocation.start();
-        }
-      });
+      // this.localNotifications.on('trigger').subscribe(res => {
+      //   let msg = res.data ? res.data.mydata : "";
+      //   if (msg.toUpperCase() == "TRACKING1".toUpperCase()) {
+      //     window.app.backgroundGeolocation.start();
+      //   }
+      //   if (msg.toUpperCase() == "TRACKING2".toUpperCase()) {
+      //     window.app.backgroundGeolocation.start();
+      //   }
+      //   if (msg.toUpperCase() == "TRACKING3".toUpperCase()) {
+      //     window.app.backgroundGeolocation.start();
+      //   }
+      // });
 
-      this.localNotifications.on('schedule').subscribe(res => {
-        this.globalService.PresentAlert("BUG : error from local notif schedule" + res.text);
-      });
+      // this.localNotifications.on('schedule').subscribe(res => {
+      //   this.globalService.PresentAlert("BUG : error from local notif schedule" + res.text);
+      // });
     });
 
     this.backgroundMode.enable();
@@ -747,7 +747,7 @@ export class HomePage {
 
     var data = this.globalService.SaveReportDataWithRequest(reportData);
     this.SubscribeGetReportDatas(data, true);
-    this.globalService.CancelLocalNotification();
+    // this.globalService.CancelLocalNotification();
   }
 
   NavigateToReportPage() {

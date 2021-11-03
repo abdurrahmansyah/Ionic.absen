@@ -60,56 +60,56 @@ export class GlobalService {
 
   InitializeApp() {
     this.platform.ready().then(() => {
-      this.localNotifications.on('click').subscribe(res => {
-        this.PresentAlert("BUG : dari klik - " + res.text);
-      });
+      // this.localNotifications.on('click').subscribe(res => {
+      //   this.PresentAlert("BUG : dari klik - " + res.text);
+      // });
 
-      this.localNotifications.on('trigger').subscribe(res => {
-        let msg = res.data ? res.data.mydata : "";
-        if (msg.toUpperCase() == "TRACKING1".toUpperCase()) {
-          window.app.backgroundGeolocation.start();
-        }
-        if (msg.toUpperCase() == "TRACKING2".toUpperCase()) {
-          window.app.backgroundGeolocation.configure({pauseLocationUpdates: false});
-          window.app.backgroundGeolocation.start();
-        }
-        if (msg.toUpperCase() == "TRACKING3".toUpperCase()) {
-          window.app.backgroundGeolocation.configure({pauseLocationUpdates: false});
-          window.app.backgroundGeolocation.start();
-        }
-      });
+      // this.localNotifications.on('trigger').subscribe(res => {
+      //   let msg = res.data ? res.data.mydata : "";
+      //   if (msg.toUpperCase() == "TRACKING1".toUpperCase()) {
+      //     window.app.backgroundGeolocation.start();
+      //   }
+      //   if (msg.toUpperCase() == "TRACKING2".toUpperCase()) {
+      //     window.app.backgroundGeolocation.configure({pauseLocationUpdates: false});
+      //     window.app.backgroundGeolocation.start();
+      //   }
+      //   if (msg.toUpperCase() == "TRACKING3".toUpperCase()) {
+      //     window.app.backgroundGeolocation.configure({pauseLocationUpdates: false});
+      //     window.app.backgroundGeolocation.start();
+      //   }
+      // });
 
-      this.localNotifications.on('schedule').subscribe(res => {
-        this.PresentAlert("BUG : error from local notif schedule" + res.text);
-      });
+      // this.localNotifications.on('schedule').subscribe(res => {
+      //   this.PresentAlert("BUG : error from local notif schedule" + res.text);
+      // });
     });
   }
 
-  public StartLocalNotification() {
-    this.localNotifications.schedule([{
-      id: 1,
-      title: "Tracking WFH",
-      text: "Anda berada diluar kantor, mohon minimize aplikasi namun tidak melakukan close app",
-      data: { mydata: "TRACKING1" },
-      trigger: { in: 2, unit: ELocalNotificationTriggerUnit.HOUR }
-    }, {
-      id: 2,
-      title: "Tracking WFH",
-      text: "Anda berada diluar kantor, mohon minimize aplikasi namun tidak melakukan close app",
-      data: { mydata: "TRACKING2" },
-      trigger: { in: 4, unit: ELocalNotificationTriggerUnit.HOUR }
-    }, {
-      id: 3,
-      title: "Tracking WFH",
-      text: "Anda berada diluar kantor, mohon minimize aplikasi namun tidak melakukan close app",
-      data: { mydata: "TRACKING3" },
-      trigger: { in: 6, unit: ELocalNotificationTriggerUnit.HOUR }
-    }]);
-  }
+  // public StartLocalNotification() {
+  //   this.localNotifications.schedule([{
+  //     id: 1,
+  //     title: "Tracking WFH",
+  //     text: "Anda berada diluar kantor, mohon minimize aplikasi namun tidak melakukan close app",
+  //     data: { mydata: "TRACKING1" },
+  //     trigger: { in: 2, unit: ELocalNotificationTriggerUnit.HOUR }
+  //   }, {
+  //     id: 2,
+  //     title: "Tracking WFH",
+  //     text: "Anda berada diluar kantor, mohon minimize aplikasi namun tidak melakukan close app",
+  //     data: { mydata: "TRACKING2" },
+  //     trigger: { in: 4, unit: ELocalNotificationTriggerUnit.HOUR }
+  //   }, {
+  //     id: 3,
+  //     title: "Tracking WFH",
+  //     text: "Anda berada diluar kantor, mohon minimize aplikasi namun tidak melakukan close app",
+  //     data: { mydata: "TRACKING3" },
+  //     trigger: { in: 6, unit: ELocalNotificationTriggerUnit.HOUR }
+  //   }]);
+  // }
 
-  public CancelLocalNotification() {
-    this.localNotifications.cancel([1, 2, 3]);
-  }
+  // public CancelLocalNotification() {
+  //   this.localNotifications.cancel([1, 2, 3]);
+  // }
 
   async InitializeLoadingCtrl() {
     this.loading = await this.loadingController.create({
@@ -757,17 +757,17 @@ export class GlobalService {
     return this.httpClient.post(url, postdata);
   }
 
-  public SetTracking(trackingData: TrackingData): Observable<any> {
-    var url = 'https://absensi.hutamakarya.com/api/attendance/setTracking';
-    let postdata = new FormData();
-    postdata.append('authorization', this.userData.szToken);
-    postdata.append('lokasisch', trackingData.lokasiSch);
-    postdata.append('datesch', trackingData.dateSch);
-    postdata.append('timesch', trackingData.timeSch);
-    postdata.append('scheduleke', trackingData.scheduleKe);
+  // public SetTracking(trackingData: TrackingData): Observable<any> {
+  //   var url = 'https://absensi.hutamakarya.com/api/attendance/setTracking';
+  //   let postdata = new FormData();
+  //   postdata.append('authorization', this.userData.szToken);
+  //   postdata.append('lokasisch', trackingData.lokasiSch);
+  //   postdata.append('datesch', trackingData.dateSch);
+  //   postdata.append('timesch', trackingData.timeSch);
+  //   postdata.append('scheduleke', trackingData.scheduleKe);
 
-    return this.httpClient.post(url, postdata);
-  }
+  //   return this.httpClient.post(url, postdata);
+  // }
 
   public pushNotif(title: string, body: string) {
     var url = 'https://absensi.hutamakarya.com/api/attendance/pushNotif';
@@ -990,14 +990,14 @@ export class LeaderboardData {
   public szSuperiorUserName: string;
 }
 
-export class TrackingData {
-  public scheduleKe: string;
-  public lokasiSch: string;
-  public dateSch: string;
-  public timeSch: string;
+// export class TrackingData {
+//   public scheduleKe: string;
+//   public lokasiSch: string;
+//   public dateSch: string;
+//   public timeSch: string;
 
-  constructor() { }
-}
+//   constructor() { }
+// }
 
 export class LocationData {
   public id: number;
