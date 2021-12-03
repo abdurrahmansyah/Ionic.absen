@@ -149,6 +149,30 @@
       </ion-item>
     </div>
 
+    <div *ngIf="!isArrived">
+      <ion-item>
+        <ion-label>Nilai AKHLAK Yang Dilakukan Hari Ini</ion-label>
+        <ion-select mode="ios" [(ngModel)]="valueAkhlak">
+          <ion-select-option value="Amanah" selected>Amanah</ion-select-option>
+          <ion-select-option value="Kompeten">Kompeten</ion-select-option>
+          <ion-select-option value="Harmonis">Harmonis</ion-select-option>
+          <ion-select-option value="Loyal">Loyal</ion-select-option>
+          <ion-select-option value="Adaptif">Adaptif</ion-select-option>
+          <ion-select-option value="Kolaboratif">Kolaboratif</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <div *ngIf="valueAkhlak">
+        <ion-item>
+          <ion-label>Ceritakan Bentuk Perilaku Yang Dilakukan</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-input type="text" placeholder="Tuliskan Cerita Anda" [(ngModel)]="storyAkhlak" name="storyAkhlak"
+            required>
+          </ion-input>
+        </ion-item>
+      </div>
+    </div>
+
     <ion-col class="picture">
       <img src="{{ photo }}" class="center" />
     </ion-col>
@@ -160,4 +184,26 @@
       </ion-button>
     </ion-col>
   </ion-row>
+</ion-card>
+
+<ion-card>
+  <ion-item color="hk-yellow">
+    <!-- <ion-icon name="warning" slot="start"></ion-icon> -->
+    <ion-icon name="megaphone" slot="start"></ion-icon>
+    <ion-text>AKHLAK BUMN</ion-text>
+  </ion-item>
+  <div padding>
+    <ion-text>1. Amanah</ion-text> <br>
+    <ion-text><span style="margin-left: 20px">Fokus pada sesuatu yang mantap</span></ion-text> <br>
+    <ion-text>2. Kompeten</ion-text> <br>
+    <span style="margin-left: 20px">Sesuatu yang luar biasa sekali untuk dipahami</span> <br>
+    <ion-text>3. Harmonis</ion-text> <br>
+    <ion-text><span style="margin-left: 20px">Jenis makanan khas manado dengan sambal khusus dipoles rempah-rempah pilihan</span></ion-text> <br>
+    <ion-text>4. Loyal</ion-text> <br>
+    <ion-text><span style="margin-left: 20px">Seperti biasa</span></ion-text> <br>
+    <ion-text>5. Adaptif</ion-text> <br>
+    <ion-text><span style="margin-left: 20px">Good sekali untuk dimakan</span></ion-text> <br>
+    <ion-text>6. Kolaboratif</ion-text> <br>
+    <ion-text><span style="margin-left: 20px">Salam dari binjai</span></ion-text> <br>
+  </div>
 </ion-card>

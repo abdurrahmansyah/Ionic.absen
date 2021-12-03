@@ -331,7 +331,7 @@ export class HomePage {
       window.plugins.appMinimize.minimize();
       // navigator['app'].appMinimize.minimize();
       this.backgroundGeolocation.switchMode(1);
-      });
+    });
     this.swipebackEnabled = false;
   }
 
@@ -506,6 +506,7 @@ export class HomePage {
           reportData.isRequest = "0";
 
           if (!this.txtTimeArrived) {
+            this.globalService.isArrived = true;
             if (reportData.timeAbsen > this.globalService.officeHourData.endtOfficeHourFrom) {
               reportData.szActivityId = "belumcheckin";
               let navigationExtras: NavigationExtras = {
@@ -517,7 +518,6 @@ export class HomePage {
             }
             else {
               // Only For WFO - NEW NORMAL
-              this.globalService.isArrived = true;
               this.ByPassDoingAbsenWfoNewNormal(reportData, false);
 
               // BackUp If WFO - NORMAL DONE
@@ -525,6 +525,7 @@ export class HomePage {
             }
           }
           else {
+            this.globalService.isArrived = false;
             if (reportData.timeAbsen < this.globalService.officeHourData.endtOfficeHourFrom) {
               reportData.szActivityId = this.globalService.activityDataList.pulangCepat.id;
               reportData.szDesc = "Pulang Cepat";
@@ -534,7 +535,8 @@ export class HomePage {
                   indexForm: reportData.szActivityId
                 }
               }
-              this.DoingAbsenWithRequest(reportData, true);
+              this.ByPassDoingAbsenWfoNewNormal(reportData, false);
+              // this.DoingAbsenWithRequest(reportData, true);
               // this.GetDecisionFromUser(reportData, navigationExtras); 
             }
             else if (reportData.timeAbsen > "17:45") {
@@ -562,6 +564,7 @@ export class HomePage {
           reportData.isRequest = "1";
 
           if (!this.txtTimeArrived) {
+            this.globalService.isArrived = true;
             if (reportData.timeAbsen > this.globalService.officeHourData.endtOfficeHourFrom) {
               reportData.szActivityId = "belumcheckin";
               let navigationExtras: NavigationExtras = {
@@ -572,7 +575,6 @@ export class HomePage {
               this.GetDecisionFromUser(reportData, navigationExtras);
             }
             else {
-              this.globalService.isArrived = true;
               reportData.szActivityId = this.globalService.activityDataList.datangDiluarKantor.id;
 
               let navigationExtras: NavigationExtras = {
@@ -657,7 +659,8 @@ export class HomePage {
       }] : reportData.szActivityId == this.globalService.activityDataList.pulangDiluarKantor.id ? [{
         text: 'WFO - Proyek',
         handler: () => {
-          this.DoingAbsenWithRequest(reportData, false);
+          this.ByPassDoingAbsenWfoNewNormal(reportData, true);
+          // this.DoingAbsenWithRequest(reportData, false);
         }        // role: 'Cancel'
       }, {
         text: 'WFH',
@@ -668,38 +671,38 @@ export class HomePage {
           this.router.navigate(['form-request'], navigationExtras);
         }
       }] :
-          reportData.szActivityId == "DILUAR-WIFIAKSES" ? [{
-            text: 'BACK',
-            role: 'Cancel'
-          }] : // reportData.szActivityId == this.globalService.activityDataList.terlambat.id ||
-            reportData.szActivityId == this.globalService.activityDataList.pulangCepat.id // ||
-              // reportData.szActivityId == this.globalService.activityDataList.lembur.id 
-              ? [{
-                text: 'CANCEL',
-                role: 'Cancel'
-              }, {
-                text: 'YES',
-                handler: () => {
-                  this.globalService.dateRequest = reportData.dateAbsen;
-                  this.globalService.timeRequest = reportData.timeAbsen;
-                  this.DoingAbsenWithRequest(reportData, true);
-                  // this.router.navigate(['form-request'], navigationExtras);
-                }
-              }] : reportData.szActivityId == "belumcheckin" ? [{
-                text: 'CANCEL',
-                role: 'Cancel'
-              }, {
-                text: 'YES',
-                handler: () => {
-                  this.globalService.dateRequest = reportData.dateAbsen;
-                  this.globalService.timeRequest = reportData.timeAbsen;
-                  this.inAppBrowser.create("https://performancemanager10.successfactors.com/login?company=pthutamaka&username=" + this.globalService.userData.szUserId);
-                  // window.open("https://performancemanager10.successfactors.com/login?company=pthutamaka&username=" + this.globalService.userData.szUserId, '_system', 'location=yes');
-                }
-              }] : [{
-                text: 'OK',
-                role: 'Cancel'
-              }]
+        reportData.szActivityId == "DILUAR-WIFIAKSES" ? [{
+          text: 'BACK',
+          role: 'Cancel'
+        }] : // reportData.szActivityId == this.globalService.activityDataList.terlambat.id ||
+          reportData.szActivityId == this.globalService.activityDataList.pulangCepat.id // ||
+            // reportData.szActivityId == this.globalService.activityDataList.lembur.id 
+            ? [{
+              text: 'CANCEL',
+              role: 'Cancel'
+            }, {
+              text: 'YES',
+              handler: () => {
+                this.globalService.dateRequest = reportData.dateAbsen;
+                this.globalService.timeRequest = reportData.timeAbsen;
+                this.DoingAbsenWithRequest(reportData, true);
+                // this.router.navigate(['form-request'], navigationExtras);
+              }
+            }] : reportData.szActivityId == "belumcheckin" ? [{
+              text: 'CANCEL',
+              role: 'Cancel'
+            }, {
+              text: 'YES',
+              handler: () => {
+                this.globalService.dateRequest = reportData.dateAbsen;
+                this.globalService.timeRequest = reportData.timeAbsen;
+                this.inAppBrowser.create("https://performancemanager10.successfactors.com/login?company=pthutamaka&username=" + this.globalService.userData.szUserId);
+                // window.open("https://performancemanager10.successfactors.com/login?company=pthutamaka&username=" + this.globalService.userData.szUserId, '_system', 'location=yes');
+              }
+            }] : [{
+              text: 'OK',
+              role: 'Cancel'
+            }]
     }).then(alert => {
       return alert.present();
     });

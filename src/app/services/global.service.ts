@@ -421,6 +421,8 @@ export class GlobalService {
     postdata.append('desc_kondisi', reportData.desc_kondisi);
     postdata.append('waktu_olahraga', reportData.waktu_olahraga);
     postdata.append('jenis_olahraga', reportData.jenis_olahraga);
+    postdata.append('value_akhlak', reportData.value_akhlak);
+    postdata.append('story_akhlak', reportData.story_akhlak);
     postdata.append('is_request', reportData.isRequest);
     postdata.append('status', "aktif");
 
@@ -914,6 +916,8 @@ export class ReportData {
   public desc_kondisi: string = "";
   public waktu_olahraga: string = "";
   public jenis_olahraga: string = "";
+  public value_akhlak: string = "";
+  public story_akhlak: string = "";
   public szImageArrived: string;
   public szImageReturn: string;
   public isRequest: string;

@@ -35,6 +35,8 @@ export class FormAbsenDiluarComponent implements OnInit {
   public txtSickDesc3: any;
   public waktuOlahraga: any;
   public jenisOlahraga: any;
+  public valueAkhlak: any;
+  public storyAkhlak: any;
   private dataimage: string;
   private loading: any;
 
@@ -141,6 +143,14 @@ export class FormAbsenDiluarComponent implements OnInit {
       if (!this.jenisOlahraga) {
         throw new Error("Jenis olahraga wajib diisi.");
       }
+    } else {
+      if (!this.valueAkhlak) {
+        throw new Error("Nilai Akhlak wajib diisi.");
+      }
+
+      if (!this.storyAkhlak) {
+        throw new Error("Cerita Akhlak wajib diisi.");
+      }
     }
   }
 
@@ -174,7 +184,6 @@ export class FormAbsenDiluarComponent implements OnInit {
     reportData.szActivityId = this.globalService.diluarKantor;
     reportData.szImage = this.dataimage;
     reportData.szDesc = this.txtDesc;
-
     if (this.isArrived) {
       reportData.health_check = this.kesehatan;
       reportData.suhu = "";
@@ -189,6 +198,9 @@ export class FormAbsenDiluarComponent implements OnInit {
       reportData.desc_kondisi = this.isFamilyMemberSick3 ? this.txtSickDesc + " ; " + this.txtSickDesc2 + " ; " + this.txtSickDesc3 : this.isFamilyMemberSick2 ? this.txtSickDesc + " ; " + this.txtSickDesc2 : this.isFamilyMemberSick ? this.txtSickDesc : "";
       reportData.waktu_olahraga = this.datePipe.transform(this.waktuOlahraga, 'yyyy-MM-dd');
       reportData.jenis_olahraga = this.jenisOlahraga;
+    } else {
+      reportData.value_akhlak = this.valueAkhlak;
+      reportData.story_akhlak = this.storyAkhlak;
     }
     reportData.isRequest = "1";
 

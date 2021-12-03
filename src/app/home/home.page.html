@@ -23,7 +23,8 @@
       </div>
       <div class="card-subtitle">
         <ion-item lines="none" color="translucent">
-          <ion-button shape="round" fill="outline" size="small" slot="end" (click)="NavRouterMenu(0)" *ngIf="leadImage">show</ion-button>
+          <ion-button shape="round" fill="outline" size="small" slot="end" (click)="NavRouterMenu(0)" *ngIf="leadImage">
+            show</ion-button>
         </ion-item>
       </div>
     </ion-card>
@@ -58,14 +59,23 @@
     <ion-text>Greetings AKHLAK</ion-text>
   </div>
 
+  <div class="container" padding>
+    <div class="scroll" scrollX="true">
+      <img style="width: 100%; border-radius: 5px 5px 5px 5px;" (click)="NavRouterMenu(X)"
+        src="../../assets/images/img-XX1.png" /> <span style="padding-left: 10px;"> </span>
+    </div>
+  </div>
+
   <div padding>
     <ion-text>Activity List</ion-text>
   </div>
 
   <div class="container" padding>
     <div class="scroll" scrollX="true">
-      <img style="padding-right:10px; width: 80%; border-radius: 5px 5px 5px 5px;" (click)="NavRouterMenu(5)" src="../../assets/images/img-11.png" />
-      <img style="padding-right:10px; width: 80%; " (click)="NavRouterMenu(6)" src="../../assets/images/img-12.png" />
+      <img style="width: 80%; border-radius: 5px 5px 5px 5px;" (click)="NavRouterMenu(5)"
+        src="../../assets/images/img-11.png" /> <span style="padding-left: 10px;"> </span>
+      <img style="width: 80%; border-radius: 5px 5px 5px 5px;" (click)="NavRouterMenu(6)"
+        src="../../assets/images/img-12.png" />
     </div>
   </div>
 
