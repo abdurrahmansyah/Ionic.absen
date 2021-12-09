@@ -5,7 +5,7 @@ import { Geolocation, GeolocationOptions, Geoposition, PositionError } from '@io
 import { Component, ViewChild } from '@angular/core';
 import { PopoverController, AlertController, NavController, Platform, IonRouterOutlet, LoadingController } from '@ionic/angular';
 import { Observable } from 'rxjs/Observable';
-import { GlobalService, ActivityId, ReportData, LeaderboardData, DateData, LocationData } from '../services/global.service';
+import { GlobalService, ActivityId, ReportData, LeaderboardData, DateData, LocationData, AkhlakData } from '../services/global.service';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { ELocalNotificationTriggerUnit, LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { DatePipe } from '@angular/common';
@@ -43,6 +43,7 @@ export class HomePage {
   public leadName: string;
   public leadDivisionName: string;
   public leadImage: any;
+  public akhlakImage: any;
   private loading: any;
   private subscription: any;
   @ViewChild(IonRouterOutlet, { static: false }) routerOutlet: IonRouterOutlet;
@@ -300,6 +301,49 @@ export class HomePage {
     return leaderboardDataList.find(x => x);
   }
 
+  private GetAkhlakDataList() {
+    var dateData = this.globalService.GetDate();
+
+    var url = 'https://absensi.hutamakarya.com/api/greetings';
+    var data: Observable<any> = this.http.get(url);
+    this.SubscribeGetAkhlakDataList(data);
+  }
+
+  private SubscribeGetAkhlakDataList(data: Observable<any>) {
+    data.subscribe(data => {
+      console.log("hasil asli : " + data);
+      console.log("hasil asli : " + data.response);
+      console.log("hasil asli : " + data.data);
+
+      if (data.response == "success") {
+        this.akhlakImage = 'data:image/jpeg;base64,' + data.data;
+        console.log("gambar akhlak : " + data.data);
+      }
+
+      // if (data.response == "success") {
+      //   var akhlakDataFromDb = data.data;
+      //   var akhlakData = this.MappingAkhlakData(akhlakDataFromDb);
+      //   console.log(data + " " + akhlakData.data);
+
+      //   this.akhlakImage = 'data:image/jpeg;base64,' + akhlakData.data;
+      //   console.log(this.akhlakImage);
+      // }
+    });
+  }
+
+  private MappingAkhlakData(akhlakDataFromDb: any) {
+    var akhlakDataList = [];
+
+    akhlakDataFromDb.forEach(aklkData => {
+      var akhlakData = new AkhlakData();
+      akhlakData.data = aklkData.data;
+      akhlakDataList.push(akhlakData);
+    });
+
+    // return akhlakDataList;
+    return akhlakDataList.find(x => x);
+  }
+
   private Timer() {
     setInterval(function () {
       this.ShowRepeatData();
@@ -323,6 +367,7 @@ export class HomePage {
   ionViewWillEnter() {
     this.GetTimeWorkingAndStatusUser();
     this.GetLeaderboardDataList();
+    this.GetAkhlakDataList();
   }
 
   ionViewDidEnter() {
@@ -358,6 +403,7 @@ export class HomePage {
   DoRefresh(event: any) {
     this.GetTimeWorkingAndStatusUser();
     this.GetLeaderboardDataList();
+    this.GetAkhlakDataList();
     this.ValidateAppVersionNumber();
 
     setTimeout(() => {
@@ -494,11 +540,11 @@ export class HomePage {
         console.log(this.globalService.geoLatitude);
 
         // if (false) {
-          if (
-            this.globalService.geoLatitude <= -6.24508
-            && this.globalService.geoLatitude >= -6.24587
-            && this.globalService.geoLongitude >= 106.87269
-            && this.globalService.geoLongitude <= 106.87379) {
+        if (
+          this.globalService.geoLatitude <= -6.24508
+          && this.globalService.geoLatitude >= -6.24587
+          && this.globalService.geoLongitude >= 106.87269
+          && this.globalService.geoLongitude <= 106.87379) {
 
           reportData.szUserId = this.globalService.userData.szToken;
           reportData.dateAbsen = this.datePipe.transform(dateData.date, 'yyyy-MM-dd');

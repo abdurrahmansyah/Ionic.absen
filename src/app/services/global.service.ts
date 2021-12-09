@@ -994,6 +994,11 @@ export class LeaderboardData {
   public szSuperiorUserName: string;
 }
 
+export class AkhlakData {
+  public id: number;
+  public data: string;
+}
+
 // export class TrackingData {
 //   public scheduleKe: string;
 //   public lokasiSch: string;
