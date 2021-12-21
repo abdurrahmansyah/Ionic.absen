@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivityId, StatusId, GlobalService, RequestData, ReportData } from 'src/app/services/global.service';
-import { AlertController, LoadingController } from '@ionic/angular';
+import { AlertController, LoadingController, Platform } from '@ionic/angular';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
@@ -45,7 +45,8 @@ export class FormAbsenDiluarComponent implements OnInit {
     private globalService: GlobalService,
     private loadingController: LoadingController,
     private datePipe: DatePipe,
-    public router: Router) {
+    public router: Router,
+    private platform: Platform) {
     this.InitializeLoadingCtrl();
   }
 
@@ -100,8 +101,7 @@ export class FormAbsenDiluarComponent implements OnInit {
     }
 
     if (!this.dataimage) {
-      console.log("NEED UPDATE");
-      // throw new Error("Foto wajib diisi.");
+      throw new Error("Foto wajib diisi.");
     }
 
     if (this.isArrived) {
@@ -247,25 +247,49 @@ export class FormAbsenDiluarComponent implements OnInit {
   }
 
   public TakePhotos() {
-    const options: CameraOptions = {
-      quality: 100,
-      mediaType: this.camera.MediaType.PICTURE,
-      destinationType: this.camera.DestinationType.DATA_URL,
-      sourceType: this.camera.PictureSourceType.CAMERA,
-      encodingType: this.camera.EncodingType.JPEG,
-      targetWidth: 200,
-      targetHeight: 200,
-      allowEdit: true,
-      saveToPhotoAlbum: false
-    }
+    if (this.platform.is('ios')) {
+      const options: CameraOptions = {
+        // quality: 200,
+        mediaType: this.camera.MediaType.PICTURE,
+        destinationType: this.camera.DestinationType.DATA_URL,
+        sourceType: this.camera.PictureSourceType.CAMERA,
+        encodingType: this.camera.EncodingType.JPEG,
+        targetWidth: 300,
+        targetHeight: 300,
+        allowEdit: true,
+        correctOrientation: true,
+        saveToPhotoAlbum: true,
+      }
 
-    this.camera.getPicture(options).then((imageData) => {
-      this.photo = 'data:image/jpeg;base64,' + imageData;
-      this.dataimage = imageData;
-    }, (err) => {
-      // Handle error
-      console.log("Camera issue:" + err);
-    });
+      this.camera.getPicture(options).then((imageData) => {
+        this.photo = 'data:image/jpeg;base64,' + imageData;
+        this.dataimage = imageData;
+      }, (err) => {
+        console.log("Camera issue:" + err);
+        this.globalService.PresentAlert("Camera issue : " + err);
+      });
+    } else {
+      const options: CameraOptions = {
+        quality: 50,
+        mediaType: this.camera.MediaType.PICTURE,
+        destinationType: this.camera.DestinationType.DATA_URL,
+        sourceType: this.camera.PictureSourceType.CAMERA,
+        encodingType: this.camera.EncodingType.JPEG,
+        // targetWidth: 200,
+        // targetHeight: 200,
+        allowEdit: false,
+        correctOrientation: false,
+        saveToPhotoAlbum: true,
+      }
+
+      this.camera.getPicture(options).then((imageData) => {
+        this.photo = 'data:image/jpeg;base64,' + imageData;
+        this.dataimage = imageData;
+      }, (err) => {
+        console.log("Camera issue:" + err);
+        this.globalService.PresentAlert("Camera issue : " + err);
+      });
+    }
   }
 
   async PresentLoading() {

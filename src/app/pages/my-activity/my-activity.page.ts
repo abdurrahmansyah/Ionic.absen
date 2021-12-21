@@ -50,6 +50,7 @@ export class MyActivityPage implements OnInit {
 
   private GetTodayReportData() {
     var dateData = this.globalService.GetDate();
+    this.globalService.dateRequest = this.datePipe.transform(dateData.date, 'yyyy-MM-dd');
 
     var url = 'https://absensi.hutamakarya.com/api/attendance/perdate';
     let postdata = new FormData();
@@ -142,6 +143,7 @@ export class MyActivityPage implements OnInit {
 
   public AddActivity() {
     this.globalService.timeRequest = this.txtTimeArrived;
+    this.globalService.isArrived = true;
     this.router.navigate(['new-activity']);
   }
 

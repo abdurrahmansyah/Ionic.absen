@@ -101,17 +101,46 @@
 
   <hr width="90%"> -->
 
-  <ion-card class="ion-text-center" *ngIf="isArrived">
-    <img src="{{ photoArrived }}" class="center" />
+  <ion-card class="ion-text-center" *ngIf="activityArrived">
+    <!-- <div style="margin: 5px; margin-bottom: 0px;"> -->
+    <img *ngIf="photoArrived" src="{{ photoArrived }}" class="center" />
+    <!-- </div> -->
     <div padding>
-      <ion-text style="font-weight: 700;">Absen Datang Diluar Kantor</ion-text>
+      <ion-text style="font-weight: 700;">{{ activityArrived }}</ion-text>
     </div>
   </ion-card>
 
-  <ion-card class="ion-text-center" *ngIf="isReturn">
-    <img src="{{ photoReturn }}" class="center" />
+  <ion-card class="ion-text-center" *ngIf="activityReturn">
+    <!-- <div style="margin: 5px; margin-bottom: 0px;"> -->
+    <img *ngIf="photoReturn" src="{{ photoReturn }}" class="center" />
+    <!-- </div> -->
     <div padding>
-      <ion-text style="font-weight: 700;">Absen Pulang Diluar Kantor</ion-text>
+      <ion-text style="font-weight: 700;">{{ activityReturn }}</ion-text>
+    </div>
+  </ion-card>
+
+  <ion-card *ngIf="txtTimeReturn">
+    <ion-item color="hk-yellow">
+      <ion-text>Nilai dan Cerita AKHLAK BUMN yang dilakukan</ion-text>
+    </ion-item>
+
+    <div padding *ngIf="txtValueAkhlak && txtStoryAkhlak">
+      <ion-text style="font-weight: 700;">{{ txtValueAkhlak }}</ion-text>
+      <ion-text> - {{ txtStoryAkhlak }}</ion-text>
+    </div>
+
+    <div *ngIf="!txtValueAkhlak && !txtStoryAkhlak">
+      <ion-row class="ion-align-items-center">
+        <ion-col size="8">
+          <div class="ion-text-center">
+            <ion-text>Anda belum mengisi cerita AKHLAK</ion-text> <br>
+            <ion-text>hari ini</ion-text>
+          </div>
+        </ion-col>
+        <ion-col size="4">
+          <ion-button color="hk-darkgrey" expand="block" (click)="IsiCerita()">Isi Cerita</ion-button>
+        </ion-col>
+      </ion-row>
     </div>
   </ion-card>
 

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { LoadingController } from '@ionic/angular';
 import { GlobalService } from 'src/app/services/global.service';
 
 @Component({

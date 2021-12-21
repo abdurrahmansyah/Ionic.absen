@@ -3,6 +3,7 @@
     <ion-icon name="warning" slot="start"></ion-icon>
     <ion-label class="ion-text-wrap">
       <p>Ketentuan foto : Menggunakan atribut kantor dan memperlihatkan aktifitas kerja.</p>
+      <p>Usahakan posisi kamera landscape.</p>
     </ion-label>
   </ion-item>
 </ion-card>
@@ -18,7 +19,7 @@
     <ion-item>
       <ion-input type="text" placeholder="Alasan Absen Diluar" [(ngModel)]="txtDesc" name="txtDesc" required>
       </ion-input>
-      <!-- <ion-icon class="takepicture" (click)="TakePhotos()" name="camera" color="hk-red"></ion-icon> -->
+      <ion-icon class="takepicture" (click)="TakePhotos()" name="camera" color="hk-red"></ion-icon>
     </ion-item>
 
     <div *ngIf="isArrived">

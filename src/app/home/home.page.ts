@@ -311,13 +311,8 @@ export class HomePage {
 
   private SubscribeGetAkhlakDataList(data: Observable<any>) {
     data.subscribe(data => {
-      console.log("hasil asli : " + data);
-      console.log("hasil asli : " + data.response);
-      console.log("hasil asli : " + data.data);
-
       if (data.response == "success") {
         this.akhlakImage = 'data:image/jpeg;base64,' + data.data;
-        console.log("gambar akhlak : " + data.data);
       }
 
       // if (data.response == "success") {
@@ -400,7 +395,7 @@ export class HomePage {
     this.subscription.unsubscribe();
   }
 
-  DoRefresh(event: any) {
+  DoRefresh(event?: any) {
     this.GetTimeWorkingAndStatusUser();
     this.GetLeaderboardDataList();
     this.GetAkhlakDataList();
@@ -412,6 +407,8 @@ export class HomePage {
   }
 
   public async ButtonAbsen() {
+    // this.ValidateAbsen();
+    
     try {
       this.PresentLoading();
 

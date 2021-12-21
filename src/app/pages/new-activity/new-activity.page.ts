@@ -32,7 +32,10 @@ export class NewActivityPage implements OnInit {
   public txtSickDesc3: any;
   public waktuOlahraga: any;
   public jenisOlahraga: any;
+  public valueAkhlak: any;
+  public storyAkhlak: any;
   public loading: any;
+  public isArrived: any;
 
   constructor(private globalService: GlobalService,
     private loadingController: LoadingController,
@@ -50,6 +53,7 @@ export class NewActivityPage implements OnInit {
 
   ngOnInit() {
     this.txtTimeRequest = this.globalService.timeRequest;
+    this.isArrived = this.globalService.isArrived;
   }
 
   public IsFamilyMemberSick() {
@@ -81,51 +85,61 @@ export class NewActivityPage implements OnInit {
   }
 
   private ValidateData() {
-    if (!this.txtTemperature) {
-      throw new Error("Suhu badan wajib diisi.");
-    }
+    if (this.isArrived) {
+      if (!this.txtTemperature) {
+        throw new Error("Suhu badan wajib diisi.");
+      }
 
-    if (this.txtTemperature < "34" || this.txtTemperature > "39") {
-      throw new Error("Silahkan mengisi suhu tubuh normal (34-39 Celcius).");
-    }
+      if (this.txtTemperature < "34" || this.txtTemperature > "39") {
+        throw new Error("Silahkan mengisi suhu tubuh normal (34-39 Celcius).");
+      }
 
-    if (!this.kendaraan) {
-      throw new Error("Kendaraan ke area kerja wajib diisi.");
-    }
+      if (!this.kendaraan) {
+        throw new Error("Kendaraan ke area kerja wajib diisi.");
+      }
 
-    if (this.isFamilyMemberSick) {
-      if (!this.txtHubungan)
-        throw new Error("Hubungan dengan karyawan wajib diisi.");
-      if (!this.txtUsia)
-        throw new Error("Usia wajib diisi.");
-      if (!this.txtSickDesc)
-        throw new Error("Deskripsi kondisi wajib diisi.");
-    }
+      if (this.isFamilyMemberSick) {
+        if (!this.txtHubungan)
+          throw new Error("Hubungan dengan karyawan wajib diisi.");
+        if (!this.txtUsia)
+          throw new Error("Usia wajib diisi.");
+        if (!this.txtSickDesc)
+          throw new Error("Deskripsi kondisi wajib diisi.");
+      }
 
-    if (this.isFamilyMemberSick2) {
-      if (!this.txtHubungan2)
-        throw new Error("Hubungan dengan karyawan wajib diisi.");
-      if (!this.txtUsia2)
-        throw new Error("Usia wajib diisi.");
-      if (!this.txtSickDesc2)
-        throw new Error("Deskripsi kondisi wajib diisi.");
-    }
+      if (this.isFamilyMemberSick2) {
+        if (!this.txtHubungan2)
+          throw new Error("Hubungan dengan karyawan wajib diisi.");
+        if (!this.txtUsia2)
+          throw new Error("Usia wajib diisi.");
+        if (!this.txtSickDesc2)
+          throw new Error("Deskripsi kondisi wajib diisi.");
+      }
 
-    if (this.isFamilyMemberSick3) {
-      if (!this.txtHubungan3)
-        throw new Error("Hubungan dengan karyawan wajib diisi.");
-      if (!this.txtUsia3)
-        throw new Error("Usia wajib diisi.");
-      if (!this.txtSickDesc3)
-        throw new Error("Deskripsi kondisi wajib diisi.");
-    }
+      if (this.isFamilyMemberSick3) {
+        if (!this.txtHubungan3)
+          throw new Error("Hubungan dengan karyawan wajib diisi.");
+        if (!this.txtUsia3)
+          throw new Error("Usia wajib diisi.");
+        if (!this.txtSickDesc3)
+          throw new Error("Deskripsi kondisi wajib diisi.");
+      }
 
-    if (!this.waktuOlahraga) {
-      throw new Error("Jadwal olahraga wajib diisi.");
-    }
+      if (!this.waktuOlahraga) {
+        throw new Error("Jadwal olahraga wajib diisi.");
+      }
 
-    if (!this.jenisOlahraga) {
-      throw new Error("Jenis olahraga wajib diisi.");
+      if (!this.jenisOlahraga) {
+        throw new Error("Jenis olahraga wajib diisi.");
+      }
+    } else {
+      if (!this.valueAkhlak) {
+        throw new Error("Nilai Akhlak wajib diisi.");
+      }
+
+      if (!this.storyAkhlak) {
+        throw new Error("Cerita Akhlak wajib diisi.");
+      }
     }
   }
 
@@ -137,25 +151,31 @@ export class NewActivityPage implements OnInit {
   byPassSaveReportData() {
     var reportData = new ReportData();
     reportData.szUserId = this.globalService.userData.szToken;
-    reportData.kota = "Kota Jakarta Timur";
-    reportData.provinsi = "Daerah Khusus Ibukota Jakarta";
-    reportData.work_from = "WFO";
-    reportData.szActivityId = this.globalService.activityDataList.wfoNewNormal.id;
-    reportData.szDesc = "WFO - New Normal";
-    reportData.health_check = "";
-    reportData.suhu = this.txtTemperature;
-    reportData.szLocation = "HK Tower";
-    reportData.interaksi = this.isInteraksi ? "Ada" : "Tidak ada";
-    reportData.riwayat_sakit = this.isRiwayatSakit ? "Pernah" : "Tidak pernah";
-    reportData.kendaraan = this.kendaraan;
-    reportData.rencana_keluar = this.isOutPlan ? "Ada" : "Tidak ada";
-    reportData.external = this.isExternal ? "Ada" : "Tidak ada";
-    reportData.kondisi_keluarga = this.isFamilyMemberSick ? "Ada" : "Tidak ada";
-    reportData.hub_keluarga = this.isFamilyMemberSick3 ? this.txtHubungan + " ; " + this.txtHubungan2 + " ; " + this.txtHubungan3 : this.isFamilyMemberSick2 ? this.txtHubungan + " ; " + this.txtHubungan2 : this.isFamilyMemberSick ? this.txtHubungan : "";
-    reportData.umur_keluarga = this.isFamilyMemberSick3 ? this.txtUsia + " ; " + this.txtUsia2 + " ; " + this.txtUsia3 : this.isFamilyMemberSick2 ? this.txtUsia + " ; " + this.txtUsia2 : this.isFamilyMemberSick ? this.txtUsia : "";
-    reportData.desc_kondisi = this.isFamilyMemberSick3 ? this.txtSickDesc + " ; " + this.txtSickDesc2 + " ; " + this.txtSickDesc3 : this.isFamilyMemberSick2 ? this.txtSickDesc + " ; " + this.txtSickDesc2 : this.isFamilyMemberSick ? this.txtSickDesc : "";
-    reportData.waktu_olahraga = this.datePipe.transform(this.waktuOlahraga, 'yyyy-MM-dd');
-    reportData.jenis_olahraga = this.jenisOlahraga;
+    reportData.dateAbsen = this.globalService.dateRequest;
+    if (this.isArrived) {
+      reportData.kota = "Kota Jakarta Timur";
+      reportData.provinsi = "Daerah Khusus Ibukota Jakarta";
+      reportData.work_from = "WFO";
+      reportData.szActivityId = this.globalService.activityDataList.wfoNewNormal.id;
+      reportData.szDesc = "WFO - New Normal";
+      reportData.health_check = "";
+      reportData.suhu = this.txtTemperature;
+      reportData.szLocation = "HK Tower";
+      reportData.interaksi = this.isInteraksi ? "Ada" : "Tidak ada";
+      reportData.riwayat_sakit = this.isRiwayatSakit ? "Pernah" : "Tidak pernah";
+      reportData.kendaraan = this.kendaraan;
+      reportData.rencana_keluar = this.isOutPlan ? "Ada" : "Tidak ada";
+      reportData.external = this.isExternal ? "Ada" : "Tidak ada";
+      reportData.kondisi_keluarga = this.isFamilyMemberSick ? "Ada" : "Tidak ada";
+      reportData.hub_keluarga = this.isFamilyMemberSick3 ? this.txtHubungan + " ; " + this.txtHubungan2 + " ; " + this.txtHubungan3 : this.isFamilyMemberSick2 ? this.txtHubungan + " ; " + this.txtHubungan2 : this.isFamilyMemberSick ? this.txtHubungan : "";
+      reportData.umur_keluarga = this.isFamilyMemberSick3 ? this.txtUsia + " ; " + this.txtUsia2 + " ; " + this.txtUsia3 : this.isFamilyMemberSick2 ? this.txtUsia + " ; " + this.txtUsia2 : this.isFamilyMemberSick ? this.txtUsia : "";
+      reportData.desc_kondisi = this.isFamilyMemberSick3 ? this.txtSickDesc + " ; " + this.txtSickDesc2 + " ; " + this.txtSickDesc3 : this.isFamilyMemberSick2 ? this.txtSickDesc + " ; " + this.txtSickDesc2 : this.isFamilyMemberSick ? this.txtSickDesc : "";
+      reportData.waktu_olahraga = this.datePipe.transform(this.waktuOlahraga, 'yyyy-MM-dd');
+      reportData.jenis_olahraga = this.jenisOlahraga;
+    } else {
+      reportData.value_akhlak = this.valueAkhlak;
+      reportData.story_akhlak = this.storyAkhlak;
+    }
 
     var data = this.globalService.SaveNewActivity(reportData);
     this.SubscribeGetReportDatas(data);

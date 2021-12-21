@@ -278,7 +278,6 @@ export class GlobalService {
     var data: any = this.httpClient.post(url, postdata);
     data.subscribe(data => {
       if (data.response == "success") {
-
         var userDataFromDb = data.data;//.find(x => x);
         var userData = this.MappingUserData(userDataFromDb);
 
@@ -736,6 +735,7 @@ export class GlobalService {
     var url = 'https://absensi.hutamakarya.com/api/attendance/setActivity';
     let postdata = new FormData();
     postdata.append('authorization', reportData.szUserId);
+    postdata.append('date_activity', reportData.dateAbsen);
     postdata.append('activity_id', reportData.szActivityId);
     postdata.append('reason', reportData.szDesc);
     postdata.append('location', reportData.szLocation);
@@ -755,6 +755,8 @@ export class GlobalService {
     postdata.append('desc_kondisi', reportData.desc_kondisi);
     postdata.append('waktu_olahraga', reportData.waktu_olahraga);
     postdata.append('jenis_olahraga', reportData.jenis_olahraga);
+    postdata.append('value_akhlak', reportData.value_akhlak);
+    postdata.append('story_akhlak', reportData.story_akhlak);
 
     return this.httpClient.post(url, postdata);
   }

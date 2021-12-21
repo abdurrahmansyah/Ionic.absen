@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { GlobalService, ReportData } from 'src/app/services/global.service';
-import { IonSlides } from '@ionic/angular';
+import { IonSlides, LoadingController } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-attendance',
@@ -22,10 +23,14 @@ export class AttendancePage implements OnInit {
   requestDatas = [];
   txtTimeArrived: string;
   txtTimeReturn: string;
-  isArrived: boolean = false;
-  isReturn: boolean = false;
+  txtValueAkhlak: string;
+  txtStoryAkhlak: string;
   photoArrived: any = [];
   photoReturn: any = [];
+
+  activityArrived: string;
+  activityReturn: string;
+  private loading: any;
 
   slideOpts = {
     initialSlide: new Date().getMonth(),
@@ -34,13 +39,26 @@ export class AttendancePage implements OnInit {
 
   constructor(private globalService: GlobalService,
     public http: HttpClient,
-    private datePipe: DatePipe) {
+    private loadingController: LoadingController,
+    private datePipe: DatePipe,
+    public router: Router) {
+    this.InitializeLoadingCtrl();
     this.GetReportDatasForThisDay();
     // this.GetLoopRequestDatas();
   }
 
+  async InitializeLoadingCtrl() {
+    this.loading = await this.loadingController.create({
+      mode: 'ios'
+    });
+  }
+
   ngOnInit() {
     this.SetDataDaysInMonth(this.decCurrentMonth, this.decCurrentYear);
+  }
+
+  ionViewDidEnter() {
+    this.GetReportDatasForThisDay();
   }
 
   async slideMonthChanged() {
@@ -105,9 +123,11 @@ export class AttendancePage implements OnInit {
   }
 
   async GetReportDatasForThisDay() {
+    this.PresentLoading();
     var month = this.decCurrentMonth < 10 ? "0" + this.decCurrentMonth : this.decCurrentMonth;
     var day = this.decCurrentDay < 10 ? "0" + this.decCurrentDay : this.decCurrentDay;
     var date = this.decCurrentYear + "-" + month + "-" + day;
+    this.globalService.dateRequest = date;
 
     var url = 'https://absensi.hutamakarya.com/api/attendance/perdate';
     let postdata = new FormData();
@@ -125,14 +145,6 @@ export class AttendancePage implements OnInit {
         var reportDataFromDb = data.data ? data.data : data.data_db;
         var reportData: ReportData = this.MappingReportData(reportDataFromDb);
 
-        // console.log(reportData.szImageArrived);
-
-        this.isArrived = reportData.szImageArrived.startsWith(',') ? false : reportData.szImageArrived ? true : false;
-        this.isReturn = reportData.szImageReturn.startsWith(',') ? false : reportData.szImageReturn ? true : false;
-        
-        this.photoArrived = 'data:image/jpeg;base64,' + reportData.szImageArrived;
-        this.photoReturn = 'data:image/jpeg;base64,' + reportData.szImageReturn;
-
         var timeValidArrived = reportData.timeValidArrived.split(':');
         var { hour, minute, ampm } = this.ConvertTimeToViewFormat(timeValidArrived);
         this.txtTimeArrived = hour + ":" + minute + " " + ampm;
@@ -145,10 +157,36 @@ export class AttendancePage implements OnInit {
           this.globalService.timeRequest = this.txtTimeReturn;
         else
           this.globalService.timeRequest = this.txtTimeArrived;
+
+        this.activityArrived = !reportDataFromDb.activity[0] ? "" : reportDataFromDb.activity[0].activity_type_id[0] == "22" ? "Absen WFO " + reportDataFromDb.activity[0].activity_type_id[1]
+          : reportDataFromDb.activity[0].activity_type_id ? "Absen " + reportDataFromDb.activity[0].activity_type_id[1]
+            : "";
+        this.activityReturn = !reportDataFromDb.activity[1] ? "" : reportDataFromDb.activity[1].activity_type_id[0] == "22" ? "Absen WFO " + reportDataFromDb.activity[1].activity_type_id[1]
+          : reportDataFromDb.activity[1].activity_type_id ? "Absen " + reportDataFromDb.activity[1].activity_type_id[1]
+            : "";
+
+        this.photoArrived = reportData.szImageArrived;
+        this.photoReturn = reportData.szImageReturn;
+
+        this.txtValueAkhlak = reportData.value_akhlak;
+        this.txtStoryAkhlak = reportData.story_akhlak;
+
+        this.loadingController.dismiss();
       }
       else {
         this.txtTimeArrived = "";
         this.txtTimeReturn = "";
+
+        this.activityArrived = "";
+        this.activityReturn = "";
+
+        this.photoArrived = "";
+        this.photoReturn = "";
+
+        this.txtValueAkhlak = "";
+        this.txtStoryAkhlak = "";
+
+        this.loadingController.dismiss();
       }
     });
   }
@@ -158,10 +196,13 @@ export class AttendancePage implements OnInit {
     var reportData = new ReportData();
     reportData.szUserId = reportDataFromDb.employee_id;
     reportData.dateAbsen = reportDataFromDb.check_in_display ? reportDataFromDb.check_in_display.split(' ')[0] : reportDataFromDb.check_out_display.split(' ')[0];
+
     reportData.timeValidArrived = reportDataFromDb.check_in_display ? reportDataFromDb.check_in_display.split(' ')[1] : this.txtTimeArrived.split(' ')[0];
     reportData.timeValidReturn = reportDataFromDb.check_out_display ? reportDataFromDb.check_out_display.split(' ')[1] : "00:00";
-    reportData.szImageArrived = reportDataFromDb.capture_in ? reportDataFromDb.capture_in : "";
-    reportData.szImageReturn = reportDataFromDb.capture_out ? reportDataFromDb.capture_out : "";
+    reportData.szImageArrived = reportDataFromDb.capture_in == "undefined" ? "" : reportDataFromDb.capture_in && reportDataFromDb.attendance_type_in == "kios-k" ? 'data:image/jpeg;base64' + reportDataFromDb.capture_in : reportDataFromDb.capture_in ? 'data:image/jpeg;base64,' + reportDataFromDb.capture_in : "";
+    reportData.szImageReturn = reportDataFromDb.capture_out == "undefined" ? "" : reportDataFromDb.capture_out && reportDataFromDb.attendance_type_out == "kios-k" ? 'data:image/jpeg;base64' + reportDataFromDb.capture_out : reportDataFromDb.capture_out ? 'data:image/jpeg;base64,' + reportDataFromDb.capture_out : "";
+    reportData.value_akhlak = reportDataFromDb.value_akhlak ? reportDataFromDb.value_akhlak : "";
+    reportData.story_akhlak = reportDataFromDb.story_akhlak ? reportDataFromDb.story_akhlak : "";
 
     reportDatas.push(reportData);
     return reportDatas.find(x => x);
@@ -174,12 +215,22 @@ export class AttendancePage implements OnInit {
     return { hour, minute, ampm };
   }
 
+  public IsiCerita(){
+    this.globalService.timeRequest = this.txtTimeReturn;
+    this.globalService.isArrived = false;
+    this.router.navigate(['new-activity']);
+  }
+
   next() {
     this.sliderMonth.slideNext();
   }
 
   prev() {
     this.sliderMonth.slidePrev();
+  }
+
+  async PresentLoading() {
+    await this.loading.present();
   }
 }
 
