@@ -39,6 +39,7 @@ export class FormAbsenDiluarComponent implements OnInit {
   public storyAkhlak: any;
   private dataimage: string;
   private loading: any;
+  public isIOS: boolean = false;
 
   constructor(private camera: Camera,
     private alertController: AlertController,
@@ -59,6 +60,8 @@ export class FormAbsenDiluarComponent implements OnInit {
   ngOnInit() {
     this.txtTimeRequest = this.globalService.timeRequest;
     this.isArrived = this.globalService.isArrived;
+
+    this.isIOS = this.platform.is('ios') ? true : false;
   }
 
   public IsFamilyMemberSick() {
@@ -100,7 +103,7 @@ export class FormAbsenDiluarComponent implements OnInit {
       throw new Error("Alasan wajib diisi.");
     }
 
-    if (!this.dataimage) {
+    if (!this.dataimage && this.isIOS) {
       throw new Error("Foto wajib diisi.");
     }
 
@@ -247,7 +250,7 @@ export class FormAbsenDiluarComponent implements OnInit {
   }
 
   public TakePhotos() {
-    if (this.platform.is('ios')) {
+    if (this.isIOS) {
       const options: CameraOptions = {
         // quality: 200,
         mediaType: this.camera.MediaType.PICTURE,
