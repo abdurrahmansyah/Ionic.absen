@@ -209,6 +209,8 @@ export class AppComponent {
     await this.globalService.GetUserDataFromStorage();
     this.globalService.GetOfficeHour();
     this.globalService.GetActivityData();
+    this.globalService.GetHolidayDataList();
+    this.globalService.GetDateCategoryDataList();
   }
 
   openPage(page) {

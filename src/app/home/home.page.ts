@@ -44,6 +44,7 @@ export class HomePage {
   public leadDivisionName: string;
   public leadImage: any;
   public akhlakImage: any;
+  public isWFOWFHPlanning: boolean = false;
   private loading: any;
   private subscription: any;
   @ViewChild(IonRouterOutlet, { static: false }) routerOutlet: IonRouterOutlet;
@@ -77,20 +78,20 @@ export class HomePage {
   }
 
   ValidateAppVersionNumber() {
-    var data = this.globalService.GetVersionNumber();
-    data.subscribe(data => {
-      if (data.response == "success") {
-        var versionNumberDb = data.data;
+    // var data = this.globalService.GetVersionNumber();
+    // data.subscribe(data => {
+    //   if (data.response == "success") {
+    //     var versionNumberDb = data.data;
 
-        this.appVersion.getVersionNumber().then((versionNumber) => {
-          if (versionNumber < versionNumberDb)
-            this.router.navigate(['warning-updates']);
-        }).catch((error) => {
-          this.globalService.PresentAlert(error.message);
-          this.router.navigate(['warning-updates']);
-        });
-      }
-    });
+    //     this.appVersion.getVersionNumber().then((versionNumber) => {
+    //       if (versionNumber < versionNumberDb)
+    //         this.router.navigate(['warning-updates']);
+    //     }).catch((error) => {
+    //       // this.globalService.PresentAlert(error.message);
+    //       this.router.navigate(['warning-updates']);
+    //     });
+    //   }
+    // });
   }
 
   // public StartLocalNotification() {
@@ -339,6 +340,10 @@ export class HomePage {
     return akhlakDataList.find(x => x);
   }
 
+  private GetWFOWFHPlanning() {
+    this.isWFOWFHPlanning = true;
+  }
+
   private Timer() {
     setInterval(function () {
       this.ShowRepeatData();
@@ -363,6 +368,7 @@ export class HomePage {
     this.GetTimeWorkingAndStatusUser();
     this.GetLeaderboardDataList();
     this.GetAkhlakDataList();
+    this.GetWFOWFHPlanning();
   }
 
   ionViewDidEnter() {
@@ -408,7 +414,7 @@ export class HomePage {
 
   public async ButtonAbsen() {
     // this.ValidateAbsen();
-    
+
     try {
       this.PresentLoading();
 
@@ -834,6 +840,9 @@ export class HomePage {
     }
     else if (index == 6) {
       this.router.navigate(['team-activity']);
+    }
+    else if (index == 7) {
+      this.router.navigate(['wfowfh-planning']);
     }
   }
 

@@ -1,0 +1,166 @@
+<ion-header>
+  <ion-toolbar color="hk-red">
+    <ion-buttons slot="start">
+      <ion-back-button color="hk-white-red"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Formulir WFO WFH</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-item color="hk-yellow" lines="none">
+      <ion-icon name="warning" slot="start"></ion-icon>
+      <ion-label class="ion-text-wrap">
+        <p>Jadwal Pengisian:</p>
+        <p>10-12 Maret 2022</p>
+      </ion-label>
+    </ion-item>
+  </ion-card>
+
+  <div *ngFor="let wfowfhPlanData of wfowfhPlanDataList">
+    <ion-row style="padding-top: 10px; padding-left: 10%; padding-right: 10%;">
+      <ion-col size="8" style="padding: 0px;">
+        <ion-item class="border" lines="none">
+          <ion-label>{{wfowfhPlanData.date}}</ion-label>
+        </ion-item>
+      </ion-col>
+      <ion-col size="4" style="padding: 0px 0px 0px 16px;" class="ion-text-end">
+        <ion-item class="border" lines="none" color="hk-ppid-main">
+          <ion-select mode="ios" [(ngModel)]="wfowfhPlanData.index" style="padding: 0px; margin: 0px;">
+            <ion-select-option value="0">WFO</ion-select-option>
+            <ion-select-option value="1" selected>WFH</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+  </div>
+
+  <ion-button expand="full" fill="clear" shape="round" (click)="CekModel()">CEK MODEL</ion-button>
+
+  <ion-row style="padding-left: 10%; padding-right: 10%;">
+    <ion-col size="8" style="padding: 0px;">
+      <ion-item class="border" lines="none">
+        <ion-label>Lokasi kerja</ion-label>
+      </ion-item>
+    </ion-col>
+    <ion-col size="4" style="padding: 0px 0px 0px 16px;" class="ion-text-end">
+      <ion-item class="border" lines="none" color="hk-ppid-main">
+        <ion-select mode="ios" [(ngModel)]="lokasi" style="padding: 0px; margin: 0px;">
+          <ion-select-option value="0">WFO</ion-select-option>
+          <ion-select-option value="1" selected>WFH</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+
+
+  <div class="input-group" style="padding-top: 10px; padding-left: 10%; padding-right: 10%;">
+    <ion-item class="border" lines="none">
+      <ion-label>Lokasi kerja</ion-label>
+      <ion-select mode="ios" [(ngModel)]="lokasi">
+        <ion-select-option value="0">WFO</ion-select-option>
+        <ion-select-option value="1" selected>WFH</ion-select-option>
+      </ion-select>
+    </ion-item>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <form (ngSubmit)="PermohonanInformasi()" [formGroup]="credentials" style="padding-left: 10%; padding-right: 10%;">
+    <div class="input-group" style="padding-top: 10px;">
+      <ion-item class="border" lines="none">
+        <ion-input type="text" placeholder="Nama Lengkap" formControlName="name"></ion-input>
+      </ion-item>
+      <div *ngIf="(name.dirty || name.touched) && name.errors" class="errors">
+        <span *ngIf="name.errors?.required">Nama Tidak Boleh Kosong</span>
+      </div>
+      <br>
+
+      <ion-item class="border" lines="none">
+        <ion-input type="text" placeholder="Tujuan Penggunaan Informasi" formControlName="tujuan"></ion-input>
+      </ion-item>
+      <div *ngIf="(tujuan.dirty || tujuan.touched) && tujuan.errors" class="errors">
+        <span *ngIf="tujuan.errors?.required">Tujuan Penggunaan Informasi Tidak Boleh Kosong</span>
+      </div>
+      <br>
+
+      <ion-item class="border" lines="none">
+        <ion-input type="text" placeholder="Rincian Informasi yang Dibutuhkan" formControlName="rincian">
+        </ion-input>
+      </ion-item>
+      <div *ngIf="(rincian.dirty || rincian.touched) && rincian.errors" class="errors">
+        <span *ngIf="rincian.errors?.required">Rincian Informasi Tidak Boleh Kosong</span>
+      </div>
+      <br>
+
+      <ion-row>
+        <ion-col size="8" style="padding: 0px;">
+          <ion-item class="border" lines="none">
+            <ion-input [type]="text" placeholder="Lampiran" formControlName="lampiran"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col size="4" style="padding: 0px 0px 0px 16px;" class="ion-text-end">
+          <div class="border ion-text-center" style="background-color: var(--ion-color-hk-ppid-main); height: 100%;">
+            <ion-button expand="full" color="transparent" style="height: 100%; padding: 0px; margin: 0px;">UPLOAD
+            </ion-button>
+          </div>
+        </ion-col>
+      </ion-row>
+      <div *ngIf="(lampiran.dirty || lampiran.touched) && lampiran.errors" class="errors">
+        <span *ngIf="lampiran.errors?.required">Lampiran Tidak Boleh Kosong</span>
+      </div>
+    </div>
+
+    <hr style="height: 12px; margin-top: 0px; margin-bottom: 0px;" no-padding>
+
+    <ion-icon class="icon" name="stop"></ion-icon>
+    <span>&nbsp;</span>
+    <span class="text">I Agree to The </span>
+    <span>&nbsp;</span>
+    <span class="text" style="font-weight: 700;">Term and Conditions</span>
+
+    <br>
+    <br>
+
+    <ion-row class="ion-align-items-center">
+      <ion-col size="12" class="ion-text-center">
+        <ion-button shape="round" type="submit" [disabled]="!credentials.valid" color="hk-ppid-main">Submit
+          Permohonan
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </form>
+
+</ion-content>

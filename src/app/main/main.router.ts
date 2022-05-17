@@ -84,6 +84,12 @@ const routes: Routes = [
                 loadChildren: () => import('../pages/new-activity/new-activity.module').then(
                     m => m.NewActivityPageModule
                 )
+            },
+            {
+                path: 'wfowfh-planning',
+                loadChildren: () => import('../pages/wfowfh-planning/wfowfh-planning.module').then(
+                    m => m.WfowfhPlanningPageModule
+                )
             }
         ]
     }

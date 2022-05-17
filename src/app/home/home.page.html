@@ -55,6 +55,16 @@
     </ion-row>
   </ion-grid>
 
+  <div padding *ngIf="isWFOWFHPlanning">
+    <ion-text>Available : {{ jadwalPengisianWFOWFH }}</ion-text>
+  </div>
+
+  <div class="container" padding>
+    <div class="scroll" scrollX="true">
+      <img style="border-radius: 5px 5px 5px 5px;" (click)="NavRouterMenu(7)" src="../../assets/images/img-16.png" />
+    </div>
+  </div>
+
   <div padding>
     <ion-text>Greetings AKHLAK</ion-text>
   </div>

@@ -19,6 +19,9 @@ declare var window;
 export class GlobalService {
   public officeHourData = new OfficeHourData();
   public activityDataList = new ActivityData();
+  public holidayDataList = [];
+  public dateCategoryDataList = [];
+  public wfowfhPlanDataList = [];
   public requestDatas = [];
   public summaryReportDatas = [];
   public errorDatas = [];
@@ -37,6 +40,7 @@ export class GlobalService {
   public timestamp: number;
   public mobile: string = "";
   loading: any;
+  public statusDateCategory = new StatusDateCategory;
 
   httpClient = InjectorInstance.get<HttpClient>(HttpClient);
   readonly mobileIos = "mobile - iOS";
@@ -267,6 +271,47 @@ export class GlobalService {
     return activityData;
   }
 
+  public GetHolidayDataList() {
+    var url = 'https://absensi.hutamakarya.com/api/list/holiday';
+
+    var data: any = this.httpClient.get(url);
+    data.subscribe(data => {
+      this.MappingHolidayDataList(data);
+    });
+  }
+
+  private MappingHolidayDataList(holidayDataFromDb: any) {
+    holidayDataFromDb.forEach(data => {
+      var holidayData = new HolidayData();
+      holidayData.id = data.id;
+      holidayData.date = data.date;
+      holidayData.holiday_name = data.holiday_name;
+
+      this.holidayDataList.push(holidayData);
+    });
+  }
+
+  public GetDateCategoryDataList() {
+    var url = 'https://absensi.hutamakarya.com/api/list/date_category';
+
+    var data: any = this.httpClient.get(url);
+    data.subscribe(data => {
+      this.MappingDateCategoryDataList(data);
+    });
+  }
+
+  private MappingDateCategoryDataList(dateCategoryDataFromDb: any) {
+    dateCategoryDataFromDb.forEach(data => {
+      var dateCategoryData = new DateCategoryData();
+      dateCategoryData.id = data.id;
+      dateCategoryData.start_date = data.start_date;
+      dateCategoryData.end_date = data.end_date;
+      dateCategoryData.status = data.status;
+
+      this.dateCategoryDataList.push(dateCategoryData);
+    });
+  }
+
   public GetUserData(szUserId: string, szPassword: string) {
     this.PresentLoading();
     var url = 'https://absensi.hutamakarya.com/api/login';
@@ -309,10 +354,10 @@ export class GlobalService {
         var url = 'https://absensi.hutamakarya.com/api/loginSSO'; // Kondisi kalau 
         var data: any = this.httpClient.post(url, postdata);
         data.subscribe(data => {
-          if (data != null){ // #supaya jika ada email tapi tidak ada data di hk absen dia ditolak
+          if (data != null) { // #supaya jika ada email tapi tidak ada data di hk absen dia ditolak
             var userDataFromDb = data.data;//.find(x => x);
             var userData = this.MappingUserData(userDataFromDb);
-  
+
             this.storage.set('userData', userData);
             this.loadingController.dismiss();
             this.PresentToast("Login Berhasil");
@@ -849,6 +894,19 @@ export class ActivityData {
   public wfoProyek: any;
 }
 
+export class HolidayData {
+  public id: any;
+  public date: any;
+  public holiday_name: any;
+}
+
+export class DateCategoryData {
+  public id: any;
+  public start_date: any;
+  public end_date: any;
+  public status: any;
+}
+
 export class UserData {
   public szToken: string;
   public szTokenFcm: string;
@@ -1022,6 +1080,15 @@ export class LocationData {
   constructor() { }
 }
 
+export class WFOWFHPlanData {
+  public number: number;
+  public id: any;
+  public employee_id: any;
+  public date: any;
+  public wfowfhplan: any;
+  public index?: string;
+}
+
 export class ErrorData {
   public szMessage: string;
 }
@@ -1043,4 +1110,9 @@ export class StatusId {
   public static readonly ST001: string = "ST001"; //Approved
   public static readonly ST002: string = "ST002"; //Not Approved 
   public static readonly ST003: string = "ST003"; //Need Approval 
+}
+
+export class StatusDateCategory {
+  public readonly ACTIVE: string = "ACTIVE"; //ACTIVE
+  public readonly NOTACTIVE: string = "NOT ACTIVE"; //NOT ACTIVE
 }
