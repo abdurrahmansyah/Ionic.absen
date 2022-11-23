@@ -439,6 +439,9 @@ export class HomePage {
           this.loadingController.dismiss();
           this.globalService.PresentAlert("BUG: Error API Version Number");
         }
+      }, (err) => {
+        this.loadingController.dismiss();
+        this.globalService.PresentToast(err.message);
       });
     }
     catch (e) {
@@ -513,8 +516,11 @@ export class HomePage {
           this.MappingLocationGeocode(0, result);
         else
           this.MappingLocationGeocode(1, result);
+      }, (rejected) => {
+        this.loadingController.dismiss();
+        this.globalService.PresentAlert(rejected.message)
       })
-      .catch((error: any) => console.log(error));
+      .catch((error: any) => { console.log(error) });
   }
 
   private MappingLocationGeocode(index: number, result: NativeGeocoderResult[]) {
