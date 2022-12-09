@@ -12,6 +12,7 @@ import { FCM } from '@ionic-native/fcm/ngx';
 import { ELocalNotificationTriggerUnit, LocalNotifications } from '@ionic-native/local-notifications/ngx';
 
 declare var window;
+export const USERDATA_KEY = 'userData';
 
 @Injectable({
   providedIn: 'root'
@@ -313,69 +314,73 @@ export class GlobalService {
   }
 
   public GetUserData(szUserId: string, szPassword: string) {
-    this.PresentLoading();
-    var url = 'https://absensi.hutamakarya.com/api/login';
+    this.InitializeLoadingCtrl();
+    setTimeout(() => {
+      this.PresentLoading();
+      var url = 'https://absensi.hutamakarya.com/api/login';
 
-    let postdata = new FormData();
-    postdata.append('username', szUserId);
-    postdata.append('password', szPassword);
+      let postdata = new FormData();
+      postdata.append('username', szUserId);
+      postdata.append('password', szPassword);
 
-    var data: any = this.httpClient.post(url, postdata);
-    data.subscribe(data => {
-      if (data.response == "success") {
-        var userDataFromDb = data.data;//.find(x => x);
-        var userData = this.MappingUserData(userDataFromDb);
+      var data: any = this.httpClient.post(url, postdata);
+      data.subscribe(data => {
+        if (data.response == "success") {
+          var userDataFromDb = data.data;//.find(x => x);
+          var userData = this.MappingUserData(userDataFromDb);
 
-        this.storage.set('userData', userData);
-        this.loadingController.dismiss();
-        this.PresentToast("Login Berhasil");
-        this.authService.login();
-        this.router.navigate(['home']);
-      }
-      else {
-        this.loadingController.dismiss();
-        this.PresentToast("Login Gagal");
-      }
-    });
+          this.storage.set(USERDATA_KEY, userData);
+          this.loadingController.dismiss();
+          this.PresentToast("Login Berhasil");
+          this.authService.login();
+          this.router.navigate(['home']);
+        }
+        else {
+          this.loadingController.dismiss();
+          this.PresentToast("Login Gagal");
+        }
+      });
+    }, 100);
   }
 
   public LoginSSO(szUserId: string, szPassword: string) {
-    this.PresentLoading();
-    var url = 'https://absensi.hutamakarya.com/api/authAD'; //ganti dengan API AD mas jerino
+    this.InitializeLoadingCtrl();
+    setTimeout(() => {
+      this.PresentLoading();
+      var url = 'https://absensi.hutamakarya.com/api/authAD'; //ganti dengan API AD mas jerino
 
-    let postdata = new FormData();
-    postdata.append('username', szUserId);
-    postdata.append('password', szPassword);
+      let postdata = new FormData();
+      postdata.append('username', szUserId);
+      postdata.append('password', szPassword);
 
+      var data: any = this.httpClient.post(url, postdata);
+      data.subscribe(data => {
+        if (data.auth == 1) {
+          var url = 'https://absensi.hutamakarya.com/api/loginSSO'; // Kondisi kalau 
+          var data: any = this.httpClient.post(url, postdata);
+          data.subscribe(data => {
+            if (data != null && data.response != "failed") { // #supaya jika ada email tapi tidak ada data di hk absen dia ditolak
+              var userDataFromDb = data.data;//.find(x => x);
+              var userData = this.MappingUserData(userDataFromDb);
 
-    var data: any = this.httpClient.post(url, postdata);
-    data.subscribe(data => {
-      if (data.auth == 1) {
-        var url = 'https://absensi.hutamakarya.com/api/loginSSO'; // Kondisi kalau 
-        var data: any = this.httpClient.post(url, postdata);
-        data.subscribe(data => {
-          if (data != null) { // #supaya jika ada email tapi tidak ada data di hk absen dia ditolak
-            var userDataFromDb = data.data;//.find(x => x);
-            var userData = this.MappingUserData(userDataFromDb);
-
-            this.storage.set('userData', userData);
-            this.loadingController.dismiss();
-            this.PresentToast("Login Berhasil");
-            this.authService.login();
-            this.router.navigate(['home']);
-          }
-          else {
-            this.loadingController.dismiss();
-            this.PresentToast("Login Gagal");
-          }
-        });
-      }
-      else {
-        this.loadingController.dismiss();
-        this.PresentToast("Login Gagal");
-      }
-    });
-
+              this.storage.set(USERDATA_KEY, userData);
+              this.loadingController.dismiss();
+              this.PresentToast("Login Berhasil");
+              this.authService.login();
+              this.router.navigate(['home']);
+            }
+            else {
+              this.loadingController.dismiss();
+              this.PresentToast("Login Gagal: " + data.data);
+            }
+          });
+        }
+        else {
+          this.loadingController.dismiss();
+          this.PresentToast("Login Gagal");
+        }
+      });
+    }, 100);
   }
 
   public GetUserData2(requestData: RequestData, szUserId: string, szPassword: string) {
@@ -840,11 +845,12 @@ export class GlobalService {
     });
   }
 
-  public Logout() {
+  public async Logout() {
     // this.PresentAlert("User tidak diperkenankan logout");
 
-    this.authService.logout();
+    await this.authService.logout();
     this.fcm.unsubscribeFromTopic(this.userData.szUserId);
+    this.router.navigateByUrl('index/welcome', { replaceUrl: true });
   }
 
   async PresentLoading() {

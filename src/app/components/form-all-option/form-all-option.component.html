@@ -9,7 +9,7 @@
 
 <ion-card>
   <ion-card-header>
-    <ion-card-subtitle>Form WFO - New Normal</ion-card-subtitle>
+    <ion-card-subtitle>Form New Normal</ion-card-subtitle>
   </ion-card-header>
 
   <ion-card-content>
@@ -18,9 +18,10 @@
     <div *ngIf="isArrived">
       <ion-item Lines="full">
         <ion-label>Lokasi kerja</ion-label>
-        <ion-select mode="ios" [(ngModel)]="lokasi" disabled="true">
+        <ion-select mode="ios" [(ngModel)]="lokasi">
           <ion-select-option value="0" selected>Kantor Pusat</ion-select-option>
           <ion-select-option value="1">Proyek</ion-select-option>
+          <ion-select-option value="2">WFH</ion-select-option>
         </ion-select>
       </ion-item>
 

@@ -16,6 +16,8 @@ export class FormRequestPage implements OnInit {
   isLembur: boolean = false;
   isWfoNewNormal: boolean = false;
   isWfoProyek: boolean = false;
+  isAllOption: boolean = false;
+  
   constructor(public activatedRoute: ActivatedRoute, public router: Router, private globalService: GlobalService) { }
 
   ngOnInit() {
@@ -32,6 +34,7 @@ export class FormRequestPage implements OnInit {
         this.isLembur = this.router.getCurrentNavigation().extras.state.indexForm == this.globalService.activityDataList.lembur.id ? true : false; // lembur
         this.isWfoNewNormal = this.router.getCurrentNavigation().extras.state.indexForm == this.globalService.activityDataList.wfoNewNormal.id ? true : false; // wfoNewNormal
         this.isWfoProyek = this.router.getCurrentNavigation().extras.state.indexForm == this.globalService.activityDataList.wfoProyek.id ? true : false; // wfoProyek
+        this.isAllOption = this.router.getCurrentNavigation().extras.state.indexForm == "isAllOption" ? true : false; // isAllOption
       }
     });
   }

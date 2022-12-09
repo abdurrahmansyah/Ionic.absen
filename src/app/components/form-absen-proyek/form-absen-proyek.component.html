@@ -24,6 +24,14 @@
         </ion-select>
       </ion-item>
   
+      <ion-item>
+        <ion-label>Kondisi kesehatan</ion-label>
+        <ion-select mode="ios" [(ngModel)]="kesehatan">
+          <ion-select-option value="Sehat" selected>Sehat</ion-select-option>
+          <ion-select-option value="Kurang sehat">Kurang sehat</ion-select-option>
+        </ion-select>
+      </ion-item>
+
       <ion-item Lines="full">
         <ion-input type="text" placeholder="Suhu badan hari ini" [(ngModel)]="txtTemperature" name="txtTemperature"
           type="number" required no-padding>

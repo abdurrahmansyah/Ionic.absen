@@ -10,6 +10,7 @@
     <ion-title *ngIf="isLembur">Form Pulang Diluar</ion-title>
     <ion-title *ngIf="isWfoNewNormal">Form WFO - New Normal</ion-title>
     <ion-title *ngIf="isWfoProyek">Form WFO - Absen Proyek</ion-title>
+    <ion-title *ngIf="isAllOption">Form New Normal</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -34,5 +35,8 @@
   </div>
   <div *ngIf="isWfoProyek">
     <app-form-absen-proyek></app-form-absen-proyek>
+  </div>
+  <div *ngIf="isAllOption">
+    <app-form-all-option></app-form-all-option>
   </div>
 </ion-content>

@@ -13,7 +13,7 @@
           <ion-label>Login NIK</ion-label>
         </ion-segment-button>
         <ion-segment-button value="sso" mode="md" checked>
-          <ion-label>SSO HK</ion-label>
+          <ion-label>Email SSO HK</ion-label>
         </ion-segment-button>
       </ion-segment>
 
@@ -24,7 +24,7 @@
           <ion-row class="ion-align-items-center">
             <ion-col>
               <ion-item>
-                <ion-input type="text" placeholder="NIK" [(ngModel)]="szUserId" name="szUserId" required>
+                <ion-input type="text" placeholder="NIK Karyawan" [(ngModel)]="szUserId" name="szUserId" required>
                 </ion-input>
               </ion-item>
             </ion-col>
@@ -45,7 +45,7 @@
 
           <ion-row class="ion-align-items-center">
             <ion-col class="signup-col">
-              <ion-button shape="round" expand="block" color='hk-red' type="submit" (click)="Login()">Login</ion-button>
+              <ion-button shape="round" expand="block" color='hk-red' type="submit" (click)="Login()">Login dengan NIK</ion-button>
             </ion-col>
           </ion-row>
         </div>
@@ -54,7 +54,7 @@
           <ion-row class="ion-align-items-center">
             <ion-col>
               <ion-item>
-                <ion-input type="text" placeholder="Email" [(ngModel)]="szUserId" name="szUserId" required>
+                <ion-input type="text" placeholder="Email Hutama Karya" [(ngModel)]="szUserId" name="szUserId" required>
                 </ion-input>
               </ion-item>
             </ion-col>
@@ -75,7 +75,7 @@
 
           <ion-row class="ion-align-items-center">
             <ion-col class="signup-col">
-              <ion-button shape="round" expand="block" color='hk-red' type="submit" (click)="LoginSSO()">Login SSO HK
+              <ion-button shape="round" expand="block" color='hk-red' type="submit" (click)="LoginSSO()">Login dengan Email SSO HK
               </ion-button>
             </ion-col>
           </ion-row>

@@ -1,22 +1,22 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivityId, StatusId, GlobalService, RequestData, ReportData } from 'src/app/services/global.service';
-import { AlertController, LoadingController, Platform } from '@ionic/angular';
-import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
-import { Observable } from 'rxjs';
-import { Router } from '@angular/router';
 import { DatePipe } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AlertController, LoadingController } from '@ionic/angular';
+import { Observable } from 'rxjs';
+import { GlobalService, ReportData } from 'src/app/services/global.service';
+import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 
 @Component({
-  selector: 'app-form-absen-diluar',
-  templateUrl: './form-absen-diluar.component.html',
-  styleUrls: ['./form-absen-diluar.component.scss'],
+  selector: 'app-form-all-option',
+  templateUrl: './form-all-option.component.html',
+  styleUrls: ['./form-all-option.component.scss'],
 })
-export class FormAbsenDiluarComponent implements OnInit {
+export class FormAllOptionComponent implements OnInit {
   public txtTimeRequest: string;
   public txtTemperature: string;
-  public txtDesc: string;
-  public photo: any = [];
+  public lokasi: string;
   public kesehatan: any;
+  public kendaraan: string;
   public isInteraksi: boolean = true;
   public isRiwayatSakit: boolean = true;
   public isOutPlan: boolean = true;
@@ -24,7 +24,6 @@ export class FormAbsenDiluarComponent implements OnInit {
   public isFamilyMemberSick: boolean = true;
   public isFamilyMemberSick2: boolean = false;
   public isFamilyMemberSick3: boolean = false;
-  public isArrived: any;
   public txtHubungan: any;
   public txtUsia: any;
   public txtSickDesc: any;
@@ -38,18 +37,17 @@ export class FormAbsenDiluarComponent implements OnInit {
   public jenisOlahraga: any;
   public valueAkhlak: any;
   public storyAkhlak: any;
-  private dataimage: string;
-  private loading: any;
-  public isIOS: boolean = false;
+  public loading: any;
+  public isArrived: any;
 
   constructor(private camera: Camera,
     private alertController: AlertController,
     private globalService: GlobalService,
     private loadingController: LoadingController,
     private datePipe: DatePipe,
-    public router: Router,
-    private platform: Platform) {
+    public router: Router) {
     this.InitializeLoadingCtrl();
+    this.lokasi = "0";
   }
 
   async InitializeLoadingCtrl() {
@@ -61,8 +59,6 @@ export class FormAbsenDiluarComponent implements OnInit {
   ngOnInit() {
     this.txtTimeRequest = this.globalService.timeRequest;
     this.isArrived = this.globalService.isArrived;
-
-    this.isIOS = this.platform.is('ios') ? true : false;
   }
 
   public IsFamilyMemberSick() {
@@ -78,16 +74,10 @@ export class FormAbsenDiluarComponent implements OnInit {
     this.isFamilyMemberSick3 = true;
   }
 
-  public SaveOutsideRequest() {
+  public SaveWfoNewNormalRequest() {
     try {
       this.ValidateData();
-
-      if (this.globalService.isArrived) {
-        this.SaveRequestData(this.globalService.activityDataList.datangDiluarKantor.id);
-      }
-      else {
-        this.SaveRequestData(this.globalService.activityDataList.pulangDiluarKantor.id);
-      }
+      this.SaveRequestData();
     } catch (e) {
       this.alertController.create({
         mode: 'ios',
@@ -100,15 +90,11 @@ export class FormAbsenDiluarComponent implements OnInit {
   }
 
   private ValidateData() {
-    if (!this.txtDesc) {
-      throw new Error("Alasan wajib diisi.");
-    }
-
-    if (!this.dataimage && this.isIOS) {
-      throw new Error("Foto wajib diisi.");
-    }
-
     if (this.isArrived) {
+      if (!this.lokasi) {
+        throw new Error("Lokasi kerja wajib diisi.");
+      }
+
       if (!this.kesehatan) {
         throw new Error("Kondisi kesehatan wajib diisi.");
       }
@@ -119,6 +105,10 @@ export class FormAbsenDiluarComponent implements OnInit {
 
       if (this.txtTemperature < "34" || this.txtTemperature > "39") {
         throw new Error("Silahkan mengisi suhu tubuh normal (34-39 Celcius).");
+      }
+
+      if (!this.kendaraan) {
+        throw new Error("Kendaraan ke area kerja wajib diisi.");
       }
 
       if (this.isFamilyMemberSick) {
@@ -166,22 +156,9 @@ export class FormAbsenDiluarComponent implements OnInit {
     }
   }
 
-  private SaveRequestData(szActivityId: string) {
+  public SaveRequestData() {
     this.PresentLoading();
     this.byPassSaveReportData();
-
-    // var requestData = new RequestData();
-    // requestData.szUserId = this.globalService.userData.szToken;
-    // requestData.dateRequest = this.globalService.dateRequest;
-    // requestData.timeRequest = this.globalService.timeRequest;
-    // requestData.szActivityId = szActivityId;
-    // requestData.szDesc = this.txtDesc;
-    // requestData.szLocation = this.globalService.geoLatitude + ", " + this.globalService.geoLongitude;
-    // // requestData.szStatusId = StatusId.ST003;
-    // requestData.decTotal = "";
-    // requestData.szReasonImage = this.dataimage;
-    // // requestData.bActiveRequest = true;
-    // this.globalService.SaveRequestData(requestData);
   }
 
   byPassSaveReportData() {
@@ -189,19 +166,18 @@ export class FormAbsenDiluarComponent implements OnInit {
     reportData.szUserId = this.globalService.userData.szToken;
     reportData.dateAbsen = this.globalService.dateRequest;
     reportData.timeAbsen = this.globalService.timeRequest;
-    reportData.szLocation = this.globalService.location;
-    reportData.kota = this.globalService.kota;
-    reportData.provinsi = this.globalService.provinsi;
-    reportData.work_from = "WFH";
-    reportData.szActivityId = this.globalService.diluarKantor;
-    reportData.szImage = this.dataimage;
-    reportData.szDesc = this.txtDesc;
+    reportData.szLocation = this.lokasi == "0" ? "HK Tower" : this.lokasi == "1" ? "WFO - Proyek" : "WFH";
+    reportData.kota = this.lokasi == "0" ? "Kota Jakarta Timur" : this.lokasi == "1" ? "WFO - Proyek" : "WFH";
+    reportData.provinsi = this.lokasi == "0" ? "Daerah Khusus Ibukota Jakarta" : this.lokasi == "1" ? "WFO - Proyek" : "WFH";
+    reportData.work_from = this.lokasi == "0" ? "WFO" : this.lokasi == "1" ? "WFO - Proyek" : "WFH";
+    reportData.szActivityId = this.globalService.activityDataList.wfoNewNormal.id;
+    reportData.szDesc = "All Option";
     if (this.isArrived) {
       reportData.health_check = this.kesehatan;
       reportData.suhu = this.txtTemperature;
       reportData.interaksi = this.isInteraksi ? "Ada" : "Tidak ada";
       reportData.riwayat_sakit = this.isRiwayatSakit ? "Pernah" : "Tidak pernah";
-      reportData.kendaraan = "";
+      reportData.kendaraan = this.kendaraan;
       reportData.rencana_keluar = this.isOutPlan ? "Ada" : "Tidak ada";
       reportData.external = this.isExternal ? "Ada" : "Tidak ada";
       reportData.kondisi_keluarga = this.isFamilyMemberSick ? "Ada" : "Tidak ada";
@@ -226,16 +202,8 @@ export class FormAbsenDiluarComponent implements OnInit {
         this.loadingController.dismiss();
         this.router.navigate(['home']);
 
-        if (this.globalService.diluarKantor == this.globalService.activityDataList.datangDiluarKantor.id)
-          this.PresentNotif(true);
-        else
-          this.PresentNotif(false);
-        // this.globalService.PresentToast("Berhasil melakukan absensi");
-
-        // if (this.isArrived)
-        //   this.globalService.StartLocalNotification();
-        // else
-        //   this.globalService.CancelLocalNotification();
+        this.PresentNotif(this.isArrived);
+        // this.globalService.StartLocalNotification();
       }
       else {
         this.loadingController.dismiss();
@@ -256,52 +224,6 @@ export class FormAbsenDiluarComponent implements OnInit {
     }).then(alert => {
       return alert.present();
     });
-  }
-
-  public TakePhotos() {
-    if (this.isIOS) {
-      const options: CameraOptions = {
-        // quality: 200,
-        mediaType: this.camera.MediaType.PICTURE,
-        destinationType: this.camera.DestinationType.DATA_URL,
-        sourceType: this.camera.PictureSourceType.CAMERA,
-        encodingType: this.camera.EncodingType.JPEG,
-        targetWidth: 300,
-        targetHeight: 300,
-        allowEdit: true,
-        correctOrientation: true,
-        saveToPhotoAlbum: true,
-      }
-
-      this.camera.getPicture(options).then((imageData) => {
-        this.photo = 'data:image/jpeg;base64,' + imageData;
-        this.dataimage = imageData;
-      }, (err) => {
-        console.log("Camera issue:" + err);
-        this.globalService.PresentAlert("Camera issue : " + err);
-      });
-    } else {
-      const options: CameraOptions = {
-        quality: 50,
-        mediaType: this.camera.MediaType.PICTURE,
-        destinationType: this.camera.DestinationType.DATA_URL,
-        sourceType: this.camera.PictureSourceType.CAMERA,
-        encodingType: this.camera.EncodingType.JPEG,
-        // targetWidth: 200,
-        // targetHeight: 200,
-        allowEdit: false,
-        correctOrientation: false,
-        saveToPhotoAlbum: true,
-      }
-
-      this.camera.getPicture(options).then((imageData) => {
-        this.photo = 'data:image/jpeg;base64,' + imageData;
-        this.dataimage = imageData;
-      }, (err) => {
-        console.log("Camera issue:" + err);
-        this.globalService.PresentAlert("Camera issue : " + err);
-      });
-    }
   }
 
   async PresentLoading() {

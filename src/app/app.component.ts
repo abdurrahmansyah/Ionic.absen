@@ -104,13 +104,13 @@ export class AppComponent {
       window.app = this;
     });
 
-    this.authenticationService.authenticationState.subscribe(state => {
-      if (state) {
-        this.router.navigate(['home']);
-      } else {
-        this.router.navigate(['']);
-      }
-    });
+    // this.authenticationService.authenticationState.subscribe(state => {
+    //   if (state) {
+    //     this.router.navigate(['home']);
+    //   } else {
+    //     this.router.navigate(['']);
+    //   }
+    // });
 
     this.platform.backButton.subscribe(() => {
       // navigator['app'].appMinimize.minimize();

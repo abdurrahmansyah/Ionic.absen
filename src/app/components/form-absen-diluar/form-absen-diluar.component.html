@@ -32,6 +32,13 @@
       </ion-item>
 
       <ion-item Lines="full">
+        <ion-input type="text" placeholder="Suhu badan hari ini" [(ngModel)]="txtTemperature" name="txtTemperature"
+          type="number" required no-padding>
+        </ion-input>
+        <ion-label position="end">Celcius</ion-label>
+      </ion-item>
+
+      <ion-item Lines="full">
         <ion-label class="ion-text-wrap">
           Berinteraksi dengan ODP/PDP/Pasien Terkonfirmasi Positif COVID-19
           <p></p>

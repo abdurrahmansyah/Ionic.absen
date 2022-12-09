@@ -27,6 +27,7 @@ export class LoginPage implements OnInit {
   }
 
   public LoginSSO() {
+    this.szUserId = this.szUserId.toLowerCase();
     this.globalService.LoginSSO(this.szUserId, this.szPassword);
   }
 

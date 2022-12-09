@@ -365,10 +365,12 @@ export class HomePage {
   }
 
   ionViewWillEnter() {
-    this.GetTimeWorkingAndStatusUser();
-    this.GetLeaderboardDataList();
-    this.GetAkhlakDataList();
-    this.GetWFOWFHPlanning();
+    setTimeout(() => {
+      this.GetTimeWorkingAndStatusUser();
+      this.GetLeaderboardDataList();
+      this.GetAkhlakDataList();
+      this.GetWFOWFHPlanning();
+    }, 500);
   }
 
   ionViewDidEnter() {
@@ -413,36 +415,42 @@ export class HomePage {
   }
 
   public async ButtonAbsen() {
-    // this.ValidateAbsen();
+    // this.ValidateAbsen(true);
 
     try {
-      this.PresentLoading();
+      this.InitializeLoadingCtrl();
+      setTimeout(() => {
+        this.PresentLoading();
 
-      var data = this.globalService.GetVersionNumber();
-      data.subscribe(data => {
-        if (data.response == "success") {
-          var versionNumberDb = data.data;
+        var data = this.globalService.GetVersionNumber();
+        data.subscribe(data => {
+          if (data.response == "success") {
+            var versionNumberDb = data.data;
 
-          this.appVersion.getVersionNumber().then((versionNumber) => {
-            if (versionNumber < versionNumberDb) {
+            this.appVersion.getVersionNumber().then((versionNumber) => {
+              if (versionNumber < versionNumberDb) {
+                this.loadingController.dismiss();
+                this.router.navigate(['warning-updates']);
+              }
+              else
+                this.GetUserPositionThenValidateAbsen();
+            }, (rejected) => {
               this.loadingController.dismiss();
+              this.globalService.PresentAlert(rejected.message)
+            }).catch((error) => {
+              this.globalService.PresentAlert(error.message);
               this.router.navigate(['warning-updates']);
-            }
-            else
-              this.GetUserPositionThenValidateAbsen();
-          }).catch((error) => {
-            this.globalService.PresentAlert(error.message);
-            this.router.navigate(['warning-updates']);
-          });
-        }
-        else {
+            });
+          }
+          else {
+            this.loadingController.dismiss();
+            this.globalService.PresentAlert("BUG: Error API Version Number");
+          }
+        }, (err) => {
           this.loadingController.dismiss();
-          this.globalService.PresentAlert("BUG: Error API Version Number");
-        }
-      }, (err) => {
-        this.loadingController.dismiss();
-        this.globalService.PresentToast(err.message);
-      });
+          this.globalService.PresentToast(err.message);
+        });
+      }, 100);
     }
     catch (e) {
       this.loadingController.dismiss();
@@ -456,36 +464,183 @@ export class HomePage {
     }
   }
 
+  async GetVersionNumberDB() {
+    // this.InitializeLoadingCtrl();
+    // this.PresentLoading();
+
+    let loading = await this.loadingController.create({
+      mode: 'ios'
+    });
+    loading.present();
+
+    var data = this.globalService.GetVersionNumber();
+    data.subscribe(data => {
+      loading.dismiss();
+      this.globalService.PresentAlert(JSON.stringify(data.data));
+    }, (err) => {
+      loading.dismiss();
+      this.globalService.PresentToast("err GetVersionNumberDB: " + JSON.stringify(err));
+    });
+  }
+
+  async GetVersionNumberNative() {
+    // this.InitializeLoadingCtrl();
+    // this.PresentLoading();
+
+    let loading = await this.loadingController.create({
+      mode: 'ios'
+    });
+    loading.present();
+
+    this.appVersion.getVersionNumber().then((versionNumber) => {
+      loading.dismiss();
+      this.globalService.PresentAlert(versionNumber);
+    }, (rejected) => {
+      loading.dismiss();
+      this.globalService.PresentAlert("reject GetVersionNumberNative: " + JSON.stringify(rejected));
+    }).catch((error) => {
+      loading.dismiss();
+      this.globalService.PresentAlert("error GetVersionNumberNative: " + JSON.stringify(error));
+    });
+  }
+
+  async isLocationAvailable() {
+    // this.InitializeLoadingCtrl();
+    // this.PresentLoading();
+
+    let loading = await this.loadingController.create({
+      mode: 'ios'
+    });
+    loading.present();
+
+    this.diagnostic.isLocationAvailable().then((allowed) => {
+      loading.dismiss();
+      this.globalService.PresentAlert(JSON.stringify(allowed));
+    }, (rejected) => {
+      loading.dismiss();
+      this.globalService.PresentAlert("reject isLocationAvailable: " + JSON.stringify(rejected));
+    }).catch((e) => {
+      loading.dismiss();
+      this.globalService.PresentAlert("error isLocationAvailable: " + JSON.stringify(e));
+    });
+  }
+
+  async getCurrentPosition() {
+    // this.InitializeLoadingCtrl();
+    // this.PresentLoading();
+
+    let loading = await this.loadingController.create({
+      mode: 'ios',
+      duration: 10000,
+    });
+    loading.present();
+
+    var latitude: number = 0;
+    var longitude: number = 0;
+
+    this.geolocation.getCurrentPosition({ enableHighAccuracy: true }).then((pos: Geoposition) => {
+      console.log(pos);
+
+      this.globalService.timestamp = pos.timestamp;
+      this.globalService.geoLatitude = pos.coords.latitude;
+      this.globalService.geoLongitude = pos.coords.longitude;
+
+      loading.dismiss();
+      this.globalService.PresentAlert("res pos.coords: " + JSON.stringify(pos.coords));
+      this.globalService.PresentToast("res pos.coords.latitude: " + pos.coords.latitude);
+      this.globalService.PresentAlert("res pos.coords.longitude: " + pos.coords.longitude);
+      latitude = pos.coords.latitude;
+      longitude = pos.coords.longitude;
+    }, (rejected) => {
+      loading.dismiss();
+      this.globalService.PresentAlert("reject getCurrentPosition: " + JSON.stringify(rejected));
+    }).catch((error) => {
+      loading.dismiss();
+      this.globalService.PresentAlert("error getCurrentPosition: " + JSON.stringify(error));
+    });
+
+    setTimeout(() => {
+      if (latitude == 0 && longitude == 0) {
+        loading.dismiss();
+        this.globalService.PresentAlert("nilai latitude dan longitude sama dengan kosong");
+      } else {
+        // loading.dismiss();
+        this.globalService.PresentAlert("nilai latitude dan longitude tidak kosong");
+      }
+    }, 7000);
+  }
+
+  async reverseGeocode(latitude = -6.2462237, longitude = 106.8768418) {
+    // this.InitializeLoadingCtrl();
+    // this.PresentLoading();
+
+    let loading = await this.loadingController.create({
+      mode: 'ios'
+    });
+    loading.present();
+
+    let options: NativeGeocoderOptions = {
+      useLocale: true,
+      maxResults: 5
+    };
+    this.nativeGeocoder.reverseGeocode(latitude, longitude, options)
+      .then((result: NativeGeocoderResult[]) => {
+        loading.dismiss();
+        this.globalService.PresentAlert(JSON.stringify(result));
+      }, (rejected) => {
+        loading.dismiss();
+        this.globalService.PresentAlert("reject reverseGeocode: " + JSON.stringify(rejected));
+      }).catch((error: any) => {
+        loading.dismiss();
+        this.globalService.PresentAlert("error reverseGeocode: " + JSON.stringify(error));
+      });
+  }
+
   private GetUserPositionThenValidateAbsen() {
     let successCallback = (enabled) => {
       if (enabled) {
         this.diagnostic.isLocationAvailable().then((allowed) => {
           if (allowed) {
+            var latitude: number = 0;
+            var longitude: number = 0;
+
             this.geolocation.getCurrentPosition({ enableHighAccuracy: true }).then((pos: Geoposition) => {
               this.ReadGeocode(pos.coords.latitude, pos.coords.longitude);
 
               this.globalService.timestamp = pos.timestamp;
               this.globalService.geoLatitude = pos.coords.latitude;
               this.globalService.geoLongitude = pos.coords.longitude;
+              latitude = pos.coords.latitude;
+              longitude = pos.coords.longitude;
 
-              this.ValidateAbsen();
+              this.ValidateAbsen(false);
+            }, (rejected) => {
+              this.loadingController.dismiss();
+              this.globalService.PresentAlert(JSON.stringify(rejected));
             }).catch((error) => {
-              throw new Error(error.message);
+              this.loadingController.dismiss();
+              this.globalService.PresentAlert(error.message);
             });
+
+            setTimeout(() => {
+              if (latitude == 0 && longitude == 0) {
+                // this.loadingController.dismiss();
+                // this.globalService.PresentAlert("nilai latitude dan longitude sama dengan kosong");
+
+                this.ValidateAbsen(true);
+              }
+            }, 3000);
           }
           else {
             this.loadingController.dismiss();
             this.router.navigate(['warning-locations']);
           }
+        }, (rejected) => {
+          this.loadingController.dismiss();
+          this.globalService.PresentAlert(JSON.stringify(rejected));
         }).catch((e) => {
           this.loadingController.dismiss();
-          this.alertController.create({
-            mode: 'ios',
-            message: e.message,
-            buttons: ['OK']
-          }).then(alert => {
-            return alert.present();
-          });
+          this.globalService.PresentAlert(e.message);
         });
       }
       else
@@ -519,8 +674,10 @@ export class HomePage {
       }, (rejected) => {
         this.loadingController.dismiss();
         this.globalService.PresentAlert(rejected.message)
-      })
-      .catch((error: any) => { console.log(error) });
+      }).catch((error: any) => {
+        this.loadingController.dismiss();
+        this.globalService.PresentAlert(error.message);
+      });
   }
 
   private MappingLocationGeocode(index: number, result: NativeGeocoderResult[]) {
@@ -536,7 +693,7 @@ export class HomePage {
     this.globalService.location = thoroughfare + subThoroughfare + subLocality + locality + subAdministrativeArea + administrativeArea + postalCode;
   }
 
-  private ValidateAbsen() {
+  private ValidateAbsen(isAllOption) {
     var data = this.globalService.GetTimeNow();
     data.subscribe(data => {
       if (data.response == "success") {
@@ -545,21 +702,13 @@ export class HomePage {
         var dateData = this.globalService.GetDateWithHourAndMinute(time[0], time[1]);
         // var dateData = this.globalService.GetDateWithHourAndMinute(8, 15);
         var reportData = new ReportData();
+        reportData.dateAbsen = this.datePipe.transform(dateData.date, 'yyyy-MM-dd');
+        reportData.timeAbsen = dateData.szHour + ":" + dateData.szMinute;
+
         console.log(this.globalService.geoLongitude);
         console.log(this.globalService.geoLatitude);
 
-        // if (false) {
-        if (
-          this.globalService.geoLatitude <= -6.24508
-          && this.globalService.geoLatitude >= -6.24587
-          && this.globalService.geoLongitude >= 106.87269
-          && this.globalService.geoLongitude <= 106.87379) {
-
-          reportData.szUserId = this.globalService.userData.szToken;
-          reportData.dateAbsen = this.datePipe.transform(dateData.date, 'yyyy-MM-dd');
-          reportData.timeAbsen = dateData.szHour + ":" + dateData.szMinute;
-          reportData.isRequest = "0";
-
+        if (isAllOption) {
           if (!this.txtTimeArrived) {
             this.globalService.isArrived = true;
             if (reportData.timeAbsen > this.globalService.officeHourData.endtOfficeHourFrom) {
@@ -572,56 +721,105 @@ export class HomePage {
               this.GetDecisionFromUser(reportData, navigationExtras);
             }
             else {
-              // Only For WFO - NEW NORMAL
-              this.ByPassDoingAbsenWfoNewNormal(reportData, false);
-
-              // BackUp If WFO - NORMAL DONE
-              // this.DoingAbsen(reportData);
+              this.ByPassDoingAllOption(reportData, false);
             }
-          }
-          else {
+          } else {
             this.globalService.isArrived = false;
-            if (reportData.timeAbsen < this.globalService.officeHourData.endtOfficeHourFrom) {
-              reportData.szActivityId = this.globalService.activityDataList.pulangCepat.id;
-              reportData.szDesc = "Pulang Cepat";
-              reportData.isRequest = "1";
-              let navigationExtras: NavigationExtras = {
-                state: {
-                  indexForm: reportData.szActivityId
+            this.ByPassDoingAllOption(reportData, false);
+          }
+        } else {
+          // if (false) {
+          if ( // DI HK TOWER
+            this.globalService.geoLatitude <= -6.24508
+            && this.globalService.geoLatitude >= -6.24587
+            && this.globalService.geoLongitude >= 106.87269
+            && this.globalService.geoLongitude <= 106.87379) {
+
+            reportData.szUserId = this.globalService.userData.szToken;
+            reportData.isRequest = "0";
+
+            if (!this.txtTimeArrived) {
+              this.globalService.isArrived = true;
+              if (reportData.timeAbsen > this.globalService.officeHourData.endtOfficeHourFrom) {
+                reportData.szActivityId = "belumcheckin";
+                let navigationExtras: NavigationExtras = {
+                  state: {
+                    indexForm: reportData.szActivityId
+                  }
                 }
+                this.GetDecisionFromUser(reportData, navigationExtras);
               }
-              this.ByPassDoingAbsenWfoNewNormal(reportData, false);
-              // this.DoingAbsenWithRequest(reportData, true);
-              // this.GetDecisionFromUser(reportData, navigationExtras); 
-            }
-            else if (reportData.timeAbsen > "17:45") {
-              reportData.szActivityId = this.globalService.activityDataList.lembur.id;
-              reportData.szDesc = "Lembur";
-              reportData.isRequest = "1";
-              let navigationExtras: NavigationExtras = {
-                state: {
-                  indexForm: reportData.szActivityId
-                }
+              else {
+                // Only For WFO - NEW NORMAL
+                this.ByPassDoingAbsenWfoNewNormal(reportData, false);
+
+                // BackUp If WFO - NORMAL DONE
+                // this.DoingAbsen(reportData);
               }
-              this.DoingAbsenWithRequest(reportData, true);
-              // this.GetDecisionFromUser(reportData, navigationExtras);
             }
             else {
-              this.DoingAbsenWithRequest(reportData, true);
-              // this.DoingAbsen(reportData);
+              this.globalService.isArrived = false;
+              if (reportData.timeAbsen < this.globalService.officeHourData.endtOfficeHourFrom) {
+                reportData.szActivityId = this.globalService.activityDataList.pulangCepat.id;
+                reportData.szDesc = "Pulang Cepat";
+                reportData.isRequest = "1";
+                let navigationExtras: NavigationExtras = {
+                  state: {
+                    indexForm: reportData.szActivityId
+                  }
+                }
+                this.ByPassDoingAbsenWfoNewNormal(reportData, false);
+                // this.DoingAbsenWithRequest(reportData, true);
+                // this.GetDecisionFromUser(reportData, navigationExtras); 
+              }
+              else if (reportData.timeAbsen > "17:45") {
+                reportData.szActivityId = this.globalService.activityDataList.lembur.id;
+                reportData.szDesc = "Lembur";
+                reportData.isRequest = "1";
+                let navigationExtras: NavigationExtras = {
+                  state: {
+                    indexForm: reportData.szActivityId
+                  }
+                }
+                this.DoingAbsenWithRequest(reportData, true);
+                // this.GetDecisionFromUser(reportData, navigationExtras);
+              }
+              else {
+                this.DoingAbsenWithRequest(reportData, true);
+                // this.DoingAbsen(reportData);
+              }
             }
           }
-        }
-        else {
-          reportData.szUserId = this.globalService.userData.szToken;
-          reportData.dateAbsen = this.datePipe.transform(dateData.date, 'yyyy-MM-dd');
-          reportData.timeAbsen = dateData.szHour + ":" + dateData.szMinute;
-          reportData.isRequest = "1";
+          else { // DILUAR HK TOWER
+            reportData.szUserId = this.globalService.userData.szToken;
+            reportData.isRequest = "1";
 
-          if (!this.txtTimeArrived) {
-            this.globalService.isArrived = true;
-            if (reportData.timeAbsen > this.globalService.officeHourData.endtOfficeHourFrom) {
-              reportData.szActivityId = "belumcheckin";
+            if (!this.txtTimeArrived) {
+              this.globalService.isArrived = true;
+              if (reportData.timeAbsen > this.globalService.officeHourData.endtOfficeHourFrom) {
+                reportData.szActivityId = "belumcheckin";
+                let navigationExtras: NavigationExtras = {
+                  state: {
+                    indexForm: reportData.szActivityId
+                  }
+                }
+                this.GetDecisionFromUser(reportData, navigationExtras);
+              }
+              else {
+                reportData.szActivityId = this.globalService.activityDataList.datangDiluarKantor.id;
+
+                let navigationExtras: NavigationExtras = {
+                  state: {
+                    indexForm: reportData.szActivityId
+                  }
+                }
+                this.GetDecisionFromUser(reportData, navigationExtras);
+              }
+            }
+            else {
+              this.globalService.isArrived = false;
+              reportData.szActivityId = this.globalService.activityDataList.pulangDiluarKantor.id;
+
               let navigationExtras: NavigationExtras = {
                 state: {
                   indexForm: reportData.szActivityId
@@ -629,27 +827,6 @@ export class HomePage {
               }
               this.GetDecisionFromUser(reportData, navigationExtras);
             }
-            else {
-              reportData.szActivityId = this.globalService.activityDataList.datangDiluarKantor.id;
-
-              let navigationExtras: NavigationExtras = {
-                state: {
-                  indexForm: reportData.szActivityId
-                }
-              }
-              this.GetDecisionFromUser(reportData, navigationExtras);
-            }
-          }
-          else {
-            this.globalService.isArrived = false;
-            reportData.szActivityId = this.globalService.activityDataList.pulangDiluarKantor.id;
-
-            let navigationExtras: NavigationExtras = {
-              state: {
-                indexForm: reportData.szActivityId
-              }
-            }
-            this.GetDecisionFromUser(reportData, navigationExtras);
           }
         }
       }
@@ -675,6 +852,19 @@ export class HomePage {
     let navigationExtras: NavigationExtras = {
       state: {
         indexForm: reportData.szActivityId
+      }
+    }
+    this.loadingController.dismiss();
+
+    this.globalService.dateRequest = reportData.dateAbsen;
+    this.globalService.timeRequest = reportData.timeAbsen;
+    this.router.navigate(['form-request'], navigationExtras);
+  }
+
+  private ByPassDoingAllOption(reportData: ReportData, isWfoProyek: boolean) {
+    let navigationExtras: NavigationExtras = {
+      state: {
+        indexForm: 'isAllOption'
       }
     }
     this.loadingController.dismiss();
@@ -853,6 +1043,10 @@ export class HomePage {
   }
 
   async PresentLoading() {
+    // this.loading = await this.loadingController.create({
+    //   mode: 'ios'
+    // });
+    // this.loading.present();
     await this.loading.present();
   }
 }

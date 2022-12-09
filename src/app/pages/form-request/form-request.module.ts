@@ -11,6 +11,7 @@ import { FormLemburComponent } from 'src/app/components/form-lembur/form-lembur.
 import { FormTerlambatComponent } from 'src/app/components/form-terlambat/form-terlambat.component';
 import { FormAbsenDiluarComponent } from 'src/app/components/form-absen-diluar/form-absen-diluar.component';
 import { FormPulangCepatComponent } from 'src/app/components/form-pulang-cepat/form-pulang-cepat.component';
+import { FormAllOptionComponent } from 'src/app/components/form-all-option/form-all-option.component';
 
 const routes: Routes = [
   {
@@ -27,7 +28,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     ComponentsModule
   ],
-  entryComponents: [FormLemburComponent, FormTerlambatComponent, FormAbsenDiluarComponent, FormPulangCepatComponent],
+  entryComponents: [FormLemburComponent, FormTerlambatComponent, FormAbsenDiluarComponent, FormPulangCepatComponent, FormAllOptionComponent],
   declarations: [FormRequestPage]
 })
 export class FormRequestPageModule { }

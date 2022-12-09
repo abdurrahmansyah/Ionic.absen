@@ -15,6 +15,7 @@ export class FormAbsenProyekComponent implements OnInit {
   public txtTimeRequest: string;
   public txtTemperature: string;
   public lokasi: string;
+  public kesehatan: any;
   public kendaraan: string;
   public isInteraksi: boolean = true;
   public isRiwayatSakit: boolean = true;
@@ -94,6 +95,10 @@ export class FormAbsenProyekComponent implements OnInit {
         throw new Error("Lokasi kerja wajib diisi.");
       }
 
+      if (!this.kesehatan) {
+        throw new Error("Kondisi kesehatan wajib diisi.");
+      }
+
       if (!this.txtTemperature) {
         throw new Error("Suhu badan wajib diisi.");
       }
@@ -168,7 +173,7 @@ export class FormAbsenProyekComponent implements OnInit {
     reportData.szActivityId = this.globalService.activityDataList.wfoProyek.id;
     reportData.szDesc = "WFO - Absen Proyek";
     if (this.isArrived) {
-      reportData.health_check = "";
+      reportData.health_check = this.kesehatan;
       reportData.suhu = this.txtTemperature;
       reportData.interaksi = this.isInteraksi ? "Ada" : "Tidak ada";
       reportData.riwayat_sakit = this.isRiwayatSakit ? "Pernah" : "Tidak pernah";
