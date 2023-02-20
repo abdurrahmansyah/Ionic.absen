@@ -1,145 +1,133 @@
 <ion-content color="hk-tweet">
-  <div style="background: var(--ion-color-hk-red);">
-    <div class="buttonBack">
+  <div class="content">
+    <div style="background: var(--ion-color-hk-red); border-radius: 0px 0px 30px 30px;">
       <br>
-      <ion-row align-items-center>
-        <ion-col button class="ion-text-center" size="12">
-          <ion-title color="hk-white-red">Leaderboards</ion-title>
+      <br>
+
+      <ion-row style="padding: 0px 16px;">
+        <ion-col size="3">
+          <ion-buttons>
+            <ion-back-button text="" defaultHref="home" color="hk-white-red"></ion-back-button>
+          </ion-buttons>
         </ion-col>
-      </ion-row>
-    </div>
-
-    <div class="buttonBack" padding>
-      <ion-buttons>
-        <ion-back-button text="" defaultHref="home" color="hk-white-red"></ion-back-button>
-      </ion-buttons>
-    </div>
-
-    <br>
-    <br>
-    <br>
-    <ion-grid style="padding-top: 0px;">
-      <ion-row align-items-center>
-
-        <ion-col button class="ion-text-center" size="4">
-          <div style="height: 30%; width: 30%; margin: auto; position: absolute;">
-            <img src="../../../assets/images/icon-2.png">
-          </div>
-          <!-- <ion-avatar style="margin: auto; margin-top: 10px; width: 70% !important; height: 70% !important;"> -->
-          <ion-avatar
-            style=" margin: auto; margin-top: 10px; margin-bottom: 4px; width: 85px !important; height: 85px !important;">
-            <img *ngIf="isSecond" src="{{ leaderboardData2.szImage }}">
-            <img *ngIf="!isSecond" src="../../../assets/images/user-1.png">
-          </ion-avatar>
-          <ion-card color="hk-white-red"
-            style="width: 100%; height: 100px; margin: 0 !important; padding: 0 !important">
-            <hr>
-            <div *ngIf="isSecond">
-              <ion-text style="font-size: 10px; font-weight: 700;">{{leaderboardData2.szUserName}}</ion-text> <br>
-              <ion-text style="font-size: 8px; font-weight: 500;">{{leaderboardData2.szDivisionName}}</ion-text> <br>
-              <ion-text style="line-height: 25px; font-weight: 500;">{{leaderboardData2.checkIn}}</ion-text>
-            </div>
-            <div *ngIf="!isSecond">
-              <ion-text style="font-size: 10px; font-weight: 700;">Belum ada data</ion-text> <br>
-              <ion-text style="font-size: 8px; font-weight: 500;"></ion-text> <br>
-              <ion-text style="line-height: 25px; font-weight: 500;"></ion-text>
-            </div>
-          </ion-card>
+        <ion-col size="6" class="ion-text-center ion-align-self-center">
+          <ion-text style="font-size: 20px; font-weight: 500;" color="hk-white-red">Leaderboards</ion-text>
         </ion-col>
-
-        <ion-col button class="ion-text-center" size="4">
-          <div style="height: 30%; width: 30%; margin: auto; position: absolute;">
-            <img src="../../../assets/images/icon-1.png">
-          </div>
-          <!-- <ion-avatar style="margin: auto; margin-top: 10px; width: 70% !important; height: 70% !important;"> -->
-          <ion-avatar
-            style=" margin: auto; margin-top: 10px; margin-bottom: 4px; width: 85px !important; height: 85px !important;">
-            <img *ngIf="isFirst" src="{{ leaderboardData1.szImage }}">
-            <img *ngIf="!isFirst" src="../../../assets/images/user-2.png">
-          </ion-avatar>
-          <ion-card color="hk-white-red"
-            style="width: 100%; height: 100px; margin: 0 !important; padding: 0 !important">
-            <hr>
-            <div *ngIf="isFirst">
-              <ion-text style="font-size: 10px; font-weight: 700;">{{leaderboardData1.szUserName}}</ion-text> <br>
-              <ion-text style="font-size: 8px; font-weight: 500;">{{leaderboardData1.szDivisionName}}</ion-text> <br>
-              <ion-text style="line-height: 25px; font-weight: 500;">{{leaderboardData1.checkIn}}</ion-text>
-            </div>
-            <div *ngIf="!isFirst">
-              <ion-text style="font-size: 10px; font-weight: 700;">Belum ada data</ion-text> <br>
-              <ion-text style="font-size: 8px; font-weight: 500;"></ion-text> <br>
-              <ion-text style="line-height: 25px; font-weight: 500;"></ion-text>
-            </div>
-          </ion-card>
-        </ion-col>
-
-        <ion-col button class="ion-text-center" size="4">
-          <div style="height: 30%; width: 30%; margin: auto; position: absolute;">
-            <img src="../../../assets/images/icon-3.png">
-          </div>
-          <!-- <img  src="{{ leaderboardData3.szImage }}"> -->
-          <ion-avatar
-            style=" margin: auto; margin-top: 10px; margin-bottom: 4px; width: 85px !important; height: 85px !important;">
-            <!-- style=" margin: auto; margin-top: 10px; width: 70% !important; height: 70% !important;" -->
-            <img *ngIf="isThird" src="{{ leaderboardData3.szImage }}">
-            <img *ngIf="!isThird" src="../../../assets/images/user-3.png">
-          </ion-avatar>
-          <ion-card color="hk-white-red"
-            style="width: 100%; height: 100px; margin: 0 !important; padding: 0 !important">
-            <hr>
-            <div *ngIf="isThird">
-              <ion-text style="font-size: 10px; font-weight: 700;">{{leaderboardData3.szUserName}}</ion-text> <br>
-              <ion-text style="font-size: 8px; font-weight: 500;">{{leaderboardData3.szDivisionName}}</ion-text> <br>
-              <ion-text style="line-height: 25px; font-weight: 500;">{{leaderboardData3.checkIn}}</ion-text>
-            </div>
-            <div *ngIf="!isThird">
-              <ion-text style="font-size: 10px; font-weight: 700;">Belum ada data</ion-text> <br>
-              <ion-text style="font-size: 8px; font-weight: 500;"></ion-text> <br>
-              <ion-text style="line-height: 25px; font-weight: 500;"></ion-text>
-            </div>
-          </ion-card>
-        </ion-col>
-
-        <!-- <span *ngFor="let buttonPropertyData of buttonPropertyDatas">
-          <ion-button shape="round" size="small" fill="{{ buttonPropertyData.fill }}"
-            color="{{ buttonPropertyData.color }}" (click)="GetDayData(buttonPropertyData.date)">
-            {{ buttonPropertyData.date }}
+        <ion-col size="3" class="ion-text-center ion-align-self-center">
+          <ion-button id="filter">
+            <ion-icon slot="icon-only" name="options"></ion-icon>
           </ion-button>
-        </span> -->
-
+          <ion-popover trigger="filter" triggerAction="click">
+            <ng-template>
+              <ion-content class="ion-padding">Hello World!</ion-content>
+            </ng-template>
+          </ion-popover>
+        </ion-col>
       </ion-row>
-    </ion-grid>
+
+      <!-- <hr style="height: 12px; margin-top: 0px; margin-bottom: 0px;" no-padding> -->
+
+      <ion-grid style="padding-top: 0px;">
+        <ion-row align-items-center>
+          <ion-col class="ion-text-center" size="4" style="padding-left: 12px;">
+            <div style="height: 30%; width: 30%; margin: auto; position: absolute;">
+              <img src="../../../assets/images/icon-2.png">
+            </div>
+            <!-- <ion-avatar style="margin: auto; margin-top: 10px; width: 70% !important; height: 70% !important;"> -->
+            <ion-avatar
+              style=" margin: auto; margin-top: 10px; margin-bottom: 4px; width: 85px !important; height: 85px !important;">
+              <img *ngIf="isSecond" src="{{ leaderboardData2.szImage }}">
+              <img *ngIf="!isSecond" src="../../../assets/images/user-1.png">
+            </ion-avatar>
+            <ion-card color="hk-white-red" style="width: 100%;  margin: 0 !important; padding: 16px 10px;">
+              <div *ngIf="isSecond" style="overflow: auto;">
+                <ion-text class="ion-text-nowrap leadUsername">{{leaderboardData2.szUserName}}</ion-text> <br>
+                <ion-text class="ion-text-nowrap leadDivisionName">{{leaderboardData2.szDivisionName}}</ion-text> <br>
+                <ion-text class="ion-text-nowrap leadCheckIn">{{leaderboardData2.checkIn}}</ion-text>
+              </div>
+              <div *ngIf="!isSecond">
+                <ion-text class="ion-text-nowrap leadUsername">Belum ada data</ion-text>
+              </div>
+            </ion-card>
+          </ion-col>
+
+          <ion-col class="ion-text-center" size="4">
+            <div style="height: 30%; width: 30%; margin: auto; position: absolute;">
+              <img src="../../../assets/images/icon-1.png">
+            </div>
+            <!-- <ion-avatar style="margin: auto; margin-top: 10px; width: 70% !important; height: 70% !important;"> -->
+            <ion-avatar
+              style=" margin: auto; margin-top: 10px; margin-bottom: 4px; width: 85px !important; height: 85px !important;">
+              <img *ngIf="isFirst" src="{{ leaderboardData1.szImage }}">
+              <img *ngIf="!isFirst" src="../../../assets/images/user-2.png">
+            </ion-avatar>
+            <ion-card color="hk-white-red" style="width: 100%;  margin: 0 !important; padding: 16px 10px;">
+              <div *ngIf="isFirst" style="overflow: auto;">
+                <ion-text class="ion-text-nowrap leadUsername">{{leaderboardData1.szUserName}}</ion-text> <br>
+                <ion-text class="ion-text-nowrap leadDivisionName">{{leaderboardData1.szDivisionName}}</ion-text> <br>
+                <ion-text class="ion-text-nowrap leadCheckIn">{{leaderboardData1.checkIn}}</ion-text>
+              </div>
+              <div *ngIf="!isFirst">
+                <ion-text class="ion-text-nowrap leadUsername">Belum ada data</ion-text>
+              </div>
+            </ion-card>
+          </ion-col>
+
+          <ion-col class="ion-text-center" size="4" style="padding-right: 12px;">
+            <div style="height: 30%; width: 30%; margin: auto; position: absolute;">
+              <img src="../../../assets/images/icon-3.png">
+            </div>
+            <!-- <img  src="{{ leaderboardData3.szImage }}"> -->
+            <ion-avatar
+              style=" margin: auto; margin-top: 10px; margin-bottom: 4px; width: 85px !important; height: 85px !important;">
+              <!-- style=" margin: auto; margin-top: 10px; width: 70% !important; height: 70% !important;" -->
+              <img *ngIf="isThird" src="{{ leaderboardData3.szImage }}">
+              <img *ngIf="!isThird" src="../../../assets/images/user-3.png">
+            </ion-avatar>
+            <ion-card color="hk-white-red" style="width: 100%;  margin: 0 !important; padding: 16px 10px;">
+              <div *ngIf="isThird" style="overflow: auto;">
+                <ion-text class="ion-text-nowrap leadUsername">{{leaderboardData3.szUserName}}</ion-text> <br>
+                <ion-text class="ion-text-nowrap leadDivisionName">{{leaderboardData3.szDivisionName}}</ion-text> <br>
+                <ion-text class="ion-text-nowrap leadCheckIn">{{leaderboardData3.checkIn}}</ion-text>
+              </div>
+              <div *ngIf="!isThird">
+                <ion-text class="ion-text-nowrap leadUsername">Belum ada data</ion-text>
+              </div>
+            </ion-card>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+      <hr style="height: 10px; margin-top: 0px; margin-bottom: 0px;">
+    </div>
+
+    <hr style="height: 40px; margin-top: 0px; margin-bottom: 0px;">
+
+    <div class="scrollYnew">
+      <ion-card *ngFor="let leaderboardData of leaderboardDataList4To5">
+        <ion-item lines="none" color="hk-red">
+          <ion-button slot="start" color="hk-white-red">{{ leaderboardData.number }}</ion-button>
+          <ion-avatar slot="start">
+            <img src="{{ leaderboardData.szImage }}">
+          </ion-avatar>
+          <ion-label>
+            <p>{{ leaderboardData.szUserName }}</p>
+          </ion-label>
+          <ion-badge slot="end" mode="ios" color="hk-white-purple">{{ leaderboardData.checkIn }}</ion-badge>
+        </ion-item>
+      </ion-card>
+
+      <ion-card *ngFor="let leaderboardData of leaderboardDataListRest">
+        <ion-item Lines="none">
+          <ion-button slot="start" color="hk-red">{{ leaderboardData.number }}</ion-button>
+          <ion-avatar slot="start">
+            <img src="{{ leaderboardData.szImage }}">
+          </ion-avatar>
+          <ion-label>
+            <p>{{ leaderboardData.szUserName }}</p>
+          </ion-label>
+          <ion-badge slot="end" mode="ios" color="hk-white-purple">{{ leaderboardData.checkIn }}</ion-badge>
+        </ion-item>
+      </ion-card>
+    </div>
   </div>
-
-
-  <div>
-    <hr>
-
-    <ion-card *ngFor="let leaderboardData of leaderboardDataList4To5">
-      <ion-item lines="none" color="hk-red">
-        <ion-button slot="start" color="hk-white-red">{{ leaderboardData.number }}</ion-button>
-        <ion-avatar slot="start">
-          <img src="{{ leaderboardData.szImage }}">
-        </ion-avatar>
-        <ion-label>
-          <p>{{ leaderboardData.szUserName }}</p>
-        </ion-label>
-        <ion-badge slot="end" mode="ios" color="hk-white-purple">{{ leaderboardData.checkIn }}</ion-badge>
-      </ion-item>
-    </ion-card>
-
-    <ion-card *ngFor="let leaderboardData of leaderboardDataListRest">
-      <ion-item Lines="none">
-        <ion-button slot="start" color="hk-red">{{ leaderboardData.number }}</ion-button>
-        <ion-avatar slot="start">
-          <img src="{{ leaderboardData.szImage }}">
-        </ion-avatar>
-        <ion-label>
-          <p>{{ leaderboardData.szUserName }}</p>
-        </ion-label>
-        <ion-badge slot="end" mode="ios" color="hk-white-purple">{{ leaderboardData.checkIn }}</ion-badge>
-      </ion-item>
-    </ion-card>
-  </div>
-
 </ion-content>

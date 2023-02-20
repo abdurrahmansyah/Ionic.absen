@@ -13,7 +13,7 @@ const routes: Routes = [
                 loadChildren: () => import('../home/home.module').then(
                     m => m.HomePageModule
                 ),
-                // canLoad: [AuthGuard]
+                canLoad: [AuthGuard]
             },
             {
                 path: 'notifications',

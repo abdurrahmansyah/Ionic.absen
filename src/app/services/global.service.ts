@@ -333,7 +333,7 @@ export class GlobalService {
           this.loadingController.dismiss();
           this.PresentToast("Login Berhasil");
           this.authService.login();
-          this.router.navigate(['home']);
+          this.router.navigateByUrl('home', { replaceUrl: true });
         }
         else {
           this.loadingController.dismiss();
@@ -367,7 +367,7 @@ export class GlobalService {
               this.loadingController.dismiss();
               this.PresentToast("Login Berhasil");
               this.authService.login();
-              this.router.navigate(['home']);
+              this.router.navigateByUrl('home', { replaceUrl: true });
             }
             else {
               this.loadingController.dismiss();
