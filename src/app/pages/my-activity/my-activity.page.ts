@@ -3,7 +3,7 @@ import { GlobalService, ReportData } from 'src/app/services/global.service';
 import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { DatePipe } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Component({

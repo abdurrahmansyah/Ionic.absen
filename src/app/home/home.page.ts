@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Geolocation, GeolocationOptions, Geoposition, PositionError } from '@ionic-native/geolocation/ngx';
 import { Component, ViewChild } from '@angular/core';
 import { PopoverController, AlertController, NavController, Platform, IonRouterOutlet, LoadingController } from '@ionic/angular';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { GlobalService, ActivityId, ReportData, LeaderboardData, DateData, LocationData, AkhlakData } from '../services/global.service';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { ELocalNotificationTriggerUnit, LocalNotifications } from '@ionic-native/local-notifications/ngx';
