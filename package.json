@@ -45,7 +45,6 @@
     "@ionic/angular": "^4.11.10",
     "@ionic/pwa-elements": "^3.0.2",
     "@ionic/storage": "^2.2.0",
-    "@mauron85/cordova-plugin-background-geolocation": "^3.1.0",
     "com-sarriaroman-photoviewer": "^1.2.4",
     "cordova-android": "8.1.0",
     "cordova-android-play-services-gradle-release": "^4.0.0",
@@ -114,7 +113,6 @@
     "ts-node": "~7.0.0",
     "tslint": "~5.15.0",
     "typescript": "~3.4.3",
-    "cordova-plugin-background-geolocation": "@mauron85/cordova-plugin-background-geolocation@^3.1.0"
   },
   "description": "An Ionic project",
   "cordova": {
@@ -157,16 +155,6 @@
       "com-sarriaroman-photoviewer": {},
       "cordova-plugin-app-version": {},
       "cordova-plugin-market": {},
-      "cordova-plugin-background-geolocation": {
-        "GOOGLE_PLAY_SERVICES_VERSION": "11+",
-        "ANDROID_SUPPORT_LIBRARY_VERSION": "26+",
-        "ICON": "@mipmap/ic_launcher",
-        "SMALL_ICON": "@mipmap/ic_launcher",
-        "ACCOUNT_NAME": "@string/app_name",
-        "ACCOUNT_LABEL": "@string/app_name",
-        "ACCOUNT_TYPE": "$PACKAGE_NAME.account",
-        "CONTENT_AUTHORITY": "$PACKAGE_NAME"
-      },
       "cordova-android-play-services-gradle-release": {
         "PLAY-SERVICES-ADS": "18.0.0",
         "PLAY-SERVICES-ADS-IDENTIFIER": "17.0.0",
