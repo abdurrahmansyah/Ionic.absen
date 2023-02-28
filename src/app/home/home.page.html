@@ -1,95 +1,108 @@
-<ion-content fullscreen="true">
+<ion-content>
   <!-- scroll-y=false -->
   <div class="content">
-    <ion-row>
-      <ion-col>
-        <div class="ion-text-center" style="color: white;">
-          <h3>{{ txtDayNow }}</h3>
-          {{ txtTimeNow }}
+    <div class="headSnap">
+      <ion-row>
+        <ion-col>
+          <div class="ion-text-center" style="color: white; padding-top: 18px;">
+            <h3>{{ txtDayNow }}</h3>
+            {{ txtTimeNow }}
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <!-- <ion-card style="border-radius: 20px;">
+        <img src="../../assets/images/img-8.png" />
+        <div class="right-item-leaderboard ion-padding">
+          <ion-avatar slot="end" *ngIf="leadImage">
+            <img src="{{ leadImage }}">
+          </ion-avatar>
+          <br>
+          <ion-text style="font-size: 1.2em; padding-top: 20px; margin-top: 20px; border-top: 20px;">{{leadName}}
+          </ion-text> <br>
+          <ion-text style="font-size: 0.8em; opacity: 50%;">{{leadDivisionName}}</ion-text> <br>
         </div>
-      </ion-col>
-    </ion-row>
+        <div class="left-item-leaderboard">
+          <ion-item lines="none" color="translucent">
+            <ion-button shape="round" fill="outline" size="small" slot="end" (click)="NavRouterMenu(0)" *ngIf="leadImage">
+              show</ion-button>
+          </ion-item>
+        </div>
+      </ion-card> -->
 
-    <ion-card>
-      <img src="../../assets/images/img-8.png" />
-      <div class="card-title ion-padding">
-        <ion-avatar slot="end" *ngIf="leadImage">
-          <img src="{{ leadImage }}">
-        </ion-avatar>
-        <br>
-        <ion-text style="font-size: 1.2em; padding-top: 20px; margin-top: 20px; border-top: 20px;">{{leadName}}
-        </ion-text> <br>
-        <ion-text style="font-size: 0.8em; opacity: 50%;">{{leadDivisionName}}</ion-text> <br>
+      <div class="ion-padding ">
+        <div class="leaderboard">
+          <div class="right-item-leaderboard">
+            <ion-item lines="none" color="translucent">
+              <ion-button shape="round" fill="outline" size="small" slot="end" (click)="NavRouterMenu(0)"
+                *ngIf="leadImage">show</ion-button>
+            </ion-item>
+          </div>
+        </div>
+        <img style="border-radius: 20px;" src="../../assets/images/img-8.png" />
+        <div class="leaderboard">
+          <div class="left-item-leaderboard ion-padding">
+            <ion-avatar slot="end" *ngIf="leadImage">
+              <img src="{{ leadImage }}">
+            </ion-avatar>
+            <br>
+            <ion-text style="font-size: 1.2em; ">{{leadName}}
+            </ion-text> <br>
+            <ion-text style="font-size: 0.8em; opacity: 50%;">{{leadDivisionName}}</ion-text> <br>
+          </div>
+        </div>
       </div>
-      <div class="card-subtitle">
-        <ion-item lines="none" color="translucent">
-          <ion-button shape="round" fill="outline" size="small" slot="end" (click)="NavRouterMenu(0)" *ngIf="leadImage">
-            show</ion-button>
-        </ion-item>
+    </div>
+
+    <ion-refresher slot="fixed" pullFactor="0.5" pullMin="100" pullMax="200" (ionRefresh)="DoRefresh($event)">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <div class="flexContainer">
+      <ion-row>
+        <ion-col button (click)="NavRouterMenu(1)" class="ion-text-center" size="3">
+          <img src="../../assets/images/img-1.png">
+          <ion-text style="font-size: 12px;" color="hk-red">Report</ion-text>
+        </ion-col>
+        <ion-col button (click)="NavRouterMenu(2)" class="ion-text-center" size="3">
+          <img src="../../assets/images/img-2.png">
+          <ion-text style="font-size: 12px;" color="hk-red">Time Sheet</ion-text>
+        </ion-col>
+        <ion-col button (click)="NavRouterMenu(3)" class="ion-text-center" size="3">
+          <img src="../../assets/images/img-3.png">
+          <ion-text style="font-size: 12px;" color="hk-red">Notification</ion-text>
+        </ion-col>
+        <ion-col button (click)="NavRouterMenu(4)" class="ion-text-center" size="3">
+          <img src="../../assets/images/img-4.png">
+          <ion-text style="font-size: 12px;" color="hk-red">Help Center</ion-text>
+        </ion-col>
+      </ion-row>
+
+      <div class="ion-padding">
+        <ion-text>Greetings AKHLAK</ion-text>
       </div>
-    </ion-card>
-  </div>
 
-  <ion-refresher slot="fixed" pullFactor="0.5" pullMin="100" pullMax="200" (ionRefresh)="DoRefresh($event)">
-    <ion-refresher-content></ion-refresher-content>
-  </ion-refresher>
+      <div class="container ion-padding">
+        <div class="scroll" scrollX="true">
+          <img style="width: 100%; border-radius: 5px" (click)="NavRouterMenu(1)" src="{{ akhlakImage }}" />
+        </div>
+      </div>
 
-  <ion-grid>
-    <ion-row align-items-center>
-      <ion-col button (click)="NavRouterMenu(1)" class="ion-text-center" size="3">
-        <img src="../../assets/images/img-1.png">
-        <ion-text style="font-size: 12px;" color="hk-red">Report</ion-text>
-      </ion-col>
-      <ion-col button (click)="NavRouterMenu(2)" class="ion-text-center" size="3">
-        <img src="../../assets/images/img-2.png">
-        <ion-text style="font-size: 12px;" color="hk-red">Time Sheet</ion-text>
-      </ion-col>
-      <ion-col button (click)="NavRouterMenu(3)" class="ion-text-center" size="3">
-        <img src="../../assets/images/img-3.png">
-        <ion-text style="font-size: 12px;" color="hk-red">Notification</ion-text>
-      </ion-col>
-      <ion-col button (click)="NavRouterMenu(4)" class="ion-text-center" size="3">
-        <img src="../../assets/images/img-4.png">
-        <ion-text style="font-size: 12px;" color="hk-red">Help Center</ion-text>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+      <div class="ion-padding">
+        <ion-text>Activity List</ion-text>
+      </div>
 
-  <!-- <div padding *ngIf="isWFOWFHPlanning">
-    <ion-text>Available : {{ jadwalPengisianWFOWFH }}</ion-text>
-  </div>
-
-  <div class="container" padding>
-    <div class="scroll" scrollX="true">
-      <img style="border-radius: 5px 5px 5px 5px;" (click)="NavRouterMenu(7)" src="../../assets/images/img-16.png" />
-    </div>
-  </div> -->
-
-  <div class="ion-padding">
-    <ion-text>Greetings AKHLAK</ion-text>
-  </div>
-
-  <div class="container ion-padding">
-    <div class="scroll" scrollX="true">
-      <!-- <img style="width: 100%; border-radius: 5px 5px 5px 5px;" (click)="NavRouterMenu(X)"
-        src="../../assets/images/img-XX1.png" /> <span style="padding-left: 10px;"> </span> -->
-      <img style="width: 100%; border-radius: 5px 5px 5px 5px;" (click)="NavRouterMenu(1)" src="{{ akhlakImage }}" />
+      <div class="container ion-padding">
+        <div class="scroll" scrollX="true">
+          <img style="width: 80%; border-radius: 5px;" (click)="NavRouterMenu(5)"
+            src="../../assets/images/img-11.png" />
+          <span style="padding-left: 10px;"> </span>
+          <img style="width: 80%; border-radius: 5px;" (click)="NavRouterMenu(6)"
+            src="../../assets/images/img-12.png" />
+        </div>
+      </div>
     </div>
   </div>
-
-  <div class="ion-padding">
-    <ion-text>Activity List</ion-text>
-  </div>
-
-  <div class="container ion-padding">
-    <div class="scroll" scrollX="true">
-      <img style="width: 80%; border-radius: 5px 5px 5px 5px;" (click)="NavRouterMenu(5)"
-        src="../../assets/images/img-11.png" /> <span style="padding-left: 10px;"> </span>
-      <img style="width: 80%; border-radius: 5px 5px 5px 5px;" (click)="NavRouterMenu(6)"
-        src="../../assets/images/img-12.png" />
-    </div>
-  </div>
-
 </ion-content>
 
 <ion-footer color="translucent" class="ion-no-border">

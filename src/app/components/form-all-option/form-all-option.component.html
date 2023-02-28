@@ -149,7 +149,13 @@
     <div *ngIf="isArrived">
       <ion-item Lines="full">
         <ion-label>Kapan Anda Terakhir Olahraga</ion-label>
-        <ion-datetime [(ngModel)]="waktuOlahraga" displayFormat="YYYY MM DD" placeholder="Select Date"></ion-datetime>
+        <ion-datetime-button datetime="datetime"></ion-datetime-button>
+
+        <ion-modal [keepContentsMounted]="true">
+          <ng-template>
+            <ion-datetime [(ngModel)]="waktuOlahraga" presentation="date" id="datetime"></ion-datetime>
+          </ng-template>
+        </ion-modal>
       </ion-item>
 
       <ion-item>
@@ -215,9 +221,11 @@
     <ion-text>3. Harmonis</ion-text> <br>
     <ion-text><span style="margin-left: 20px">Saling peduli dan menghargai perbedaan</span></ion-text> <br>
     <ion-text>4. Loyal</ion-text> <br>
-    <ion-text><span style="margin-left: 20px">Berdedikasi dan mengutamakan kepentingan Bangsa dan Negara</span></ion-text> <br>
+    <ion-text><span style="margin-left: 20px">Berdedikasi dan mengutamakan kepentingan Bangsa dan
+        Negara</span></ion-text> <br>
     <ion-text>5. Adaptif</ion-text> <br>
-    <ion-text><span style="margin-left: 20px">Terus berinovasi dan antusias dalam menggerakkan ataupun menghadapi perubahan</span></ion-text> <br>
+    <ion-text><span style="margin-left: 20px">Terus berinovasi dan antusias dalam menggerakkan ataupun menghadapi
+        perubahan</span></ion-text> <br>
     <ion-text>6. Kolaboratif</ion-text> <br>
     <ion-text><span style="margin-left: 20px">Membangun kerjasama yang sinergis</span></ion-text> <br>
   </div>

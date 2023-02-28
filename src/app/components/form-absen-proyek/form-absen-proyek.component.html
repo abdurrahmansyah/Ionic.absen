@@ -148,7 +148,13 @@
     <div *ngIf="isArrived">
       <ion-item Lines="full">
         <ion-label>Kapan Anda Terakhir Olahraga</ion-label>
-        <ion-datetime [(ngModel)]="waktuOlahraga" displayFormat="YYYY MM DD" placeholder="Select Date"></ion-datetime>
+        <ion-datetime-button datetime="datetime"></ion-datetime-button>
+
+        <ion-modal [keepContentsMounted]="true">
+          <ng-template>
+            <ion-datetime [(ngModel)]="waktuOlahraga" presentation="date" id="datetime"></ion-datetime>
+          </ng-template>
+        </ion-modal>
       </ion-item>
   
       <ion-item>
