@@ -744,6 +744,14 @@ export class GlobalService {
     // this.SubscribeGetLeaderboardDataList(data);
   }
 
+  public GetLeaderboardDataListByWorkLocation(total: number): Observable<any> {
+    var dateData = this.GetDate();
+
+    var url = 'https://absensi.hutamakarya.com/api/leaderboardByWorkLocation/ASC/' + total + '?date=' + this.datePipe.transform(dateData.date, 'yyyy-MM-dd');
+
+    return this.httpClient.get(url);
+  }
+
   public GetTimeNow(): Observable<any> {
     var url = 'https://absensi.hutamakarya.com/api/timenow';
 

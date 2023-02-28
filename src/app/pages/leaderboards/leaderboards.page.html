@@ -14,14 +14,20 @@
           <ion-text style="font-size: 20px; font-weight: 500;" color="hk-white-red">Leaderboards</ion-text>
         </ion-col>
         <ion-col size="3" class="ion-text-center ion-align-self-center">
-          <ion-button id="filter">
+          <ion-button id="filter" color="hk-red" style="--box-shadow: none;">
             <ion-icon slot="icon-only" name="options"></ion-icon>
           </ion-button>
-          <!-- <ion-popover trigger="filter" triggerAction="click">
+          <ion-popover trigger="filter" [dismissOnSelect]="true">
             <ng-template>
-              <ion-content class="ion-padding">Hello World!</ion-content>
+              <ion-content>
+                <ion-list>
+                  <ion-item [button]="true" [detail]="false" (click)="LeaderboardWFO()">WFO</ion-item>
+                  <ion-item [button]="true" [detail]="false" (click)="LeaderboardWFOProyek()">WFO - Proyek</ion-item>
+                  <ion-item [button]="true" [detail]="false" (click)="LeaderboardWFH()" Lines="none">WFH</ion-item>
+                </ion-list>
+              </ion-content>
             </ng-template>
-          </ion-popover> -->
+          </ion-popover>
         </ion-col>
       </ion-row>
 
@@ -97,7 +103,7 @@
           </ion-col>
         </ion-row>
       </ion-grid>
-      <hr style="height: 10px; margin-top: 0px; margin-bottom: 0px;">
+      <!-- <hr style="height: 10px; margin-top: 0px; margin-bottom: 0px;"> -->
     </div>
 
     <hr style="height: 40px; margin-top: 0px; margin-bottom: 0px;">

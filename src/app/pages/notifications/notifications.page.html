@@ -30,7 +30,7 @@
         <p>{{ requestData.szDivisionId }}</p>
       </ion-label>
     </ion-item>
-    <div class="ion-text-start" padding style="padding-top: 0px; padding-bottom: 0px; line-height: 150%;">
+    <div class="ion-text-start ion-padding" style="padding-top: 0px; padding-bottom: 0px; line-height: 150%;">
       <ion-text>{{ requestData.dateRequest }}</ion-text> <br>
       <div *ngFor="let requestDetailData of requestData.requestDetailDataList">
         <ion-text color="dark">{{ requestDetailData.szActivityName }}</ion-text>

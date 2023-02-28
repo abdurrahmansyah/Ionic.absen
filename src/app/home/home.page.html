@@ -12,7 +12,7 @@
 
     <ion-card>
       <img src="../../assets/images/img-8.png" />
-      <div class="card-title" padding>
+      <div class="card-title ion-padding">
         <ion-avatar slot="end" *ngIf="leadImage">
           <img src="{{ leadImage }}">
         </ion-avatar>
@@ -65,11 +65,11 @@
     </div>
   </div> -->
 
-  <div padding>
+  <div class="ion-padding">
     <ion-text>Greetings AKHLAK</ion-text>
   </div>
 
-  <div class="container" padding>
+  <div class="container ion-padding">
     <div class="scroll" scrollX="true">
       <!-- <img style="width: 100%; border-radius: 5px 5px 5px 5px;" (click)="NavRouterMenu(X)"
         src="../../assets/images/img-XX1.png" /> <span style="padding-left: 10px;"> </span> -->
@@ -77,11 +77,11 @@
     </div>
   </div>
 
-  <div padding>
+  <div class="ion-padding">
     <ion-text>Activity List</ion-text>
   </div>
 
-  <div class="container" padding>
+  <div class="container ion-padding">
     <div class="scroll" scrollX="true">
       <img style="width: 80%; border-radius: 5px 5px 5px 5px;" (click)="NavRouterMenu(5)"
         src="../../assets/images/img-11.png" /> <span style="padding-left: 10px;"> </span>
@@ -92,7 +92,7 @@
 
 </ion-content>
 
-<ion-footer no-border color="translucent">
+<ion-footer color="translucent" class="ion-no-border">
   <!-- UNTUK TOMBOL REFRESH (BUTUH HILANG SAAT TURUN) -->
   <!-- <div class="ion-text-center">
     <ion-button size="small" shape="round" mode="md" (click)="DoRefresh()">

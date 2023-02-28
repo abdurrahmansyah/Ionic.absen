@@ -68,9 +68,9 @@
 
   <hr width="90%">
 
-  <ion-grid style="width: 90%" no-padding>
-    <ion-row no-padding align-items-center>
-      <ion-col size="2" no-padding style="text-align: left">
+  <ion-grid style="width: 90%" class="ion-no-padding">
+    <ion-row class="ion-no-padding" align-items-center>
+      <ion-col size="2" class="ion-no-padding" style="text-align: left">
         <ion-icon name="card" style="font-size: 50px; vertical-align: middle" color="hk-red"></ion-icon>
       </ion-col>
       <ion-col size="10" style="text-align: left; font-size: 16px">
@@ -105,7 +105,7 @@
     <!-- <div style="margin: 5px; margin-bottom: 0px;"> -->
     <img *ngIf="photoArrived" src="{{ photoArrived }}" class="center" />
     <!-- </div> -->
-    <div padding>
+    <div class="ion-padding">
       <ion-text style="font-weight: 700;">{{ activityArrived }}</ion-text>
     </div>
   </ion-card>
@@ -114,7 +114,7 @@
     <!-- <div style="margin: 5px; margin-bottom: 0px;"> -->
     <img *ngIf="photoReturn" src="{{ photoReturn }}" class="center" />
     <!-- </div> -->
-    <div padding>
+    <div class="ion-padding">
       <ion-text style="font-weight: 700;">{{ activityReturn }}</ion-text>
     </div>
   </ion-card>
@@ -146,7 +146,7 @@
 
 </ion-content>
 
-<ion-footer no-shadow no-border>
+<ion-footer no-shadow class="ion-no-border">
   <ion-card>
     <ion-item color="hk-yellow">
       <ion-icon name="warning" slot="start"></ion-icon>

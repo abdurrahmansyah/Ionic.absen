@@ -28,13 +28,13 @@
           <p>{{ activityData.userData.szDivisionName }}</p>
         </ion-label>
       </ion-item>
-      <div *ngIf="activityData.isAnyActivity" class="ion-text-start" padding
+      <div *ngIf="activityData.isAnyActivity" class="ion-text-start ion-padding"
         style="padding-top: 0px; padding-bottom: 0px; line-height: 150%;">
         <ion-text color="dark">{{ activityData.workCondition }}</ion-text>
         <ion-text> - </ion-text>
         <ion-text>{{ activityData.szLocation }}</ion-text> <br>
-        <ion-row no-padding>
-          <ion-col size="6" no-padding>
+        <ion-row class="ion-no-padding">
+          <ion-col size="6" class="ion-no-padding">
             <div class="ion-text-nowrap" style="overflow: hidden; text-overflow: ellipsis;">
               <ion-text *ngIf="activityData.work_from == 'WFO'">Suhu</ion-text>
               <ion-text *ngIf="activityData.work_from == 'WFH'">Health Check</ion-text>
@@ -75,7 +75,7 @@
         <ion-icon name="arrow-forward" mode="ios" color="primary" style="font-size: 14px; vertical-align: middle">
         </ion-icon>
       </div>
-      <div *ngIf="!activityData.isAnyActivity" padding class="ion-text-center">
+      <div *ngIf="!activityData.isAnyActivity" class="ion-text-center ion-padding">
         <ion-text>Karyawan belum mengisi form activity</ion-text>
       </div>
     </ion-card>

@@ -2,17 +2,17 @@
   <ion-item lines="none" color="transparent">
     <ion-label text-center>{{ summaryReportData.szMonthAttendance }} {{ txtCurrentYear }}</ion-label>
   </ion-item>
-  <div class="ion-text-start" padding style="padding-top: 0px">
-    <ion-grid no-padding>
-      <ion-row no-padding>
-        <ion-col size="8" style="background: transparent" no-padding>
+  <div class="ion-text-start ion-padding" style="padding-top: 0px">
+    <ion-grid class="ion-no-padding">
+      <ion-row class="ion-no-padding">
+        <ion-col size="8" style="background: transparent" class="ion-no-padding">
           <ion-text>Total hadir</ion-text> <br>
           <ion-text>Total absen</ion-text> <br>
           <ion-text>Total datang terlambat</ion-text> <br>
           <ion-text>Total pulang cepat</ion-text> <br>
           <ion-text>Total lembur</ion-text>
         </ion-col>
-        <ion-col size="4" style="background: transparent" no-padding>
+        <ion-col size="4" style="background: transparent" class="ion-no-padding">
           <ion-text>: {{ summaryReportData.decTotalAttendance }} Hari</ion-text> <br>
           <ion-text>: {{ summaryReportData.decTotalAbsen }} Hari</ion-text> <br>
           <ion-text>: {{ summaryReportData.decTotalLate }}</ion-text> <br>

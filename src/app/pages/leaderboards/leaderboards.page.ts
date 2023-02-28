@@ -22,6 +22,8 @@ export class LeaderboardsPage implements OnInit {
   public leaderboardDataListRest = [];
   public length: any;
   private loading: any;
+  private filter: string = 'WFO';
+  private leaderboardDataFromDb: any;
 
   constructor(public router: Router,
     public globalService: GlobalService,
@@ -70,16 +72,33 @@ export class LeaderboardsPage implements OnInit {
     leaderboardData.szImage = '';
   }
 
+  public LeaderboardWFO() {
+    this.filter = 'WFO';
+    this.MappingLeaderboardDataFromDb();
+  }
+
+  public LeaderboardWFOProyek() {
+    this.filter = 'WFOProyek';
+    this.MappingLeaderboardDataFromDb();
+  }
+
+  public LeaderboardWFH() {
+    this.filter = 'WFH';
+    this.MappingLeaderboardDataFromDb();
+  }
+
   private GetLeaderboardDataList() {
-    var data = this.globalService.GetLeaderboardDataList(50);
+    var data = this.globalService.GetLeaderboardDataListByWorkLocation(50);
     this.SubscribeGetLeaderboardDataList(data);
   }
 
   private SubscribeGetLeaderboardDataList(data) {
     data.subscribe(data => {
       if (data.response == "success") {
-        var leaderboardDataFromDb = data.data;
-        var leaderboardData = this.MappingLeaderboardDataFromDb(leaderboardDataFromDb);
+        var leaderboardDataFromDb = this.filter === 'WFO' ? data.data.wfo : this.filter === 'WFOProyek' ? data.data.wfoProyek : data.data.wfh;
+        // this.MappingLeaderboardDataFromDb(leaderboardDataFromDb);
+        this.leaderboardDataFromDb = data.data;
+        this.MappingLeaderboardDataFromDb();
 
         this.loadingController.dismiss();
         // console.log(leaderboardData);
@@ -89,8 +108,13 @@ export class LeaderboardsPage implements OnInit {
     });
   }
 
-  private MappingLeaderboardDataFromDb(leaderboardDataFromDb: any) {
+  private MappingLeaderboardDataFromDb() {
+    var leaderboardDataFromDb = this.filter === 'WFO' ? this.leaderboardDataFromDb.wfo : this.filter === 'WFOProyek' ? this.leaderboardDataFromDb.wfoProyek : this.leaderboardDataFromDb.wfh;
     var number = 1;
+    this.leaderboardDataList1To3 = [];
+    this.leaderboardDataList4To5 = [];
+    this.leaderboardDataListRest = [];
+  
 
     leaderboardDataFromDb.forEach(ldrbrdData => {
       var leaderboardData = new LeaderboardData();
