@@ -17,14 +17,13 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    RouterModule.forChild(routes),
-    ComponentsModule
-  ],
-  entryComponents: [PasswordComponent],
-  declarations: [SettingsPage]
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        RouterModule.forChild(routes),
+        ComponentsModule
+    ],
+    declarations: [SettingsPage]
 })
 export class SettingsPageModule {}

@@ -17,14 +17,13 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    ComponentsModule,
-    RouterModule.forChild(routes)
-  ],
-  entryComponents: [ PopoverComponent ],
-  declarations: [NotificationsPage]
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        ComponentsModule,
+        RouterModule.forChild(routes)
+    ],
+    declarations: [NotificationsPage]
 })
 export class NotificationsPageModule {}

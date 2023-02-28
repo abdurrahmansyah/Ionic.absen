@@ -16,15 +16,14 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    ComponentsModule,
-    RouterModule.forChild(routes)
-  ],
-  entryComponents: [ PopoverComponent ],
-  declarations: [HomePage],
-  exports: [HomePage]
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        ComponentsModule,
+        RouterModule.forChild(routes)
+    ],
+    declarations: [HomePage],
+    exports: [HomePage]
 })
 export class HomePageModule { }

@@ -34,41 +34,38 @@ import { AppMinimize } from '@ionic-native/app-minimize/ngx';
 export let InjectorInstance: Injector;
 
 @NgModule({
-  declarations: [AppComponent, HideHeaderDirective],
-  entryComponents: [],
-  imports: [BrowserModule, 
-    IonicModule.forRoot(), 
-    AppRoutingModule,
-    HttpClientModule,
-    IonicStorageModule.forRoot(
-      {
-        name: 'mobileabsensi_sql_lite',
-        driverOrder: ['indexeddb', 'sqlite', 'websql']
-      }
-    )],
-  providers: [
-    StatusBar,
-    SplashScreen,
-    Geolocation,
-    FCM,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    Camera,
-    File,
-    LocalNotifications,
-    FCM,
-    DatePipe,
-    Diagnostic,
-    InAppBrowser,
-    OpenNativeSettings,
-    NativeGeocoder,
-    PhotoViewer,
-    AppVersion,
-    Market,
-    BackgroundGeolocation,
-    BackgroundMode,
-    AppMinimize
-  ],
-  bootstrap: [AppComponent]
+    declarations: [AppComponent, HideHeaderDirective],
+    imports: [BrowserModule,
+        IonicModule.forRoot(),
+        AppRoutingModule,
+        HttpClientModule,
+        IonicStorageModule.forRoot({
+            name: 'mobileabsensi_sql_lite',
+            driverOrder: ['indexeddb', 'sqlite', 'websql']
+        })],
+    providers: [
+        StatusBar,
+        SplashScreen,
+        Geolocation,
+        FCM,
+        { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+        Camera,
+        File,
+        LocalNotifications,
+        FCM,
+        DatePipe,
+        Diagnostic,
+        InAppBrowser,
+        OpenNativeSettings,
+        NativeGeocoder,
+        PhotoViewer,
+        AppVersion,
+        Market,
+        BackgroundGeolocation,
+        BackgroundMode,
+        AppMinimize
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule {
   constructor(private injector: Injector) 

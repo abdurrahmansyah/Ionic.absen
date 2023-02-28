@@ -21,15 +21,14 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    RouterModule.forChild(routes),
-    ComponentsModule,
-    HttpClientModule,
-  ],
-  entryComponents: [ PopoverComponent, ReportDailyComponent, ReportDaily2Component, ReportMonthlyComponent ],
-  declarations: [ReportsPage]
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        RouterModule.forChild(routes),
+        ComponentsModule,
+        HttpClientModule,
+    ],
+    declarations: [ReportsPage]
 })
 export class ReportsPageModule { }
