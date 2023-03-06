@@ -9,6 +9,43 @@
 
 
 <ion-content>
+  <div class="ion-padding">
+    <ion-segment [scrollable]="true" value="default" mode="md">
+      <!-- <span *ngFor="let buttonPropertyData of buttonPropertyDatas">
+        <ion-button shape="round" size="small" fill="{{ buttonPropertyData.fill }}"
+          color="{{ buttonPropertyData.color }}" (click)="GetDayData(buttonPropertyData.date)">
+          {{ buttonPropertyData.date }}
+        </ion-button>
+      </span> -->
+
+      <ion-segment-button class="ion-no-padding" *ngFor="let buttonPropertyData of buttonPropertyDatas" value={{buttonPropertyData.date}} style="min-width: 40px;">
+        <ion-text style="padding: 16px 14px; font-size: 10px; opacity: 50%;">{{buttonPropertyData.date}}</ion-text>
+        <ion-text class="ion-padding-bottom">{{buttonPropertyData.date}}</ion-text>
+      </ion-segment-button>
+
+      <!-- <ion-segment-button value="default" class="ion-no-padding">
+        <ion-text style="padding: 16px 14px; font-size: 10px; opacity: 50%;">M</ion-text>
+        <ion-text class="ion-padding-bottom">1</ion-text>
+      </ion-segment-button>
+      <ion-segment-button value="segment">
+        <ion-text>F</ion-text>
+        <ion-text>2</ion-text>
+      </ion-segment-button>
+      <ion-segment-button value="makan">
+        <ion-label>makan</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="suzuki">
+        <ion-label>suzuki</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="yaaha">
+        <ion-label>yaaha</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="honda">
+        <ion-label>honda</ion-label>
+      </ion-segment-button> -->
+    </ion-segment>
+  </div>
+
   <ion-button type="submit" float-left fill="clear" color="dark" class="btnPrev" (click)="prev()">
     <ion-icon name="arrow-back"></ion-icon>
   </ion-button>

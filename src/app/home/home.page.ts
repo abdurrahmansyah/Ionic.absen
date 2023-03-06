@@ -1020,6 +1020,7 @@ export class HomePage {
     }
     else if (index == 1) {
       this.router.navigate(['attendance']);
+      // this.router.navigate(['reports']);
     }
     else if (index == 2) {
       this.router.navigate(['work-permit']);

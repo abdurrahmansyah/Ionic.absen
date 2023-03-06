@@ -144,6 +144,8 @@ export class AttendancePage implements OnInit {
       if (data.response == "success") {
         var reportDataFromDb = data.data ? data.data : data.data_db;
         var reportData: ReportData = this.MappingReportData(reportDataFromDb);
+        console.log(reportDataFromDb);
+
 
         var timeValidArrived = reportData.timeValidArrived.split(':');
         var { hour, minute, ampm } = this.ConvertTimeToViewFormat(timeValidArrived);
@@ -158,12 +160,11 @@ export class AttendancePage implements OnInit {
         else
           this.globalService.timeRequest = this.txtTimeArrived;
 
-        this.activityArrived = !reportDataFromDb.activity[0] ? "" : reportDataFromDb.activity[0].activity_type_id[0] == "22" ? "Absen WFO " + reportDataFromDb.activity[0].activity_type_id[1]
-          : reportDataFromDb.activity[0].activity_type_id ? "Absen " + reportDataFromDb.activity[0].activity_type_id[1]
-            : "";
-        this.activityReturn = !reportDataFromDb.activity[1] ? "" : reportDataFromDb.activity[1].activity_type_id[0] == "22" ? "Absen WFO " + reportDataFromDb.activity[1].activity_type_id[1]
-          : reportDataFromDb.activity[1].activity_type_id ? "Absen " + reportDataFromDb.activity[1].activity_type_id[1]
-            : "";
+        // this.activityArrived = !reportDataFromDb.activity[0] ? "" : reportDataFromDb.activity[0].activity_type_id[0] == "22" ? "Absen WFO " + reportDataFromDb.activity[0].activity_type_id[1]
+        //   : reportDataFromDb.activity[0].activity_type_id ? "Absen " + reportDataFromDb.activity[0].activity_type_id[1]
+        //     : "";
+        this.activityArrived = !reportDataFromDb.activity[0] ? "" : reportDataFromDb.activity[0].activity_type_id ? "Absen " + reportDataFromDb.activity[0].activity_type_id[1] : "";
+        this.activityReturn = !reportDataFromDb.activity[1] ? "" : reportDataFromDb.activity[1].activity_type_id ? "Absen " + reportDataFromDb.activity[1].activity_type_id[1] : "";
 
         this.photoArrived = reportData.szImageArrived;
         this.photoReturn = reportData.szImageReturn;
@@ -215,7 +216,7 @@ export class AttendancePage implements OnInit {
     return { hour, minute, ampm };
   }
 
-  public IsiCerita(){
+  public IsiCerita() {
     this.globalService.timeRequest = this.txtTimeReturn;
     this.globalService.isArrived = false;
     this.router.navigate(['new-activity']);
@@ -235,6 +236,7 @@ export class AttendancePage implements OnInit {
 }
 
 class ButtonPropertyData {
+  public day: string;
   public date: number;
   public fill: string;
   public color: string;
