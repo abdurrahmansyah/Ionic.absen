@@ -1,6 +1,6 @@
 {
-  "appId": "io.ionic.starter",
-  "appName": "absen",
+  "appId": "com.hutamakarya.hkabsen",
+  "appName": "HK Absen",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",

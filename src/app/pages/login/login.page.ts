@@ -22,7 +22,7 @@ export class LoginPage implements OnInit {
   ngOnInit() { }
 
   public Login() {
-    this.globalService.GetUserData(this.szUserId, this.szPassword);
+    this.globalService.Login(this.szUserId, this.szPassword);
   }
 
   public LoginSSO() {

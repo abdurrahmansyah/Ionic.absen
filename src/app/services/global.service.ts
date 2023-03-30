@@ -313,7 +313,7 @@ export class GlobalService {
     });
   }
 
-  public GetUserData(szUserId: string, szPassword: string) {
+  public Login(szUserId: string, szPassword: string) {
     this.InitializeLoadingCtrl();
     setTimeout(() => {
       this.PresentLoading();
@@ -329,6 +329,7 @@ export class GlobalService {
           var userDataFromDb = data.data;//.find(x => x);
           var userData = this.MappingUserData(userDataFromDb);
 
+          this.userData = userData;
           this.storage.set(USERDATA_KEY, userData);
           this.loadingController.dismiss();
           this.PresentToast("Login Berhasil");
@@ -359,7 +360,7 @@ export class GlobalService {
           var url = 'https://absensi.hutamakarya.com/api/loginSSO'; // Kondisi kalau 
           var data: any = this.httpClient.post(url, postdata);
           data.subscribe(data => {
-            if (data != null && data.response != "failed") { // #supaya jika ada email tapi tidak ada data di hk absen dia ditolak
+            if (data.response != "failed") { // #supaya jika ada email tapi tidak ada data di hk absen dia ditolak
               var userDataFromDb = data.data;//.find(x => x);
               var userData = this.MappingUserData(userDataFromDb);
 
@@ -377,10 +378,41 @@ export class GlobalService {
         }
         else {
           this.loadingController.dismiss();
-          this.PresentToast("Login Gagal");
+          this.PresentToast("Login Gagal! Username atau password salah");
         }
       });
     }, 100);
+  }
+
+  public GetEmployeeInformation() {
+    var url = 'https://absensi.hutamakarya.com/api/getEmployeeInformation';
+
+    let postdata = new FormData();
+    postdata.append('authorization', this.userData.szToken);
+
+    var data: any = this.httpClient.post(url, postdata);
+    data.subscribe(data => {
+      if (data.response == "success") {
+        var userDataFromDb = data.data;
+        var userData = this.MappingUserData(userDataFromDb);
+
+        this.userData = userData;
+        this.storage.set(USERDATA_KEY, userData);
+      }
+      else {
+        this.loadingController.dismiss();
+        this.PresentToast("Login Gagal");
+      }
+    });
+  }
+
+  public GetEmployeeInformationReturnObserve() {
+    var url = 'https://absensi.hutamakarya.com/api/getEmployeeInformation';
+
+    let postdata = new FormData();
+    postdata.append('authorization', this.userData.szToken);
+
+    return this.httpClient.post(url, postdata);
   }
 
   public GetUserData2(requestData: RequestData, szUserId: string, szPassword: string) {
@@ -407,7 +439,7 @@ export class GlobalService {
     });
   }
 
-  private MappingUserData(userDataFromDb: any) {
+  public MappingUserData(userDataFromDb: any) {
     var userData = new UserData();
     userData.szToken = userDataFromDb.token;
     userData.szTokenFcm = userDataFromDb.token_fcm;

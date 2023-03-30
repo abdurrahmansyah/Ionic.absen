@@ -18,6 +18,10 @@ export class SettingsPage implements OnInit {
   public supervisorList = [];
   constructor(private globalService: GlobalService,
     private modalController: ModalController) {
+      this.LoadMyEmployeeData();
+  }
+
+  private LoadMyEmployeeData() {
     this.txtUserId = this.globalService.userData.szUserId;
     this.txtUserName = this.globalService.userData.szUserName;
     this.txtDivisionName = this.globalService.userData.szDivisionName;

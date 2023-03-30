@@ -19,9 +19,11 @@ import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocati
 import { BackgroundMode } from '@ionic-native/background-mode/ngx';
 import { AppMinimize } from '@ionic-native/app-minimize/ngx';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
+import { Storage } from '@ionic/storage';
 
 declare var window;
 defineCustomElements(window);
+export const USERDATA_KEY = 'userData';
 
 @Component({
   selector: 'app-home',
@@ -68,7 +70,8 @@ export class HomePage {
     private appVersion: AppVersion,
     private backgroundGeolocation: BackgroundGeolocation,
     private backgroundMode: BackgroundMode,
-    private appMinimize: AppMinimize
+    private appMinimize: AppMinimize,
+    private storage: Storage
   ) {
     this.ValidateAppVersionNumber();
     this.InitializeApp();
@@ -173,11 +176,17 @@ export class HomePage {
       }
     });
     this.cobadeh = this.globalService.userData.szUserId;
-    this.userImage = this.globalService.userData.szImage;
-    this.userName = this.globalService.userData.szUserName;
+    this.LoadMyEmployeeData();
     this.fcm.subscribeToTopic(this.cobadeh);
 
     this.GetCurrentPositionForFirst();
+  }
+
+  private LoadMyEmployeeData() {
+    console.log("this.globalService.userData", this.globalService.userData);
+
+    this.userImage = this.globalService.userData.szImage;
+    this.userName = this.globalService.userData.szUserName;
   }
 
   private GetCurrentPositionForFirst() {
@@ -404,6 +413,7 @@ export class HomePage {
   }
 
   DoRefresh(event?: any) {
+    this.GetEmployeeInformation();
     this.GetTimeWorkingAndStatusUser();
     this.GetLeaderboardDataList();
     this.GetAkhlakDataList();
@@ -414,8 +424,25 @@ export class HomePage {
     }, 1000);
   }
 
+  private GetEmployeeInformation() {
+    var data: any = this.globalService.GetEmployeeInformationReturnObserve();
+    data.subscribe(data => {
+      if (data.response == "success") {
+        var userDataFromDb = data.data;
+        var userData = this.globalService.MappingUserData(userDataFromDb);
+
+        this.globalService.userData = userData;
+        this.LoadMyEmployeeData();
+        this.storage.set(USERDATA_KEY, userData);
+      }
+      else {
+        this.globalService.PresentAlert("BUG: Get Employe Information Failed");
+      }
+    });
+  }
+
   public async ButtonAbsen() {
-    // this.ValidateAbsen(true);
+    // this.ValidateAbsen(true); // DIKOMEN KALAU TIDAK DIPAKAI
 
     try {
       this.InitializeLoadingCtrl();
