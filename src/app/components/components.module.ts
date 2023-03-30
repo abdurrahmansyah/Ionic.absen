@@ -14,9 +14,10 @@ import { PasswordComponent } from './password/password.component';
 import { FormWfoNewNormalComponent } from './form-wfo-new-normal/form-wfo-new-normal.component';
 import { FormAbsenProyekComponent } from './form-absen-proyek/form-absen-proyek.component';
 import { FormAllOptionComponent } from './form-all-option/form-all-option.component';
+import { MaintenanceComponent } from './maintenance/maintenance.component';
 
 @NgModule({
-  declarations: [PopoverComponent, ReportDailyComponent, ReportDaily2Component, ReportMonthlyComponent, FormLemburComponent, FormAbsenDiluarComponent, FormTerlambatComponent, FormPulangCepatComponent, PasswordComponent, FormWfoNewNormalComponent, FormAbsenProyekComponent, FormAllOptionComponent],
+  declarations: [PopoverComponent, ReportDailyComponent, ReportDaily2Component, ReportMonthlyComponent, FormLemburComponent, FormAbsenDiluarComponent, FormTerlambatComponent, FormPulangCepatComponent, PasswordComponent, FormWfoNewNormalComponent, FormAbsenProyekComponent, FormAllOptionComponent, MaintenanceComponent],
   exports: [PopoverComponent, ReportDailyComponent, ReportDaily2Component, ReportMonthlyComponent, FormLemburComponent, FormAbsenDiluarComponent, FormTerlambatComponent, FormPulangCepatComponent, PasswordComponent, FormWfoNewNormalComponent, FormAbsenProyekComponent, FormAllOptionComponent],
   imports: [
     CommonModule,
