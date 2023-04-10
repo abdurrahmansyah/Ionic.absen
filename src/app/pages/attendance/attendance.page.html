@@ -7,42 +7,23 @@
   </ion-toolbar>
 </ion-header>
 
-
 <ion-content>
+</ion-content>
+
+<!-- <ion-content>
   <div class="ion-padding">
     <ion-segment [scrollable]="true" value="default" mode="md">
-      <!-- <span *ngFor="let buttonPropertyData of buttonPropertyDatas">
+      <span *ngFor="let buttonPropertyData of buttonPropertyDatas">
         <ion-button shape="round" size="small" fill="{{ buttonPropertyData.fill }}"
           color="{{ buttonPropertyData.color }}" (click)="GetDayData(buttonPropertyData.date)">
           {{ buttonPropertyData.date }}
         </ion-button>
-      </span> -->
+      </span>
 
       <ion-segment-button class="ion-no-padding" *ngFor="let buttonPropertyData of buttonPropertyDatas" value={{buttonPropertyData.date}} style="min-width: 40px;">
         <ion-text style="padding: 16px 14px; font-size: 10px; opacity: 50%;">{{buttonPropertyData.date}}</ion-text>
         <ion-text class="ion-padding-bottom">{{buttonPropertyData.date}}</ion-text>
       </ion-segment-button>
-
-      <!-- <ion-segment-button value="default" class="ion-no-padding">
-        <ion-text style="padding: 16px 14px; font-size: 10px; opacity: 50%;">M</ion-text>
-        <ion-text class="ion-padding-bottom">1</ion-text>
-      </ion-segment-button>
-      <ion-segment-button value="segment">
-        <ion-text>F</ion-text>
-        <ion-text>2</ion-text>
-      </ion-segment-button>
-      <ion-segment-button value="makan">
-        <ion-label>makan</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="suzuki">
-        <ion-label>suzuki</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="yaaha">
-        <ion-label>yaaha</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="honda">
-        <ion-label>honda</ion-label>
-      </ion-segment-button> -->
     </ion-segment>
   </div>
 
@@ -122,35 +103,15 @@
 
   <hr width="90%">
 
-  <!-- <ion-card>
-    <div class="ion-text-start" padding style="padding-top: 0px">
-      <ion-text> <br /> <img src="{{ photo }}" class="center" /></ion-text>
-    </div>
-  </ion-card>
-
-  <hr width="90%">
-
-  <ion-card>
-    <div class="ion-text-start" padding style="padding-top: 0px">
-      <img src="{{ photo }}" class="center" />
-    </div>
-  </ion-card>
-
-  <hr width="90%"> -->
-
   <ion-card class="ion-text-center" *ngIf="activityArrived">
-    <!-- <div style="margin: 5px; margin-bottom: 0px;"> -->
     <img *ngIf="photoArrived" src="{{ photoArrived }}" class="center" />
-    <!-- </div> -->
     <div class="ion-padding">
       <ion-text style="font-weight: 700;">{{ activityArrived }}</ion-text>
     </div>
   </ion-card>
 
   <ion-card class="ion-text-center" *ngIf="activityReturn">
-    <!-- <div style="margin: 5px; margin-bottom: 0px;"> -->
     <img *ngIf="photoReturn" src="{{ photoReturn }}" class="center" />
-    <!-- </div> -->
     <div class="ion-padding">
       <ion-text style="font-weight: 700;">{{ activityReturn }}</ion-text>
     </div>
@@ -192,4 +153,4 @@
       </ion-label>
     </ion-item>
   </ion-card>
-</ion-footer>
+</ion-footer> -->

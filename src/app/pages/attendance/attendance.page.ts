@@ -42,9 +42,9 @@ export class AttendancePage implements OnInit {
     private loadingController: LoadingController,
     private datePipe: DatePipe,
     public router: Router) {
-    this.InitializeLoadingCtrl();
-    this.GetReportDatasForThisDay();
-    // this.GetLoopRequestDatas();
+    // this.InitializeLoadingCtrl();
+    // this.GetReportDatasForThisDay();
+    // this.GetLoopRequestDatas(); // not used
   }
 
   async InitializeLoadingCtrl() {
@@ -54,11 +54,11 @@ export class AttendancePage implements OnInit {
   }
 
   ngOnInit() {
-    this.SetDataDaysInMonth(this.decCurrentMonth, this.decCurrentYear);
+    // this.SetDataDaysInMonth(this.decCurrentMonth, this.decCurrentYear);
   }
 
   ionViewDidEnter() {
-    this.GetReportDatasForThisDay();
+    // this.GetReportDatasForThisDay();
   }
 
   async slideMonthChanged() {
