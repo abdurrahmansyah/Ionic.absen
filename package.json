@@ -69,7 +69,7 @@
     "cordova-plugin-nativegeocoder": "^3.2.2",
     "cordova-plugin-networkinterface": "^2.0.0",
     "cordova-sqlite-storage": "^3.4.1",
-    "cordova.plugins.diagnostic": "^5.0.1",
+    "cordova.plugins.diagnostic": "^7.1.1",
     "core-js": "^2.6.11",
     "ionic-angular": "^3.9.9",
     "ionic2-calendar": "^0.5.8",
