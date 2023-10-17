@@ -42,6 +42,7 @@ export class GlobalService {
   public mobile: string = "";
   loading: any;
   public statusDateCategory = new StatusDateCategory;
+  public isSeenAlertWelcome: boolean = false;
 
   httpClient = InjectorInstance.get<HttpClient>(HttpClient);
   readonly mobileIos = "mobile - iOS";

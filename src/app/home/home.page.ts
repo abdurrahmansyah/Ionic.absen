@@ -80,21 +80,50 @@ export class HomePage {
     this.Timer();
   }
 
-  ValidateAppVersionNumber() {
-    // var data = this.globalService.GetVersionNumber();
-    // data.subscribe(data => {
-    //   if (data.response == "success") {
-    //     var versionNumberDb = data.data;
+  async ngOnInit() {
+    await this.ShowWelcomeAlert();
+  }
 
-    //     this.appVersion.getVersionNumber().then((versionNumber) => {
-    //       if (versionNumber < versionNumberDb)
-    //         this.router.navigate(['warning-updates']);
-    //     }).catch((error) => {
-    //       // this.globalService.PresentAlert(error.message);
-    //       this.router.navigate(['warning-updates']);
-    //     });
-    //   }
-    // });
+  ngOnDestroy() {
+    this.globalService.isSeenAlertWelcome = false;
+  }
+
+  private async ShowWelcomeAlert() {
+    if (!this.globalService.isSeenAlertWelcome) {
+      await this.alertController.create({
+        mode: 'ios',
+        message: 'This is an alert message.',
+        backdropDismiss: true,
+        cssClass: 'alert-welcome',
+        buttons: [{
+          text: 'Rate Us ⭐⭐⭐⭐⭐',
+          handler: () => {
+            if (this.platform.is('ios')) window.open("https://apps.apple.com/id/app/hk-absen-attendance-system/id1491468614", '_system', 'location=yes');
+            else window.open("https://play.google.com/store/apps/details?id=com.hutamakarya.hkabsen&hl=en-ID", '_system', 'location=yes');
+          }
+        }]
+      }).then(alert => {
+        this.globalService.isSeenAlertWelcome = true;
+        return alert.present();
+      });
+    }
+  }
+
+  ValidateAppVersionNumber() {
+    var data = this.globalService.GetVersionNumber();
+    data.subscribe(data => {
+      if (data.response == "success") {
+        var versionNumberDb = data.data;
+
+        this.appVersion.getVersionNumber().then((versionNumber) => {
+          if (versionNumber < versionNumberDb)
+            this.router.navigate(['warning-updates']);
+        }).catch((error) => {
+          // this.globalService.PresentAlert(error.message);
+          this.router.navigate(['warning-updates']);
+        });
+      }
+    });
   }
 
   // public StartLocalNotification() {
